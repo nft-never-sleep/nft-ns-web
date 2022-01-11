@@ -10,6 +10,16 @@
         搜索藏家，租来使用吧｜连接你的钱包，立刻有｜往下逛逛，喜欢就报价
       </div>
     </div>
+    <div class="main">
+      <div class="tab-group">
+        <n-tabs type="segment">
+          <n-tab-pane name="chap1" tab="My Collectibles"></n-tab-pane>
+          <n-tab-pane name="chap2" tab="Browse by category"></n-tab-pane>
+          <n-tab-pane name="chap3" tab="Recent activity"></n-tab-pane>
+        </n-tabs>
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,7 +34,7 @@ export default {};
   justify-content: space-between;
   align-items: flex-end;
 
-  height: 200px;
+  height: 150px;
   padding-bottom: 60px;
 
   border-bottom: 3px solid rgba(255, 186, 13, 0.8);
@@ -82,5 +92,8 @@ export default {};
 
     color: #898397;
   }
+}
+.main{
+  margin-top: 40px;
 }
 </style>
