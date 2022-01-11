@@ -24,7 +24,28 @@
 </template>
 
 <script>
-export default {};
+import { mapActions } from 'vuex'
+
+export default {
+  data(){
+    return{
+      accountId: null,
+    }
+  },
+  methods:{
+    setAccount() {
+      // this.accountId = this.$near.user && this.$near.user.accountId ? this.$near.user.accountId : null
+      // this.update({ key: 'account_id', value: this.accountId })
+      // this.update({ key: 'account', value: { ...this.$near.user } })
+    },
+  },
+  async mounted() {
+    console.log(this.$near.user.accountId);
+    setTimeout(() => {
+      this.$near.loginAccount()
+    }, 1000);
+  },
+};
 </script>
 <style lang="scss" scoped>
 .Banner {
