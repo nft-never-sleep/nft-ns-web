@@ -35,12 +35,15 @@ export default {
     async login() {
       await this.$near.loginAccount()
     },
-    logout() {
-      this.$near.logoutAccount()
+    async logout() {
+      await this.$near.logoutAccount()
       this.$router.push('/',{query:{}})
+      localStorage.removeItem(`nearlib:keystore:${this.accountId}:default`);
       this.accountId = null
       this.update({ key: 'account_id', value: this.accountId })
       this.update({ key: 'account', value: null })
+      var protocol = 'https:' == document.location.protocol ? 'https://': 'http://';
+      window.location.href = `${protocol}${window.location.host}`
     },
     setAccount() {
       this.accountId = this.$near.user && this.$near.user.accountId ? this.$near.user.accountId : null
