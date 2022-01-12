@@ -9,7 +9,8 @@
         <input placeholder="搜索 : 账户ID" />
       </div>
       <div class="connect-wallet">
-        <n-button round type="warning" @click="nearAccount">{{userType}}</n-button>
+        <n-button v-if="accountId" round type="warning" @click="logout">{{accountId}}</n-button>
+        <n-button v-if="!accountId" round type="warning" @click="login">connect-wallet</n-button>
       </div>
     </div>
     <div class="container">
@@ -19,27 +20,42 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import { useRouter } from 'vue-router'
+
 export default {
   name: "Layout",
   data(){
     return{
-      userType: null
+      accountId: null,
     }
   },
   methods:{
-    async nearAccount(){
-      if (this.userType) {
-        await this.$near.loginAccount()
-      }else{
-        this.$near.logoutAccount()
-      }
-    }
+    ...mapActions(['update']),
+    async login() {
+      await this.$near.loginAccount()
+    },
+    logout() {
+      this.$near.logoutAccount()
+      this.$router.push('/',{query:{}})
+      this.accountId = null
+      this.update({ key: 'account_id', value: this.accountId })
+      this.update({ key: 'account', value: null })
+    },
+    setAccount() {
+      this.accountId = this.$near.user && this.$near.user.accountId ? this.$near.user.accountId : null
+      this.update({ key: 'account_id', value: this.accountId })
+      this.update({ key: 'account', value: { ...this.$near.user } })
+    },
   },
   mounted(){
-    this.$nextTick(() =>{
-      this.userType = this.$near.user ? this.$near.user.accountId : 'connect-wallet'
-    })
-  }
+    setTimeout(() => {
+      this.setAccount()
+    }, 40)
+    setTimeout(() => {
+      this.setAccount()
+    }, 4000)
+  },
 };
 </script>
 
