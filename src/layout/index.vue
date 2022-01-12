@@ -8,6 +8,7 @@
       <div class="search-area">
         <input placeholder="搜索 : 账户ID" />
       </div>
+<<<<<<< HEAD
       <div class="tool-btns">
         <n-button round type="warning" @click="nearAccount">{{
           userType
@@ -21,6 +22,11 @@
           <template #unchecked>中文</template>
         </n-switch>
         <p>{{count}}</p>
+=======
+      <div class="connect-wallet">
+        <n-button v-if="accountId" round type="warning" @click="logout">{{accountId}}</n-button>
+        <n-button v-if="!accountId" round type="warning" @click="login">connect-wallet</n-button>
+>>>>>>> ac812ff0d8d0987c37a709ee7b83c6a47cbc7515
       </div>
     </div>
     <div class="container">
@@ -30,6 +36,7 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import { ref } from "vue";
 import { useMessage } from "naive-ui";
 import { useI18n } from "vue-i18n";
@@ -69,6 +76,47 @@ export default {
       },
     };
   },
+=======
+import { mapActions } from 'vuex'
+import { useRouter } from 'vue-router'
+
+export default {
+  name: "Layout",
+  data(){
+    return{
+      accountId: null,
+    }
+  },
+  methods:{
+    ...mapActions(['update']),
+    async login() {
+      await this.$near.loginAccount()
+    },
+    async logout() {
+      await this.$near.logoutAccount()
+      this.$router.push('/',{query:{}})
+      localStorage.removeItem(`nearlib:keystore:${this.accountId}:default`);
+      this.accountId = null
+      this.update({ key: 'account_id', value: this.accountId })
+      this.update({ key: 'account', value: null })
+      var protocol = 'https:' == document.location.protocol ? 'https://': 'http://';
+      window.location.href = `${protocol}${window.location.host}`
+    },
+    setAccount() {
+      this.accountId = this.$near.user && this.$near.user.accountId ? this.$near.user.accountId : null
+      this.update({ key: 'account_id', value: this.accountId })
+      this.update({ key: 'account', value: { ...this.$near.user } })
+    },
+  },
+  mounted(){
+    setTimeout(() => {
+      this.setAccount()
+    }, 40)
+    setTimeout(() => {
+      this.setAccount()
+    }, 4000)
+  },
+>>>>>>> ac812ff0d8d0987c37a709ee7b83c6a47cbc7515
 };
 </script>
 
