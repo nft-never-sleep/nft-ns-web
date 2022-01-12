@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-
+import Collectible from "../views/Collectible.vue"
+import Recent from "../views/Recent.vue"
+import Browse from "../views/Browse.vue"
 const routes = [
   {
     path: '/',
@@ -9,7 +11,16 @@ const routes = [
     children: [
       {
         path: "browse",
-        component: () => import(/* webpackChunkName: "browse" */ '../views/Browse.vue')
+        // component: () => import(/* webpackChunkName: "browse" */ '../views/Browse.vue')
+        component:Browse
+      }, {
+        path: "collectible",
+        // component: () => import(/* webpackChunkName: "collectible" */ '../views/Collectible.vue')
+        component:Collectible
+      }, {
+        path: "recent",
+        // component: () => import(/* webpackChunkName: "recent" */ '../views/Recent.vue')
+        component:Recent
       }
     ]
   },
