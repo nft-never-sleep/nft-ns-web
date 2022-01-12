@@ -6,25 +6,9 @@
   </div>
 </template>
   <script >
-import { ref, watch } from "vue";
 import { onBeforeRouteUpdate } from "vue-router";
 export default {
   setup() {
-    const num = ref();
-    // const num = ref(0);
-    // // watch(要侦听的数据,回调函数)
-    // watch(num, (v1, v2) => {
-    //   // v1 是改变以后的新值
-    //   // v2 是改变前的值
-    //   console.log(v1, v2);
-    //   // 要点：侦听普通函数可以获取修改前后的值，被侦听的数据必须是响应式的
-    // });
-    // // 单机事件
-    // const butFn = () => {
-    //   num.value++;
-    // };
-
-    // return { butFn, num };
     onBeforeRouteUpdate((to) => {
       console.log(to.fullPath, "=====");
     });

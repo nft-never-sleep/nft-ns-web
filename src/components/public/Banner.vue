@@ -6,13 +6,18 @@
       <p class="p3">NFT NEVER SLEEP</p>
     </div>
     <div class="desc">
-      搜索藏家，租来使用吧｜连接你的钱包，立刻有｜往下逛逛，喜欢就报价
+      {{$t('banner.desc')}}
+      <!-- 搜索藏家，租来使用吧｜连接你的钱包，立刻有｜往下逛逛，喜欢就报价 -->
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  mounted() {
+    console.log(this);
+  },
+};
 </script>
 
 <style lang="scss" scoped>

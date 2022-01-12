@@ -8,8 +8,19 @@
       <div class="search-area">
         <input placeholder="搜索 : 账户ID" />
       </div>
-      <div class="connect-wallet">
-        <n-button round type="warning" @click="nearAccount">{{userType}}</n-button>
+      <div class="tool-btns">
+        <n-button round type="warning" @click="nearAccount">{{
+          userType
+        }}</n-button>
+        <n-switch
+          checked-value="zh"
+          unchecked-value="en"
+          @update:value="toggle_lang"
+        >
+          <template #checked>EN</template>
+          <template #unchecked>中文</template>
+        </n-switch>
+        <p>{{count}}</p>
       </div>
     </div>
     <div class="container">
@@ -19,27 +30,45 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import { useMessage } from "naive-ui";
+import { useI18n } from "vue-i18n";
+import { reactive } from "@vue/reactivity";
 export default {
   name: "Layout",
-  data(){
-    return{
-      userType: null
-    }
+  data() {
+    return {
+      userType: null,
+    };
   },
-  methods:{
-    async nearAccount(){
+  methods: {
+    async nearAccount() {
       if (this.userType) {
-        await this.$near.loginAccount()
-      }else{
-        this.$near.logoutAccount()
+        await this.$near.loginAccount();
+      } else {
+        this.$near.logoutAccount();
       }
-    }
+    },
   },
-  mounted(){
-    this.$nextTick(() =>{
-      this.userType = this.$near.user ? this.$near.user.accountId : 'connect-wallet'
-    })
-  }
+  mounted() {
+    this.$nextTick(() => {
+      this.userType = this.$near.user
+        ? this.$near.user.accountId
+        : "connect-wallet";
+    });
+  },
+  setup() {
+    const message = useMessage();
+    const { locale } = useI18n();
+    
+    return {
+      toggle_lang(value) {
+        locale.value = value;
+        localStorage.setItem("lang", value);
+        message.info(value);
+      },
+    };
+  },
 };
 </script>
 
@@ -71,7 +100,7 @@ export default {
       top: 0;
       color: #ffac32;
       z-index: 2;
-      transform: translate(3px,3px);
+      transform: translate(3px, 3px);
     }
   }
   .search-area {
@@ -89,7 +118,7 @@ export default {
       padding-left: 30px;
     }
   }
-  .connect-wallet {
+  .tool-btns {
     width: 217px;
     display: flex;
     align-items: center;
