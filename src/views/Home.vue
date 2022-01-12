@@ -40,7 +40,7 @@ export default {
     },
   },
   async mounted() {
-    console.log(this.$near);
+    // console.log(this.$near);
     // setTimeout(() => {
     //   this.$near.loginAccount()
     // }, 1000);

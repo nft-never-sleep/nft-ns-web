@@ -9,7 +9,7 @@
         <input placeholder="搜索 : 账户ID" />
       </div>
       <div class="connect-wallet">
-        <n-button round type="warning">connect-wallet</n-button>
+        <n-button round type="warning" @click="nearAccount">{{userType}}</n-button>
       </div>
     </div>
     <div class="container">
@@ -21,6 +21,25 @@
 <script>
 export default {
   name: "Layout",
+  data(){
+    return{
+      userType: null
+    }
+  },
+  methods:{
+    async nearAccount(){
+      if (this.userType) {
+        await this.$near.loginAccount()
+      }else{
+        this.$near.logoutAccount()
+      }
+    }
+  },
+  mounted(){
+    this.$nextTick(() =>{
+      this.userType = this.$near.user ? this.$near.user.accountId : 'connect-wallet'
+    })
+  }
 };
 </script>
 
