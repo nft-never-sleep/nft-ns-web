@@ -30,10 +30,10 @@ export default {
     },
   },
   async mounted() {
-    console.log(this.$near.user.accountId);
-    setTimeout(() => {
-      this.$near.loginAccount()
-    }, 1000);
+    console.log(this.$near);
+    // setTimeout(() => {
+    //   this.$near.loginAccount()
+    // }, 1000);
   },
 };
 </script>
