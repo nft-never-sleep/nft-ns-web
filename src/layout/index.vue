@@ -2,18 +2,25 @@
   <div class="Layout">
     <div class="TopBar">
       <div class="logo">
-        <p class="p1">NFT Lease</p>
-        <p class="p2">NFT Lease</p>
+        <!-- <p class="p1">NFT Lease</p>
+        <p class="p2">NFT Lease</p> -->
+        <img src="../assets/img/public/logo.png" />
       </div>
       <div class="search-area">
-        <input placeholder="搜索 : 账户ID" />
+        <div class="input">
+          <n-icon class="icon" size="18">
+            <Search />
+          </n-icon>
+          <input :placeholder="$t('input.placeholder')" />
+        </div>
       </div>
-<<<<<<< HEAD
       <div class="tool-btns">
-        <n-button round type="warning" @click="nearAccount">{{
-          userType
-        }}</n-button>
+        <button class="connect-btn" @click="nearAccount">
+          {{ userType }}
+        </button>
         <n-switch
+        class="toggle-lang-btn"
+          :value="lang"
           checked-value="zh"
           unchecked-value="en"
           @update:value="toggle_lang"
@@ -21,28 +28,33 @@
           <template #checked>EN</template>
           <template #unchecked>中文</template>
         </n-switch>
-        <p>{{count}}</p>
-=======
-      <div class="connect-wallet">
-        <n-button v-if="accountId" round type="warning" @click="logout">{{accountId}}</n-button>
-        <n-button v-if="!accountId" round type="warning" @click="login">connect-wallet</n-button>
->>>>>>> ac812ff0d8d0987c37a709ee7b83c6a47cbc7515
       </div>
     </div>
-    <div class="container">
-      <slot></slot>
+    <div class="bg-wrap">
+      <div class="container">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
 import { ref } from "vue";
 import { useMessage } from "naive-ui";
 import { useI18n } from "vue-i18n";
+import {
+  GameControllerOutline,
+  GameController,
+  Search,
+} from "@vicons/ionicons5";
 import { reactive } from "@vue/reactivity";
 export default {
   name: "Layout",
+  components: {
+    GameController,
+    GameControllerOutline,
+    Search,
+  },
   data() {
     return {
       userType: null,
@@ -61,70 +73,31 @@ export default {
     this.$nextTick(() => {
       this.userType = this.$near.user
         ? this.$near.user.accountId
-        : "connect-wallet";
+        : "Connect wallet";
     });
   },
   setup() {
     const message = useMessage();
     const { locale } = useI18n();
-    
+    const lang = ref(localStorage.getItem("lang"));
     return {
       toggle_lang(value) {
+        lang.value = value;
         locale.value = value;
         localStorage.setItem("lang", value);
         message.info(value);
       },
+      lang,
     };
   },
-=======
-import { mapActions } from 'vuex'
-import { useRouter } from 'vue-router'
-
-export default {
-  name: "Layout",
-  data(){
-    return{
-      accountId: null,
-    }
-  },
-  methods:{
-    ...mapActions(['update']),
-    async login() {
-      await this.$near.loginAccount()
-    },
-    async logout() {
-      await this.$near.logoutAccount()
-      this.$router.push('/',{query:{}})
-      localStorage.removeItem(`nearlib:keystore:${this.accountId}:default`);
-      this.accountId = null
-      this.update({ key: 'account_id', value: this.accountId })
-      this.update({ key: 'account', value: null })
-      var protocol = 'https:' == document.location.protocol ? 'https://': 'http://';
-      window.location.href = `${protocol}${window.location.host}`
-    },
-    setAccount() {
-      this.accountId = this.$near.user && this.$near.user.accountId ? this.$near.user.accountId : null
-      this.update({ key: 'account_id', value: this.accountId })
-      this.update({ key: 'account', value: { ...this.$near.user } })
-    },
-  },
-  mounted(){
-    setTimeout(() => {
-      this.setAccount()
-    }, 40)
-    setTimeout(() => {
-      this.setAccount()
-    }, 4000)
-  },
->>>>>>> ac812ff0d8d0987c37a709ee7b83c6a47cbc7515
 };
 </script>
 
 <style lang="scss" scoped>
 .TopBar {
-  background: #6039ce;
+  background: white;
   width: 100%;
-  height: 80px;
+  height: 60px;
   display: flex;
   justify-content: space-between;
   padding: 0 52px;
@@ -153,27 +126,60 @@ export default {
   }
   .search-area {
     flex: 1;
-    padding: 0 40px;
     display: flex;
     align-items: center;
-    input {
-      width: 100%;
-      height: 40px;
-      background: #eff0f6;
-      border-radius: 6px;
-      outline: none;
-      border: none;
-      padding-left: 30px;
+
+    .input {
+      position: relative;
+      width: 938px;
+      height: 34px;
+      .icon {
+        position: absolute;
+        color: #fde47c;
+        left: 8px;
+        top: 10px;
+      }
+      input {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #fde47c;
+        border-radius: 10px;
+        outline: none;
+        padding-left: 30px;
+        &:focus-visible {
+          border: 1px solid #fde47c;
+        }
+      }
     }
   }
   .tool-btns {
     width: 217px;
     display: flex;
     align-items: center;
+    .connect-btn {
+      font-family: "Barlow", sans-serif;
+      cursor: pointer;
+      width: 120px;
+      height: 34px;
+      background: #fde47c;
+      border: 1px solid #fdcc01;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 14px;
+      text-align: center;
+      color: #000000;
+    }
+    .toggle-lang-btn{
+      margin-left: 10px;
+    }
   }
 }
+.bg-wrap {
+  background-color: #fff9e7;
+}
 .container {
-  width: 1660px;
+  width: 1344px;
   margin: 0 auto;
 }
 </style>

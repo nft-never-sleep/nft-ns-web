@@ -1229,6 +1229,11 @@
     anymatch "^3.0.0"
     source-map "^0.6.0"
 
+"@vicons/ionicons5@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.npmmirror.com/@vicons/ionicons5/download/@vicons/ionicons5-0.11.0.tgz#54185bfa572a09df70094db1954f28bfbf1363ed"
+  integrity sha1-VBhb+lcqCd9wCU2xlU8ov78TY+0=
+
 "@vue/babel-helper-vue-jsx-merge-props@^1.2.1":
   version "1.2.1"
   resolved "https://registry.nlark.com/@vue/babel-helper-vue-jsx-merge-props/download/@vue/babel-helper-vue-jsx-merge-props-1.2.1.tgz#31624a7a505fb14da1d58023725a4c5f270e6a81"
@@ -8470,6 +8475,13 @@ vfonts@^0.1.0:
   resolved "https://registry.npmmirror.com/vfonts/download/vfonts-0.1.0.tgz#c16af37ca044b2725ae55553049280efbe6222a9"
   integrity sha1-wWrzfKBEsnJa5VVTBJKA775iIqk=
 
+vicons@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.npmmirror.com/vicons/download/vicons-0.0.1.tgz#c496818e79943a8fd94b42955cbf619ace2b314f"
+  integrity sha1-xJaBjnmUOo/ZS0KVXL9hms4rMU8=
+  dependencies:
+    vue "^3.0.2"
+
 vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "https://registry.nlark.com/vm-browserify/download/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
@@ -8542,7 +8554,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha1-HuO8mhbsv1EYvjNLsV+cRvgvWCU=
 
-vue@^3.0.0:
+vue@^3.0.0, vue@^3.0.2:
   version "3.2.26"
   resolved "https://registry.npmmirror.com/vue/download/vue-3.2.26.tgz#5db575583ecae495c7caa5c12fd590dffcbb763e"
   integrity sha512-KD4lULmskL5cCsEkfhERVRIOEDrfEL9CwAsLYpzptOGjaGFNWo3BQ9g8MAb7RaIO71rmVOziZ/uEN/rHwcUIhg==
