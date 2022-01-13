@@ -64,6 +64,8 @@ export default {
     overflow: hidden;
     box-sizing: border-box;
     padding: 16px;
+    transition: .3s;
+    margin-top: 16px;
     &:hover {
       cursor: pointer;
       margin-top: -3px;

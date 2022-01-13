@@ -1,18 +1,18 @@
 <template>
-  <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
-    <n-message-provider>
-      <Layout>
+  <n-message-provider>
+    <Layout>
+      <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
         <router-view></router-view>
-      </Layout>
-    </n-message-provider>
-  </n-config-provider>
+      </n-config-provider>
+    </Layout>
+  </n-message-provider>
 </template>
 <script>
 import { defineComponent, reactive, ref } from "vue";
 import { mapActions } from "vuex";
 import Layout from "./layout/index.vue";
 import { NConfigProvider, createLocale, zhCN, enUS, dateZhCN } from "naive-ui";
-import near from './utils/near'
+import near from "./utils/near";
 
 const zh = createLocale(
   {
@@ -53,24 +53,24 @@ export default defineComponent({
       dateZhCN,
     };
   },
-  methods:{
-    ...mapActions(['update']),
+  methods: {
+    ...mapActions(["update"]),
     async setAccount() {
-      let currentUser = await near.currentUser
+      let currentUser = await near.currentUser;
       // this.accountId = currentUser.accountId
       if (currentUser) {
-        this.update({ key: 'account_id', value: currentUser.accountId })
-        this.update({ key: 'account', value: { ...currentUser } })
-      }else{
-        this.update({ key: 'account_id', value: null })
-        this.update({ key: 'account', value: {  } })
+        this.update({ key: "account_id", value: currentUser.accountId });
+        this.update({ key: "account", value: { ...currentUser } });
+      } else {
+        this.update({ key: "account_id", value: null });
+        this.update({ key: "account", value: {} });
       }
     },
   },
-  async mounted(){
-    await near.init()
-    this.setAccount()
-  }
+  async mounted() {
+    await near.init();
+    this.setAccount();
+  },
 });
 </script>
 <style lang="scss">

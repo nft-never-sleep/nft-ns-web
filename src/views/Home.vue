@@ -3,6 +3,7 @@
     <Banner></Banner>
     <div class="main">
       <Tabbar></Tabbar>
+      <Category></Category>
       <transition name="slide">
         <router-view v-slot="{ Component }">
           <transition name="slide">
@@ -18,10 +19,12 @@
 import { mapActions } from "vuex";
 import Banner from "../components/public/Banner.vue";
 import Tabbar from "../components/Home/TabBar.vue";
+import Category from "../components/Home/Category.vue"
 export default {
   components: {
     Banner,
     Tabbar,
+    Category
   },
   data() {
     return {

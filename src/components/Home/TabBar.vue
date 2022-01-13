@@ -1,16 +1,17 @@
 <template>
-  <div class="tab-group">
-    <!-- <router-link to="collectible" class="tab active"
-      >My Collectibles</router-link
-    >
-    <router-link to="browse" class="tab unactive"
-      >Browse by category</router-link
-    >
-    <router-link to="recent" class="tab unactive">Recent activity</router-link> -->
-    <div v-for="(item, i) in routes" :key="i" :class="get_class(item)">
-      <router-link :to="item.to" :class="get_class(item)">{{
-        item.desc
-      }}</router-link>
+  <div>
+    <n-modal :show="tip_show">
+      <div class="tip">
+        <img src="../../assets/img/public/no-link.png" />
+        <button @click="tip_show = false">Connect wallet</button>
+      </div>
+    </n-modal>
+    <div class="tab-group">
+      <div v-for="(item, i) in routes" :key="i" :class="get_class(item)">
+        <router-link :to="item.to" :class="get_class(item)">{{
+          item.desc
+        }}</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -20,27 +21,32 @@ import { onBeforeRouteUpdate } from "vue-router";
 export default {
   methods: {},
   setup() {
+    const tip_show = ref(false);
     const routes = reactive([
       { to: "collectible", desc: "My Collectibles", active: true },
       { to: "browse", desc: "Browse by category", active: false },
       { to: "recent", desc: "Recent activity", active: false },
     ]);
     onBeforeRouteUpdate((to) => {
-      console.log(to.fullPath.substr(1), "=====");
-      routes.forEach((e, i) => {
-        console.log();
-        if (e.to === to.fullPath.substr(1)) {
-          routes[i].active = true;
-        }else{
-          routes[i].active = false;
-          
-        }
-      });
+      const permit = Math.random() > 0.5; //账户是否登陆
+      if (permit) {
+        routes.forEach((e, i) => {
+          if (e.to === to.fullPath.substr(1)) {
+            routes[i].active = true;
+          } else {
+            routes[i].active = false;
+          }
+        });
+      } else {
+        tip_show.value = true;
+        return false;
+      }
     });
     const get_class = (item) => "tab " + (item.active ? "active" : "unactive");
     return {
       routes,
       get_class,
+      tip_show,
     };
   },
 };
@@ -77,8 +83,6 @@ export default {
 <style lang="scss" scoped>
 .tab-group {
   width: 533px;
-  height: 82px;
-  line-height: 82px;
   display: flex;
   justify-content: space-between;
   margin-top: 27px;
@@ -106,6 +110,39 @@ export default {
       color: #000000;
       font-weight: 600;
     }
+  }
+}
+.tip {
+  width: 260.44px;
+  height: 223.32px;
+  background: #ffffff;
+  border: 4px solid #fccb01;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  img {
+    margin-top: 27px;
+    width: 135px;
+    height: 100.6px;
+  }
+  button {
+    cursor: pointer;
+    margin-top: 35px;
+    outline: none;
+    display: block;
+    width: 120px;
+    height: 34px;
+    background: #fde47c;
+    border: 1px solid #fdcc01;
+    border-radius: 10px;
+    font-family: Barlow;
+    font-weight: 600;
+    font-size: 14px;
+
+    text-align: center;
+
+    color: #000000;
   }
 }
 </style>
