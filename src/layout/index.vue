@@ -14,14 +14,9 @@
           <input :placeholder="$t('input.placeholder')" />
         </div>
       </div>
-<<<<<<< HEAD
-      <div class="connect-wallet">
-        <n-button v-if="gitAccountId" round type="warning" @click="logout">{{gitAccountId}}</n-button>
-        <n-button v-if="!gitAccountId" round type="warning" @click="login">connect-wallet</n-button>
-=======
       <div class="tool-btns">
         <button class="connect-btn" @click="nearAccount">
-          {{ userType }}
+          {{ gitAccountId ? gitAccountId : 'connect-wallet' }}
         </button>
         <n-switch
         class="toggle-lang-btn"
@@ -33,7 +28,6 @@
           <template #checked>EN</template>
           <template #unchecked>中文</template>
         </n-switch>
->>>>>>> bf3f3dc0388294a3bb08436308fcc037cd04f4c8
       </div>
     </div>
     <div class="bg-wrap">
@@ -45,38 +39,10 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import { mapActions } from 'vuex'
-import { useRouter } from 'vue-router'
-import * as nearAPI from "near-api-js";
-import near from '../utils/near'
-import { log } from 'util';
-
-export default {
-  name: "Layout",
-  data(){
-    return{
-    }
-  },
-  methods:{
-    ...mapActions(['update']),
-    async login() {
-      near.login()
-
-    },
-    async logout() {
-      near.logout()
-    },
-  },
-  computed:{
-    gitAccountId(){
-      return this.$store.getters.account_id
-    }
-  }
-=======
 import { ref } from "vue";
 import { useMessage } from "naive-ui";
 import { useI18n } from "vue-i18n";
+import near from '../utils/near'
 import {
   GameControllerOutline,
   GameController,
@@ -97,19 +63,24 @@ export default {
   },
   methods: {
     async nearAccount() {
-      if (this.userType) {
-        await this.$near.loginAccount();
+      if (this.gitAccountId) {
+        near.logout()
       } else {
-        this.$near.logoutAccount();
+        near.login()
       }
     },
   },
   mounted() {
-    this.$nextTick(() => {
-      this.userType = this.$near.user
-        ? this.$near.user.accountId
-        : "Connect wallet";
-    });
+    // this.$nextTick(() => {
+    //   this.userType = this.$near.user
+    //     ? this.$near.user.accountId
+    //     : "Connect wallet";
+    // });
+  },
+  computed:{
+    gitAccountId(){
+      return this.$store.getters.account_id
+    }
   },
   setup() {
     const message = useMessage();
@@ -125,7 +96,6 @@ export default {
       lang,
     };
   },
->>>>>>> bf3f3dc0388294a3bb08436308fcc037cd04f4c8
 };
 </script>
 
