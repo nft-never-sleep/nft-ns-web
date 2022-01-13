@@ -1,11 +1,11 @@
 <template>
-  <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
-    <n-message-provider>
-      <Layout>
+  <n-message-provider>
+    <Layout>
+      <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
         <router-view></router-view>
-      </Layout>
-    </n-message-provider>
-  </n-config-provider>
+      </n-config-provider>
+    </Layout>
+  </n-message-provider>
 </template>
 <script>
 import { defineComponent, reactive, ref } from "vue";
@@ -54,18 +54,18 @@ export default defineComponent({
       dateZhCN,
     };
   },
-  methods:{
-    ...mapActions(['update']),
+  methods: {
+    ...mapActions(["update"]),
     async setAccount() {
       let currentUser = await near.currentUser
       // 账户NEAR余额
       // console.log(currentUser.balance.total / 1e24);
       if (currentUser) {
-        this.update({ key: 'account_id', value: currentUser.accountId })
-        this.update({ key: 'account', value: { ...currentUser } })
-      }else{
-        this.update({ key: 'account_id', value: null })
-        this.update({ key: 'account', value: {  } })
+        this.update({ key: "account_id", value: currentUser.accountId });
+        this.update({ key: "account", value: { ...currentUser } });
+      } else {
+        this.update({ key: "account_id", value: null });
+        this.update({ key: "account", value: {} });
       }
     },
   },

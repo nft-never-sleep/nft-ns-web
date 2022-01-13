@@ -16,10 +16,10 @@
       </div>
       <div class="tool-btns">
         <button class="connect-btn" @click="nearAccount">
-          {{ gitAccountId ? gitAccountId : 'connect-wallet' }}
+          {{ gitAccountId ? gitAccountId : "connect-wallet" }}
         </button>
         <n-switch
-        class="toggle-lang-btn"
+          class="toggle-lang-btn"
           :value="lang"
           checked-value="zh"
           unchecked-value="en"
@@ -43,7 +43,7 @@ import { ref } from "vue";
 import { mapActions } from 'vuex'
 import { useMessage } from "naive-ui";
 import { useI18n } from "vue-i18n";
-import near from '../utils/near'
+import near from "../utils/near";
 import {
   GameControllerOutline,
   GameController,
@@ -93,10 +93,10 @@ export default {
       this.setAccount()
     }, 4000)
   },
-  computed:{
-    gitAccountId(){
-      return this.$store.getters.account_id
-    }
+  computed: {
+    gitAccountId() {
+      return this.$store.getters.account_id;
+    },
   },
   setup() {
     const message = useMessage();
@@ -116,6 +116,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.Layout {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1;
+}
 .TopBar {
   background: white;
   width: 100%;
@@ -192,16 +199,18 @@ export default {
       text-align: center;
       color: #000000;
     }
-    .toggle-lang-btn{
+    .toggle-lang-btn {
       margin-left: 10px;
     }
   }
 }
 .bg-wrap {
+  flex: 1 1;
+    overflow-y: scroll;
   background-color: #fff9e7;
-}
-.container {
-  width: 1344px;
-  margin: 0 auto;
+  .container {
+    width: 1344px;
+    margin: 0 auto;
+  }
 }
 </style>
