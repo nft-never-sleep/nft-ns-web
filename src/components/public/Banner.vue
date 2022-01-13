@@ -1,18 +1,22 @@
 <template>
   <div class="Banner">
-    <div class="slogen">
-      <p class="p1">NFT NEVER SLEEP</p>
-      <p class="p2">NFT NEVER SLEEP</p>
-      <p class="p3">NFT NEVER SLEEP</p>
+    <!-- <div class="slogen">
+      <p class="p1">{{$t('banner.slogen')}}</p>
+      <p class="p2">{{$t('banner.slogen')}}</p>
+      <p class="p3">{{$t('banner.slogen')}}</p>
     </div>
     <div class="desc">
-      搜索藏家，租来使用吧｜连接你的钱包，立刻有｜往下逛逛，喜欢就报价
-    </div>
+      {{$t('banner.desc')}}
+    </div> -->
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  mounted() {
+    console.log(this);
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -23,23 +27,14 @@ export default {};
   justify-content: space-between;
   align-items: flex-end;
 
-  height: 150px;
-  padding-bottom: 60px;
+  width: 1344px;
+  height: 244px;
 
-  border-bottom: 3px solid rgba(255, 186, 13, 0.8);
-  &::after {
-    content: "";
-
-    position: absolute;
-    bottom: 0px;
-
-    transform: translate(2px, 7px);
-
-    display: block;
-    width: 100%;
-    height: 3px;
-    background-color: #7b36ff;
-  }
+  margin: 0 auto;
+  padding-top: 13px;
+  background-origin: content-box;
+  background-repeat: no-repeat;
+  background-image: url("../../assets/img/public/banner.png");
   .slogen {
     position: relative;
     height: 100px;

@@ -1,16 +1,15 @@
 <template>
-  <n-config-provider :locale="locale" :date-locale="dateZhCN">
-    <Layout>
-      <div>{{ locale.Input.placeholder }}</div>
-      <div>{{ language }}</div>
-      <button @click="toggle">toggle</button>
-      <router-view></router-view>
-    </Layout>
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
+    <n-message-provider>
+      <Layout>
+        <router-view></router-view>
+      </Layout>
+    </n-message-provider>
   </n-config-provider>
 </template>
 <script>
-import Layout from "./layout/index.vue";
 import { defineComponent, reactive, ref } from "vue";
+<<<<<<< HEAD
 import { mapActions } from 'vuex'
 import { NConfigProvider, createLocale } from "naive-ui";
 import { zhCN, enUS, dateZhCN } from "naive-ui";
@@ -33,12 +32,18 @@ const en = createLocale(
   enUS
 );
 
+=======
+import Layout from "./layout/index.vue";
+import { NConfigProvider, createLocale } from "naive-ui";
+import { zhCN, enUS, dateZhCN } from "naive-ui";
+>>>>>>> bf3f3dc0388294a3bb08436308fcc037cd04f4c8
 export default defineComponent({
   components: {
     NConfigProvider,
     Layout,
   },
   setup() {
+<<<<<<< HEAD
     const language = ref("zh");
     const locale = ref(zh);
     const toggle = () => {
@@ -50,11 +55,11 @@ export default defineComponent({
       console.log(language.value);
     };
     // await near.init()
+=======
+>>>>>>> bf3f3dc0388294a3bb08436308fcc037cd04f4c8
     return {
-      locale,
+      zhCN,
       dateZhCN,
-      language,
-      toggle,
     };
   },
   methods:{

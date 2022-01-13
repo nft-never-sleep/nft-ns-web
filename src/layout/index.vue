@@ -2,24 +2,50 @@
   <div class="Layout">
     <div class="TopBar">
       <div class="logo">
-        <p class="p1">NFT Lease</p>
-        <p class="p2">NFT Lease</p>
+        <!-- <p class="p1">NFT Lease</p>
+        <p class="p2">NFT Lease</p> -->
+        <img src="../assets/img/public/logo.png" />
       </div>
       <div class="search-area">
-        <input placeholder="搜索 : 账户ID" />
+        <div class="input">
+          <n-icon class="icon" size="18">
+            <Search />
+          </n-icon>
+          <input :placeholder="$t('input.placeholder')" />
+        </div>
       </div>
+<<<<<<< HEAD
       <div class="connect-wallet">
         <n-button v-if="gitAccountId" round type="warning" @click="logout">{{gitAccountId}}</n-button>
         <n-button v-if="!gitAccountId" round type="warning" @click="login">connect-wallet</n-button>
+=======
+      <div class="tool-btns">
+        <button class="connect-btn" @click="nearAccount">
+          {{ userType }}
+        </button>
+        <n-switch
+        class="toggle-lang-btn"
+          :value="lang"
+          checked-value="zh"
+          unchecked-value="en"
+          @update:value="toggle_lang"
+        >
+          <template #checked>EN</template>
+          <template #unchecked>中文</template>
+        </n-switch>
+>>>>>>> bf3f3dc0388294a3bb08436308fcc037cd04f4c8
       </div>
     </div>
-    <div class="container">
-      <slot></slot>
+    <div class="bg-wrap">
+      <div class="container">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+<<<<<<< HEAD
 import { mapActions } from 'vuex'
 import { useRouter } from 'vue-router'
 import * as nearAPI from "near-api-js";
@@ -47,14 +73,67 @@ export default {
       return this.$store.getters.account_id
     }
   }
+=======
+import { ref } from "vue";
+import { useMessage } from "naive-ui";
+import { useI18n } from "vue-i18n";
+import {
+  GameControllerOutline,
+  GameController,
+  Search,
+} from "@vicons/ionicons5";
+import { reactive } from "@vue/reactivity";
+export default {
+  name: "Layout",
+  components: {
+    GameController,
+    GameControllerOutline,
+    Search,
+  },
+  data() {
+    return {
+      userType: null,
+    };
+  },
+  methods: {
+    async nearAccount() {
+      if (this.userType) {
+        await this.$near.loginAccount();
+      } else {
+        this.$near.logoutAccount();
+      }
+    },
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.userType = this.$near.user
+        ? this.$near.user.accountId
+        : "Connect wallet";
+    });
+  },
+  setup() {
+    const message = useMessage();
+    const { locale } = useI18n();
+    const lang = ref(localStorage.getItem("lang"));
+    return {
+      toggle_lang(value) {
+        lang.value = value;
+        locale.value = value;
+        localStorage.setItem("lang", value);
+        message.info(value);
+      },
+      lang,
+    };
+  },
+>>>>>>> bf3f3dc0388294a3bb08436308fcc037cd04f4c8
 };
 </script>
 
 <style lang="scss" scoped>
 .TopBar {
-  background: #6039ce;
+  background: white;
   width: 100%;
-  height: 80px;
+  height: 60px;
   display: flex;
   justify-content: space-between;
   padding: 0 52px;
@@ -78,32 +157,65 @@ export default {
       top: 0;
       color: #ffac32;
       z-index: 2;
-      transform: translate(3px,3px);
+      transform: translate(3px, 3px);
     }
   }
   .search-area {
     flex: 1;
-    padding: 0 40px;
     display: flex;
     align-items: center;
-    input {
-      width: 100%;
-      height: 40px;
-      background: #eff0f6;
-      border-radius: 6px;
-      outline: none;
-      border: none;
-      padding-left: 30px;
+
+    .input {
+      position: relative;
+      width: 938px;
+      height: 34px;
+      .icon {
+        position: absolute;
+        color: #fde47c;
+        left: 8px;
+        top: 10px;
+      }
+      input {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #fde47c;
+        border-radius: 10px;
+        outline: none;
+        padding-left: 30px;
+        &:focus-visible {
+          border: 1px solid #fde47c;
+        }
+      }
     }
   }
-  .connect-wallet {
+  .tool-btns {
     width: 217px;
     display: flex;
     align-items: center;
+    .connect-btn {
+      font-family: "Barlow", sans-serif;
+      cursor: pointer;
+      width: 120px;
+      height: 34px;
+      background: #fde47c;
+      border: 1px solid #fdcc01;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 14px;
+      text-align: center;
+      color: #000000;
+    }
+    .toggle-lang-btn{
+      margin-left: 10px;
+    }
   }
 }
+.bg-wrap {
+  background-color: #fff9e7;
+}
 .container {
-  width: 1660px;
+  width: 1344px;
   margin: 0 auto;
 }
 </style>
