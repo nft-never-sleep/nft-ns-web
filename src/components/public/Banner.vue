@@ -50,6 +50,9 @@ export default {};
       margin: 0;
       position: absolute;
       top: 0;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
     .p1 {
       position: relative;
@@ -80,6 +83,10 @@ export default {};
     text-align: center;
 
     color: #898397;
+
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
 }
 </style>

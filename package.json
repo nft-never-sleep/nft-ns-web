@@ -8,10 +8,12 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "js-base64": "^3.7.2",
     "naive-ui": "^2.23.2",
+    "near-api-js": "^0.44.2",
+    "query-string": "^7.1.0",
     "vfonts": "^0.0.3",
     "vue": "^3.0.0",
-    "vue-near": "^0.2.1",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },

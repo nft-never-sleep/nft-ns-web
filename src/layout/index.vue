@@ -9,8 +9,8 @@
         <input placeholder="搜索 : 账户ID" />
       </div>
       <div class="connect-wallet">
-        <n-button v-if="accountId" round type="warning" @click="logout">{{accountId}}</n-button>
-        <n-button v-if="!accountId" round type="warning" @click="login">connect-wallet</n-button>
+        <n-button v-if="gitAccountId" round type="warning" @click="logout">{{gitAccountId}}</n-button>
+        <n-button v-if="!gitAccountId" round type="warning" @click="login">connect-wallet</n-button>
       </div>
     </div>
     <div class="container">
@@ -22,43 +22,31 @@
 <script>
 import { mapActions } from 'vuex'
 import { useRouter } from 'vue-router'
+import * as nearAPI from "near-api-js";
+import near from '../utils/near'
+import { log } from 'util';
 
 export default {
   name: "Layout",
   data(){
     return{
-      accountId: null,
     }
   },
   methods:{
     ...mapActions(['update']),
     async login() {
-      await this.$near.loginAccount()
+      near.login()
+
     },
     async logout() {
-      await this.$near.logoutAccount()
-      this.$router.push('/',{query:{}})
-      localStorage.removeItem(`nearlib:keystore:${this.accountId}:default`);
-      this.accountId = null
-      this.update({ key: 'account_id', value: this.accountId })
-      this.update({ key: 'account', value: null })
-      var protocol = 'https:' == document.location.protocol ? 'https://': 'http://';
-      window.location.href = `${protocol}${window.location.host}`
-    },
-    setAccount() {
-      this.accountId = this.$near.user && this.$near.user.accountId ? this.$near.user.accountId : null
-      this.update({ key: 'account_id', value: this.accountId })
-      this.update({ key: 'account', value: { ...this.$near.user } })
+      near.logout()
     },
   },
-  mounted(){
-    setTimeout(() => {
-      this.setAccount()
-    }, 40)
-    setTimeout(() => {
-      this.setAccount()
-    }, 4000)
-  },
+  computed:{
+    gitAccountId(){
+      return this.$store.getters.account_id
+    }
+  }
 };
 </script>
 
