@@ -40,6 +40,7 @@
 
 <script>
 import { ref } from "vue";
+import { mapActions } from 'vuex'
 import { useMessage } from "naive-ui";
 import { useI18n } from "vue-i18n";
 import near from '../utils/near'
@@ -49,6 +50,7 @@ import {
   Search,
 } from "@vicons/ionicons5";
 import { reactive } from "@vue/reactivity";
+
 export default {
   name: "Layout",
   components: {
@@ -58,24 +60,38 @@ export default {
   },
   data() {
     return {
-      userType: null,
+      accountId: null,
     };
   },
   methods: {
+    ...mapActions(['update']),
     async nearAccount() {
       if (this.gitAccountId) {
-        near.logout()
+        this.$near.walletConnection.signOut()
+        window.location.replace(window.location.origin + window.location.pathname)
+        // this.$near.logoutAccount()
+        // near.logout()
       } else {
-        near.login()
+        await this.$near.loginAccount()
+        // near.login()
       }
+    },
+    setAccount() {
+      this.accountId = this.$near.user && this.$near.user.accountId ? this.$near.user.accountId : null
+      this.update({ key: 'account_id', value: this.accountId })
+      this.update({ key: 'account', value: { ...this.$near.user } })
     },
   },
   mounted() {
-    // this.$nextTick(() => {
-    //   this.userType = this.$near.user
-    //     ? this.$near.user.accountId
-    //     : "Connect wallet";
-    // });
+    setTimeout(async () => {
+      this.setAccount()
+      //余额
+      let account = await this.$near.near.account(this.$near.user.accountId)
+      console.log(await account.state() );
+    }, 40)
+    setTimeout(() => {
+      this.setAccount()
+    }, 4000)
   },
   computed:{
     gitAccountId(){
