@@ -8662,6 +8662,11 @@ vue-loader@^15.9.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-near@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.npmmirror.com/vue-near/download/vue-near-0.2.1.tgz#a6f029da2a3bdf1eeadfd2b41c075a18a2196a66"
+  integrity sha1-pvAp2io73x7q39K0HAdaGKIZamY=
+
 vue-router@^4.0.0-0:
   version "4.0.12"
   resolved "https://registry.npmmirror.com/vue-router/download/vue-router-4.0.12.tgz#8dc792cddf5bb1abcc3908f9064136de7e13c460"

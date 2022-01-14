@@ -15,7 +15,8 @@
     </div>
   </div>
 </template>
-  <script >
+<script >
+import { useStore } from 'vuex'
 import { reactive, ref } from "@vue/reactivity";
 import { onMounted } from "vue";
 import { toRaw } from "vue";
@@ -42,8 +43,10 @@ export default {
       const router = useRouter();
       set_cur_active_route(router.currentRoute.value.fullPath.substr(1));
     });
+    
+    const store = useStore()
     onBeforeRouteUpdate((to) => {
-      const permit = Math.random() > 0.5; //账户是否登陆
+      const permit = store.getters.account_id; //账户是否登陆
       if (permit) {
         set_cur_active_route(to.fullPath.substr(1));
       } else {

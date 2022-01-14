@@ -28,7 +28,7 @@ class Near {
 				msgBuf,
 				this.wallet._authData.accountId,
 				this.wallet._networkId
-			)
+				)
 			const pubKey = Buffer.from(signedMsg.publicKey.data).toString('hex')
 			const signature = Buffer.from(signedMsg.signature).toString('hex')
 			const payload = [accountId, pubKey, signature]
@@ -41,23 +41,23 @@ class Near {
 	}
 
 	async init() {
-		const nearConfig = getConfig('mainnet')
-
+		const nearConfig = getConfig('development')
+		console.log(nearAPI);
 		try {
 			const urlSearchParams = queryString.parse(window.location.search)
 			const { successLogin, account_id } = urlSearchParams
-
+			let key = new nearAPI.keyStores.BrowserLocalStorageKeyStore(window.localStorage)
+			console.log(key);
 			const near = await nearAPI.connect({
 				deps: {
-					keyStore: new nearAPI.keyStores.BrowserLocalStorageKeyStore(),
+					keyStore: key,
 				},
 				...nearConfig,
 			})
-
 			let idLogin
 			const connectedAcc = this.getAccountAndKey()
 			const haveNotLogin = connectedAcc.every((acc) => acc.accountId !== account_id)
-
+			console.log(connectedAcc,haveNotLogin);
 			if (successLogin && haveNotLogin) {
 				localStorage.setItem('ACTIVE_ACCOUNT', successLogin)
 				idLogin = successLogin
@@ -85,7 +85,7 @@ class Near {
 			this.config = nearConfig
 			this.signer = new nearAPI.InMemorySigner(wallet._keyStore)
 		} catch (err) {
-			sentryCaptureException(err)
+			// sentryCaptureException(err)
 			throw err
 		}
 	}
@@ -99,7 +99,7 @@ class Near {
 			await this.init()
 		}
 
-		const appTitle = 'Paras — Digital Art Cards Market'
+		const appTitle = 'NEAR'
 		this.wallet.requestSignIn(
 			process.env.MARKETPLACE_CONTRACT_ID,
 			appTitle,
@@ -136,3 +136,4 @@ class Near {
 const near = new Near()
 
 export default near
+
