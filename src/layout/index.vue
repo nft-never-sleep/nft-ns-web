@@ -76,7 +76,7 @@ export default {
         // near.login()
       }
     },
-    setAccount() {
+    setAccount(name) {
       this.accountId = this.$near.user && this.$near.user.accountId ? this.$near.user.accountId : null
       this.update({ key: 'account_id', value: this.accountId })
       this.update({ key: 'account', value: { ...this.$near.user } })
@@ -86,8 +86,9 @@ export default {
     setTimeout(async () => {
       this.setAccount()
       //余额
-      let account = await this.$near.near.account(this.$near.user.accountId)
-      console.log(await account.state() );
+      // let account = await this.$near.near.account(this.$near.user.accountId)
+      // console.log(await account.state() );
+      // console.log(this.$near.config);
     }, 40)
     setTimeout(() => {
       this.setAccount()

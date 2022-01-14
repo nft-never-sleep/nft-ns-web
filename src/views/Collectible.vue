@@ -43,6 +43,24 @@ export default {
       ],
     };
   },
+  async mounted(){
+    const contract = await this.$near.getContractInstance( 'paras-token-v2.testnet' , {
+      changeMethods: ['set_something'],
+      viewMethods: [
+        'nft_metadata',
+        'nft_tokens_for_owner',
+        'get_account_unstaked_balance',
+        'get_account_total_balance',
+        'is_account_unstaked_balance_available',
+        'get_total_staked_balance',
+        'get_owner_id',
+        'get_reward_fee_fraction',
+      ],
+    })
+    const tokens = await contract.nft_tokens_for_owner({account_id: this.$store.getters.account_id })
+    // https://ipfs.fleek.co/ipfs/
+    console.log(tokens);
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -64,7 +82,7 @@ export default {
     overflow: hidden;
     box-sizing: border-box;
     padding: 16px;
-    transition: .3s;
+    transition: 0.3s;
     margin-top: 16px;
     &:hover {
       cursor: pointer;

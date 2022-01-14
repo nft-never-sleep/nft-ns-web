@@ -56,6 +56,7 @@ class Near {
 			})
 			let idLogin
 			const connectedAcc = this.getAccountAndKey()
+			console.log(connectedAcc,123);
 			const haveNotLogin = connectedAcc.every((acc) => acc.accountId !== account_id)
 			console.log(connectedAcc,haveNotLogin);
 			if (successLogin && haveNotLogin) {
