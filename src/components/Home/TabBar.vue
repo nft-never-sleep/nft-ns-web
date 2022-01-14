@@ -17,7 +17,9 @@
 </template>
   <script >
 import { reactive, ref } from "@vue/reactivity";
-import { onBeforeRouteUpdate } from "vue-router";
+import { onMounted } from "vue";
+import { toRaw } from "vue";
+import { onBeforeRouteUpdate, useRouter } from "vue-router";
 export default {
   methods: {},
   setup() {
@@ -27,16 +29,23 @@ export default {
       { to: "browse", desc: "Browse by category", active: false },
       { to: "recent", desc: "Recent activity", active: false },
     ]);
+    const set_cur_active_route = (path) => {
+      routes.forEach((e, i) => {
+        if (e.to === path) {
+          routes[i].active = true;
+        } else {
+          routes[i].active = false;
+        }
+      });
+    };
+    onMounted(() => {
+      const router = useRouter();
+      set_cur_active_route(router.currentRoute.value.fullPath.substr(1));
+    });
     onBeforeRouteUpdate((to) => {
       const permit = Math.random() > 0.5; //账户是否登陆
       if (permit) {
-        routes.forEach((e, i) => {
-          if (e.to === to.fullPath.substr(1)) {
-            routes[i].active = true;
-          } else {
-            routes[i].active = false;
-          }
-        });
+        set_cur_active_route(to.fullPath.substr(1));
       } else {
         tip_show.value = true;
         return false;
@@ -45,38 +54,11 @@ export default {
     const get_class = (item) => "tab " + (item.active ? "active" : "unactive");
     return {
       routes,
-      get_class,
       tip_show,
+      get_class,
     };
   },
 };
-// export default {
-//   name: "Tabbar",
-//   mounted() {
-//     console.log(this.$route);
-//   },
-//   watch: {
-//     $router(to) {
-//       console.log(1);
-//     },
-//   },
-// };
-//
-
-// //通过useRouter()获取路由器的实例
-// const router = useRouter();
-// backToHome(){
-//   router.push("/");
-// };
-
-// //route是响应式对象，可监控其变化，需要用useRoute()获取
-// const route = useRoute();
-// watch(
-//   () => route.query,
-//   (query) => {
-//     console.log(query);
-//   }
-// );
 </script>
 
 

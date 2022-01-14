@@ -4,23 +4,25 @@ import Collectible from "../views/Collectible.vue"
 import Recent from "../views/Recent.vue"
 import Browse from "../views/Browse.vue"
 const routes = [
+
   {
     path: '/',
     name: 'Home',
     component: Home,
+    redirect: { path: '/browse' },
     children: [
       {
         path: "browse",
         // component: () => import(/* webpackChunkName: "browse" */ '../views/Browse.vue')
-        component:Browse
+        component: Browse
       }, {
         path: "collectible",
         // component: () => import(/* webpackChunkName: "collectible" */ '../views/Collectible.vue')
-        component:Collectible
+        component: Collectible
       }, {
         path: "recent",
         // component: () => import(/* webpackChunkName: "recent" */ '../views/Recent.vue')
-        component:Recent
+        component: Recent
       }
     ]
   },
