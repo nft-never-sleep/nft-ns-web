@@ -11,7 +11,6 @@
 import { defineComponent, reactive, ref } from "vue";
 import Layout from "./layout/index.vue";
 import { NConfigProvider, createLocale, zhCN, enUS, dateZhCN } from "naive-ui";
-import * as nearAPI from 'near-api-js'
 
 const zh = createLocale(
   {
