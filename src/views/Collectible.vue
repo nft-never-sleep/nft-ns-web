@@ -12,8 +12,11 @@
 </template>
 
 <script>
+import chainMixin from '../utils/chainMixin'
+
 export default {
-  data: () => {
+  mixins: [chainMixin],
+  data(){
     return {
       imgs: [
         {
@@ -43,23 +46,18 @@ export default {
       ],
     };
   },
-  async mounted(){
-    const contract = await this.$near.getContractInstance( 'paras-token-v2.testnet' , {
-      changeMethods: ['set_something'],
-      viewMethods: [
-        'nft_metadata',
-        'nft_tokens_for_owner',
-        'get_account_unstaked_balance',
-        'get_account_total_balance',
-        'is_account_unstaked_balance_available',
-        'get_total_staked_balance',
-        'get_owner_id',
-        'get_reward_fee_fraction',
-      ],
-    })
-    const tokens = await contract.nft_tokens_for_owner({account_id: this.$store.getters.account_id })
-    // https://ipfs.fleek.co/ipfs/
-    console.log(tokens);
+  mounted(){
+    // setTimeout(async () => {
+    //   const contract = await this.$near.getContractInstance( 'paras-token-v2.testnet' , {
+    //   changeMethods: ['set_something'],
+    //   viewMethods: ['nft_tokens_for_owner','nft_tokens']
+    // })
+    // console.log(this.$store.getters.account_id);
+    // const tokens = await contract.nft_tokens_for_owner({account_id: this.$store.getters.account_id })
+    // const tokens2 = await contract.nft_tokens({from_index: '0' , limit: 10})
+    // // https://ipfs.fleek.co/ipfs/
+    // console.log(tokens,tokens2);
+    // }, 50);
   }
 };
 </script>

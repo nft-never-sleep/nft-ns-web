@@ -43,7 +43,7 @@ import { ref } from "vue";
 import { mapActions } from 'vuex'
 import { useMessage } from "naive-ui";
 import { useI18n } from "vue-i18n";
-import near from "../utils/near";
+
 import {
   GameControllerOutline,
   GameController,
@@ -69,11 +69,8 @@ export default {
       if (this.gitAccountId) {
         this.$near.walletConnection.signOut()
         window.location.replace(window.location.origin + window.location.pathname)
-        // this.$near.logoutAccount()
-        // near.logout()
       } else {
         await this.$near.loginAccount()
-        // near.login()
       }
     },
     setAccount(name) {
