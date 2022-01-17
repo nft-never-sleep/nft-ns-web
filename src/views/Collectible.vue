@@ -57,8 +57,10 @@ export default {
         'get_reward_fee_fraction',
       ],
     })
+    // 当前账户的收藏品
     const tokens = await contract.nft_tokens_for_owner({account_id: this.$store.getters.account_id })
     // https://ipfs.fleek.co/ipfs/
+    // 拼接url
     console.log(tokens);
   }
 };
