@@ -16,8 +16,11 @@
 </template>
 
 <script>
+import chainMixin from '../utils/chainMixin'
+
 export default {
-  data: () => {
+  mixins: [chainMixin],
+  data(){
     return {
       imgs: [
         {
