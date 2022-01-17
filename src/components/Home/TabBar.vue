@@ -16,7 +16,7 @@
   </div>
 </template>
 <script >
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 import { reactive, ref } from "@vue/reactivity";
 import { onMounted } from "vue";
 import { toRaw } from "vue";
@@ -31,24 +31,30 @@ export default {
       { to: "recent", desc: "Recent activity", active: false },
     ]);
     const set_cur_active_route = (path) => {
+      console.log(path);
       routes.forEach((e, i) => {
+        console.log(e.to, e.to === path);
         if (e.to === path) {
           routes[i].active = true;
         } else {
           routes[i].active = false;
         }
       });
+      console.log(routes);
     };
     onMounted(() => {
       const router = useRouter();
-      set_cur_active_route(router.currentRoute.value.fullPath.substr(1));
+      set_cur_active_route(
+        router.currentRoute.value.fullPath.substr("/home".length + 1)
+      );
     });
-    
-    const store = useStore()
+
+    const store = useStore();
     onBeforeRouteUpdate((to) => {
       const permit = store.getters.account_id; //账户是否登陆
       if (permit) {
-        set_cur_active_route(to.fullPath.substr(1));
+        const route_name_length = "/home".length + 1;
+        set_cur_active_route(to.fullPath.substr(route_name_length));
       } else {
         tip_show.value = true;
         return false;

@@ -7,7 +7,7 @@
             <img :src="item.img" />
           </div>
           <div class="bottom">
-            <button>Bid Now</button>
+            <button @click="detail">Bid Now</button>
           </div>
         </div>
       </div>
@@ -16,11 +16,11 @@
 </template>
 
 <script>
-import chainMixin from '../utils/chainMixin'
-
+import chainMixin from "../utils/chainMixin";
+import { useRouter } from "vue-router";
 export default {
   mixins: [chainMixin],
-  data(){
+  data() {
     return {
       imgs: [
         {
@@ -52,6 +52,7 @@ export default {
       loading: true,
     };
   },
+
   async mounted() {
     const contract = await this.$near.getContractInstance(
       "paras-token-v2.testnet",
@@ -74,13 +75,23 @@ export default {
       account_id: this.$store.getters.account_id,
     });
     // 拼接url
-    this.loading=false
+    this.loading = false;
     const media_base_url = "https://ipfs.fleek.co/ipfs/";
     this.collectibles = tokens.map((e) => ({
       img: media_base_url + e.metadata.media,
       title: e.metadata.title,
     }));
     console.log(this.collectibles);
+  },
+  setup() {
+    const router = useRouter();
+    return {
+      detail: () => {
+        router.push({
+          name: "Detail",
+        });
+      },
+    };
   },
 };
 </script>
