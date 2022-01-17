@@ -1,14 +1,18 @@
 <template>
-  <div class="card-group">
-    <div class="card" v-for="(item, index) in imgs" :key="index">
-      <div class="top">
-        <img :src="item.img" />
-      </div>
-      <div class="bottom">
-        <button>Bid Now</button>
+  <n-spin :show="loading">
+    <div class="card-group">
+      <div class="card-wrap" v-for="(item, index) in collectibles" :key="index">
+        <div class="card">
+          <div class="top">
+            <img :src="item.img" />
+          </div>
+          <div class="bottom">
+            <button>Bid Now</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </n-spin>
 </template>
 
 <script>
@@ -41,82 +45,102 @@ export default {
           title: "Domain",
         },
       ],
+      collectibles: [],
+      loading: true,
     };
   },
-  async mounted(){
-    const contract = await this.$near.getContractInstance( 'paras-token-v2.testnet' , {
-      changeMethods: ['set_something'],
-      viewMethods: [
-        'nft_metadata',
-        'nft_tokens_for_owner',
-        'get_account_unstaked_balance',
-        'get_account_total_balance',
-        'is_account_unstaked_balance_available',
-        'get_total_staked_balance',
-        'get_owner_id',
-        'get_reward_fee_fraction',
-      ],
-    })
+  async mounted() {
+    const contract = await this.$near.getContractInstance(
+      "paras-token-v2.testnet",
+      {
+        changeMethods: ["set_something"],
+        viewMethods: [
+          "nft_metadata",
+          "nft_tokens_for_owner",
+          "get_account_unstaked_balance",
+          "get_account_total_balance",
+          "is_account_unstaked_balance_available",
+          "get_total_staked_balance",
+          "get_owner_id",
+          "get_reward_fee_fraction",
+        ],
+      }
+    );
     // 当前账户的收藏品
-    const tokens = await contract.nft_tokens_for_owner({account_id: this.$store.getters.account_id })
-    // https://ipfs.fleek.co/ipfs/
+    const tokens = await contract.nft_tokens_for_owner({
+      account_id: this.$store.getters.account_id,
+    });
     // 拼接url
-    console.log(tokens);
-  }
+    this.loading=false
+    const media_base_url = "https://ipfs.fleek.co/ipfs/";
+    this.collectibles = tokens.map((e) => ({
+      img: media_base_url + e.metadata.media,
+      title: e.metadata.title,
+    }));
+    console.log(this.collectibles);
+  },
 };
 </script>
 <style lang="scss" scoped>
 .card-group {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  // display: flex;
+  // flex-wrap: wrap;
+  // justify-content: space-between;
+  min-height: 385px;
   margin-top: 32px;
   padding: 19px;
   box-sizing: border-box;
   background-color: #fff5d6;
   border-radius: 20px;
-  .card {
-    border: 1px solid rgba(245, 205, 146, 0.7);
-    box-sizing: border-box;
-    border-radius: 10px;
-    width: 232px;
-    height: 325.63px;
-    overflow: hidden;
-    box-sizing: border-box;
-    padding: 16px;
-    transition: 0.3s;
-    margin-top: 16px;
-    &:hover {
-      cursor: pointer;
-      margin-top: -3px;
-      box-shadow: 0px 0px 6px rgb(116, 116, 116);
-    }
-    .top {
-      width: 100%;
-      height: 250px;
-      overflow: hidden;
+  .card-wrap {
+    width: 20%;
+    display: inline-block;
+    .card {
+      border: 1px solid rgba(245, 205, 146, 0.7);
+      box-sizing: border-box;
       border-radius: 10px;
-      img {
-        width: 100%;
-        object-fit: cover;
+      width: 232px;
+      height: 325.63px;
+      overflow: hidden;
+      box-sizing: border-box;
+      padding: 16px;
+      transition: 0.3s;
+      margin-top: 16px;
+      transform: translateY(0);
+      &:hover {
+        cursor: pointer;
+        transform: translateY(-3px);
+
+        // box-shadow: 0px 0px 10px rgb(116, 116, 116);
+        box-shadow: 8px 8px 11px #f0e6c9, -8px -8px 11px #ffffe3;
       }
-    }
-    .bottom {
-      margin-top: 15px;
-      height: 32px;
-      font-weight: 600;
-      text-align: center;
-      button {
-        background: #fecc00;
-        border-radius: 6px;
-        width: 200px;
+      .top {
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+        border-radius: 10px;
+        img {
+          width: 100%;
+          object-fit: cover;
+        }
+      }
+      .bottom {
+        margin-top: 15px;
         height: 32px;
-        border: none;
-        font-family: Barlow;
-        font-style: normal;
         font-weight: 600;
-        font-size: 15px;
-        color: #000000;
+        text-align: center;
+        button {
+          background: #fecc00;
+          border-radius: 6px;
+          width: 200px;
+          height: 32px;
+          border: none;
+          font-family: Barlow;
+          font-style: normal;
+          font-weight: 600;
+          font-size: 15px;
+          color: #000000;
+        }
       }
     }
   }
