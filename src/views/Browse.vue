@@ -12,7 +12,10 @@
 </template>
 
 <script>
+import chainMixin from '../utils/chainMixin'
+
 export default {
+  mixins: [chainMixin],
   data: () => {
     return {
       imgs: [
@@ -43,6 +46,20 @@ export default {
       
       ],
     };
+  },
+  async mounted() {
+    setTimeout(async () => {
+      //获取nft列表 from_index必须为staring
+      const tokens = await this.useApi('nft_tokens',{from_index: '0' ,limit: 10})
+      console.log(tokens);
+      // 拼接url
+      this.loading=false
+      const media_base_url = "https://ipfs.fleek.co/ipfs/";
+      this.imgs = tokens.map((e) => ({
+        img: media_base_url + e.metadata.media,
+        title: e.metadata.title,
+      }));
+    }, 40);
   },
 };
 </script>
