@@ -54,34 +54,17 @@ export default {
   },
 
   async mounted() {
-    const contract = await this.$near.getContractInstance(
-      "paras-token-v2.testnet",
-      {
-        changeMethods: ["set_something"],
-        viewMethods: [
-          "nft_metadata",
-          "nft_tokens_for_owner",
-          "get_account_unstaked_balance",
-          "get_account_total_balance",
-          "is_account_unstaked_balance_available",
-          "get_total_staked_balance",
-          "get_owner_id",
-          "get_reward_fee_fraction",
-        ],
-      }
-    );
-    // 当前账户的收藏品
-    const tokens = await contract.nft_tokens_for_owner({
-      account_id: this.$store.getters.account_id,
-    });
-    // 拼接url
-    this.loading = false;
-    const media_base_url = "https://ipfs.fleek.co/ipfs/";
-    this.collectibles = tokens.map((e) => ({
-      img: media_base_url + e.metadata.media,
-      title: e.metadata.title,
-    }));
-    console.log(this.collectibles);
+    setTimeout(async () => {
+      const tokens = await this.useApi('nft_tokens_for_owner',{account_id: this.$store.getters.account_id })
+      console.log(tokens);
+      // 拼接url
+      this.loading=false
+      const media_base_url = "https://ipfs.fleek.co/ipfs/";
+      this.collectibles = tokens.map((e) => ({
+        img: media_base_url + e.metadata.media,
+        title: e.metadata.title,
+      }));
+    }, 40);
   },
   setup() {
     const router = useRouter();
