@@ -23,8 +23,8 @@ var myMixin = {
       changeMethods: ['set_something'],
       viewMethods: ['nft_tokens_for_owner','nft_tokens']
     })
-    const tokens = await contract.nft_tokens_for_owner({account_id: this.$store.getters.account_id })
-    const tokens2 = await contract.nft_tokens({from_index: '0' , limit: 10})
+    const tokens = await this.api.nft_tokens_for_owner({account_id: this.$store.getters.account_id })
+    const tokens2 = await this.api.nft_tokens({from_index: '0' , limit: 10})
     // https://ipfs.fleek.co/ipfs/
     console.log(tokens,tokens2);
     }, 50);
