@@ -38,7 +38,7 @@ export default {
     const detail = (index) => {
       const { token_id } = tokens.values[index];
       router.push({
-        name: "Detail",
+        to: "/detail/" + token_id,
         query: {
           token_id,
         },

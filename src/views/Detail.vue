@@ -162,7 +162,7 @@
     <div class="other-nft">
       <p class="title">🔥Hot NFTs</p>
       <div class="card-group">
-        <div class="card-wrap" v-for="(item, index) in imgs" :key="index">
+        <div class="card-wrap" v-for="(item, index) in imgs.values" :key="index">
           <div class="card">
             <img :src="item.img" />
           </div>
@@ -174,6 +174,7 @@
 
 <script>
 import { reactive, ref } from "@vue/reactivity";
+import { getCurrentInstance } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import { onMounted } from "@vue/runtime-core";
 export default {
@@ -192,32 +193,7 @@ export default {
         name: "小王",
       },
     });
-    const imgs = reactive([
-      {
-        img: "https://img2.huashi6.com/images/resource/thumbnail/2021/12/16/14037_43794980032.jpg?imageMogr2/quality/75/interlace/1/thumbnail/700x>",
-        title: "Art",
-      },
-      {
-        img: "https://img2.huashi6.com/images/resource/2021/07/27/91h533226p0.jpg?imageMogr2/quality/75/interlace/1/thumbnail/700x>",
-        title: "Collectibles",
-      },
-      {
-        img: "https://img2.huashi6.com/images/resource/2021/09/25/929998h06p0.jpg?imageMogr2/quality/75/interlace/1/thumbnail/1400x>",
-        title: "Domain",
-      },
-      {
-        img: "https://img2.huashi6.com/images/resource/2019/10/25/77473h341p0.png?imageMogr2/quality/75/interlace/1/thumbnail/700x>/format/jpeg",
-        title: "Ciri",
-      },
-      {
-        img: "https://img2.huashi6.com/images/resource/2016/09/15/58h998602p0.jpg?imageMogr2/quality/75/interlace/1/thumbnail/700x>",
-        title: "Collectibles",
-      },
-      {
-        img: "https://img2.huashi6.com/images/resource/2019/10/25/77473h341p0.png?imageMogr2/quality/75/interlace/1/thumbnail/700x>/format/jpeg",
-        title: "Domain",
-      },
-    ]);
+    const imgs = reactive([]);
     const route = useRoute();
     // ? type = 1  未租赁：没有人报价，新的nft还没有mint
     // ? type = 2 有报价的未租赁：有人报价，未统一，新的nft还没有mint
@@ -225,14 +201,35 @@ export default {
     // ? type = 4 已租赁&不可使用：新的nft已经mint，expired time已经过期
     const nft_type = ref(1);
 
-    const dialog_show = ref(false);
+    const { proxy } = getCurrentInstance();
 
+    const dialog_show = ref(false);
     onMounted(() => {
-      let { type, data } = route.params;
-      const _data = JSON.parse(data);
-      console.log(_data);
-      console.log(type);
-      nft_type.value = type || 1;
+      setTimeout(async () => {
+        // 在进入页面是通过params获取nft的token_id然后从链侧获取nft信息
+        nft_info.values = await proxy.useApi("nft_token", {token_id: route.params.token_id});
+        
+        // 没有热门fnt接口直接获取随机连续nft
+        const hot_nft = await proxy.useApi("nft_tokens", {
+          from_index: Math.ceil(Math.random()*30).toString(),
+          limit: 6,
+        });
+        const media_base_url = "https://ipfs.fleek.co/ipfs/";
+        imgs.values = hot_nft.map((e) => {
+          return {
+            img: media_base_url + e.metadata.media,
+            title: e.metadata.title,
+            // data: e,
+          };
+        });
+        console.log(imgs);
+        // let { type, data } = route.params;
+        // const _data = JSON.parse(data);
+        // console.log(_data);
+        // console.log(type);
+        // nft_type.value = type || 1;
+        nft_type.value = 1;
+      }, 40);
     });
     const confirm = () => {
       dialog_show.value = false;

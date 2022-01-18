@@ -4,7 +4,7 @@ import Collectible from "../views/Collectible.vue"
 import Recent from "../views/Recent.vue"
 import Browse from "../views/Browse.vue"
 const routes = [
-
+  { path: '/', name: '', redirect: { name: 'Home' } },
   {
     path: '/home',
     name: 'Home',
@@ -24,7 +24,7 @@ const routes = [
     ]
   },
   {
-    path: "/detail",
+    path: "/detail/:token_id",
     name:"Detail",
     component: () => import(/* webpackChunkName: "detail" */ '../views/Detail.vue'),
   },

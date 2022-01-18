@@ -34,16 +34,7 @@ export default {
     const loading = ref(true);
     const detail = (index) => {
       const { token_id } = tokens.values[index];
-      router.push({
-        name: "Detail",
-        query: {
-          token_id,
-        },
-        params: {
-          type: 1, //1是没报价 2是已经报价了
-          data:JSON.stringify(tokens.values[index])
-        },
-      });
+      router.push("/detail/" + token_id);
     };
     onMounted(() => {
       setTimeout(async () => {
