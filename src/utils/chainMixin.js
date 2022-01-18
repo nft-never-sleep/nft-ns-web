@@ -16,9 +16,9 @@ var myMixin = {
       })
       // console.log(this.$store.getters.account_id);
       // const tokens = await this.useApi('nft_tokens_for_owner',{account_id: this.$store.getters.account_id })
-      const tokens2 = await this.api.nft_tokens({from_index: '0' , limit: 10})
+      // const tokens2 = await this.api.nft_tokens({from_index: '0' , limit: 10})
       // https://ipfs.fleek.co/ipfs/
-      console.log(tokens2);
+      // console.log(tokens2);
     },
     //调用api，分别传入API名称和传入参数
     async useApi(apiName,data){
