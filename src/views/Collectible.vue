@@ -80,9 +80,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .card-group {
-  // display: flex;
-  // flex-wrap: wrap;
-  // justify-content: space-between;
   min-height: 385px;
   margin-top: 32px;
   padding: 19px;
