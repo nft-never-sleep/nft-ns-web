@@ -1,13 +1,17 @@
 <template>
   <n-spin :show="loading">
     <div class="card-group">
-      <div class="card-wrap" v-for="(item, index) in collectibles" :key="index">
+      <div
+        class="card-wrap"
+        v-for="(item, index) in collectibles.values"
+        :key="index"
+      >
         <div class="card">
           <div class="top">
             <img :src="item.img" />
           </div>
           <div class="bottom">
-            <button @click="detail">Bid Now</button>
+            <button @click="() => detail(index)">Bid Now</button>
           </div>
         </div>
       </div>
@@ -18,35 +22,50 @@
 <script>
 import chainMixin from "../utils/chainMixin";
 import { useRouter } from "vue-router";
+import { getCurrentInstance, onMounted, ref, reactive } from "vue";
 export default {
   mixins: [chainMixin],
-  data() {
-    return {
-      collectibles: [],
-      loading: true,
-    };
-  },
-  async mounted() {
-    setTimeout(async () => {
-      const tokens = await this.useApi('nft_tokens_for_owner',{account_id: this.$store.getters.account_id })
-      // 拼接url
-      this.loading=false
-      const media_base_url = "https://ipfs.fleek.co/ipfs/";
-      this.collectibles = tokens.map((e) => ({
-        img: media_base_url + e.metadata.media,
-        title: e.metadata.title,
-        data: e
-      }));
-    }, 40);
-  },
   setup() {
     const router = useRouter();
-    return {
-      detail: () => {
-        router.push({
-          name: "Detail",
+
+    const { proxy } = getCurrentInstance();
+    const tokens = reactive([]);
+    const collectibles = reactive([]);
+    const loading = ref(true);
+    const detail = (index) => {
+      const { token_id } = tokens.values[index];
+      router.push({
+        name: "Detail",
+        query: {
+          token_id,
+        },
+        params: {
+          type: 1, //1是没报价 2是已经报价了
+          data:JSON.stringify(tokens.values[index])
+        },
+      });
+    };
+    onMounted(() => {
+      setTimeout(async () => {
+        tokens.values = await proxy.useApi("nft_tokens_for_owner", {
+          account_id: proxy.$store.getters.account_id,
         });
-      },
+        loading.value = false;
+        const media_base_url = "https://ipfs.fleek.co/ipfs/";
+        collectibles.values = tokens.values.map((e) => {
+          return {
+            img: media_base_url + e.metadata.media,
+            title: e.metadata.title,
+            data: e,
+          };
+        });
+      }, 40);
+    });
+    return {
+      detail,
+      loading,
+      collectibles,
+      tokens,
     };
   },
 };

@@ -138,21 +138,22 @@
 
         <div class="bid">
           <!-- 未租赁：没有人报价，新的nft还没有mint -->
-          <div v-if="nft_type === 1">
+          <!-- 有报价的未租赁：有人报价，未统一，新的nft还没有mint -->
+          <!-- 已租赁&可使用：新的nft已经mint，expired time没过期 -->
+          <!-- 已租赁&不可使用：新的nft已经mint，expired time已经过期 -->
+
+          <div v-if="nft_type === '1'">
             <div class="tip">报价默认为自发起后的24小时</div>
             <button @click="dialog_show = true">Bid Now</button>
           </div>
-          <!-- 有报价的未租赁：有人报价，未统一，新的nft还没有mint -->
-          <div v-if="nft_type === 2">
+          <div v-if="nft_type === '2'">
             <button @click="dialog_show = true">On sale</button>
           </div>
-          <!-- 已租赁&可使用：新的nft已经mint，expired time没过期 -->
-          <div v-if="nft_type === 3" class="type3">
+          <div v-if="nft_type === '3'" class="type3">
             <button @click="dialog_show = true">Bid again</button>
             <button @click="recall">Recall</button>
           </div>
-          <!-- 已租赁&不可使用：新的nft已经mint，expired time已经过期 -->
-          <div v-if="nft_type === 4">
+          <div v-if="nft_type === '4'">
             <button @click="dialog_show = true">Bid again</button>
           </div>
         </div>
@@ -223,13 +224,15 @@ export default {
     // ? type = 3 已租赁&可使用：新的nft已经mint，expired time没过期
     // ? type = 4 已租赁&不可使用：新的nft已经mint，expired time已经过期
     const nft_type = ref(1);
+
     const dialog_show = ref(false);
 
     onMounted(() => {
-      const { type, data } = route.query;
-      // nft_type.value = type;
-      console.log(JSON.parse(data));
-      nft_type.value = 4;
+      let { type, data } = route.params;
+      const _data = JSON.parse(data);
+      console.log(_data);
+      console.log(type);
+      nft_type.value = type || 1;
     });
     const confirm = () => {
       dialog_show.value = false;

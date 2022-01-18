@@ -1,7 +1,11 @@
 <template>
   <n-spin :show="loading">
     <div class="card-group">
-      <div class="card-wrap" v-for="(item, index) in imgs" :key="index">
+      <div
+        class="card-wrap"
+        v-for="(item, index) in collectibles.values"
+        :key="index"
+      >
         <div class="card">
           <div class="top">
             <img :src="item.img" />
@@ -23,23 +27,29 @@ import { onMounted } from "vue";
 import { getCurrentInstance } from "vue";
 
 export default {
-  data: () => {
-    return {
-      imgs: [],
-      tokens: [],
-      loading: true,
-    };
-  },
   setup() {
     const router = useRouter();
-    const imgs = reactive([]);
-    const tokens = reactive([]);
-    const loading = ref(true);
-    const { proxy } = getCurrentInstance();
 
+    const { proxy } = getCurrentInstance();
+    const tokens = reactive([]);
+    const collectibles = reactive([]);
+    const loading = ref(true);
+
+    const detail = (index) => {
+      const { token_id } = tokens.values[index];
+      router.push({
+        name: "Detail",
+        query: {
+          token_id,
+        },
+        params: {
+          type:1,
+          data:JSON.stringify(tokens.values[index])
+        },
+      });
+    };
     onMounted(() => {
       setTimeout(async () => {
-        //获取nft列表 from_index必须为staring
         tokens.values = await proxy.useApi("nft_tokens", {
           from_index: "0",
           limit: 10,
@@ -47,39 +57,21 @@ export default {
         // 拼接url
         loading.value = false;
         const media_base_url = "https://ipfs.fleek.co/ipfs/";
-        imgs.values = tokens.map((e) => ({
-          img: media_base_url + e.metadata.media,
-          title: e.metadata.title,
-        }));
+        collectibles.values = tokens.values.map((e) => {
+          return {
+            img: media_base_url + e.metadata.media,
+            title: e.metadata.title,
+            data: e,
+          };
+        });
       }, 40);
     });
-    const detail = (index) => {
-      router.push({
-        name: "Detail",
-        query: {
-          type: 1,
-          data: JSON.stringify(tokens.values[index]),
-        },
-      });
-    };
     return {
       detail,
+      loading,
+      collectibles,
+      tokens,
     };
-  },
-  async mounted() {
-    setTimeout(async () => {
-      //获取nft列表 from_index必须为staring
-      let tokens = await this.useApi('nft_tokens',{from_index: '0' ,limit: 10})
-      tokens = tokens ? tokens : []
-      // 拼接url
-      this.loading = false;
-      const media_base_url = "https://ipfs.fleek.co/ipfs/";
-      this.imgs = this.tokens.map((e) => ({
-        img: media_base_url + e.metadata.media,
-        title: e.metadata.title,
-        data: e
-      }));
-    }, 40);
   },
 };
 </script>
