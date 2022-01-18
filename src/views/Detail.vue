@@ -31,7 +31,17 @@
 
     <div class="dialog-modal" v-if="dialog_show">
       <div class="dialog-card">
-        <div class="title">Bid</div>
+        <div class="title">
+          {{
+            nft_type === 1
+              ? "Bid"
+              : type === 2
+              ? "On sale"
+              : type === 3
+              ? "Bid again"
+              : "Bid again"
+          }}
+        </div>
         <div class="main">
           <div class="input-group">
             <div class="input-item">
@@ -67,7 +77,6 @@
             </div>
           </div>
         </div>
-
         <button class="confirm-btn" @click="confirm">Confirm</button>
       </div>
     </div>
@@ -128,13 +137,23 @@
         </div>
 
         <div class="bid">
+          <!-- 未租赁：没有人报价，新的nft还没有mint -->
           <div v-if="nft_type === 1">
             <div class="tip">报价默认为自发起后的24小时</div>
             <button @click="dialog_show = true">Bid Now</button>
           </div>
+          <!-- 有报价的未租赁：有人报价，未统一，新的nft还没有mint -->
           <div v-if="nft_type === 2">
-            <div class="tip">报价默认为自小时</div>
-            <button @click="dialog_show = true">Bid Now</button>
+            <button @click="dialog_show = true">On sale</button>
+          </div>
+          <!-- 已租赁&可使用：新的nft已经mint，expired time没过期 -->
+          <div v-if="nft_type === 3" class="type3">
+            <button @click="dialog_show = true">Bid again</button>
+            <button @click="recall">Recall</button>
+          </div>
+          <!-- 已租赁&不可使用：新的nft已经mint，expired time已经过期 -->
+          <div v-if="nft_type === 4">
+            <button @click="dialog_show = true">Bid again</button>
           </div>
         </div>
       </div>
@@ -210,7 +229,7 @@ export default {
       const { type, data } = route.query;
       // nft_type.value = type;
       console.log(JSON.parse(data));
-      nft_type.value = 1;
+      nft_type.value = 4;
     });
     const confirm = () => {
       dialog_show.value = false;
@@ -434,6 +453,16 @@ p {
           text-align: center;
 
           color: #000000;
+        }
+        .type3 {
+          display: flex;
+          button {
+            &:nth-of-type(2) {
+              background-color: transparent;
+              border: 1px solid #000000;
+              margin-left: 16.88px;
+            }
+          }
         }
       }
     }
