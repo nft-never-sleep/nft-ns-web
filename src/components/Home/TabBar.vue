@@ -31,16 +31,13 @@ export default {
       { to: "recent", desc: "Recent activity", active: false },
     ]);
     const set_cur_active_route = (path) => {
-      console.log(path);
       routes.forEach((e, i) => {
-        console.log(e.to, e.to === path);
         if (e.to === path) {
           routes[i].active = true;
         } else {
           routes[i].active = false;
         }
       });
-      console.log(routes);
     };
     onMounted(() => {
       const router = useRouter();
