@@ -46,7 +46,7 @@ var myMixin = {
           return err
         }
       }else{
-        return null
+        await this.$near.loginAccount()
       }
     }
   },
