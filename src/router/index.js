@@ -6,25 +6,27 @@ import Browse from "../views/Browse.vue"
 const routes = [
 
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
     component: Home,
-    redirect: { path: '/browse' },
+    redirect: { path: '/home/browse' },
     children: [
       {
         path: "browse",
-        // component: () => import(/* webpackChunkName: "browse" */ '../views/Browse.vue')
-        component: Browse
+        component: () => import(/* webpackChunkName: "browse" */ '../views/Browse.vue')
       }, {
         path: "collectible",
-        // component: () => import(/* webpackChunkName: "collectible" */ '../views/Collectible.vue')
-        component: Collectible
+        component: () => import(/* webpackChunkName: "collectible" */ '../views/Collectible.vue')
       }, {
         path: "recent",
-        // component: () => import(/* webpackChunkName: "recent" */ '../views/Recent.vue')
-        component: Recent
-      }
+        component: () => import(/* webpackChunkName: "recent" */ '../views/Recent.vue')
+      },
     ]
+  },
+  {
+    path: "/detail",
+    name:"Detail",
+    component: () => import(/* webpackChunkName: "detail" */ '../views/Detail.vue'),
   },
   {
     path: '/about',

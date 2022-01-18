@@ -7,7 +7,7 @@
             <img :src="item.img" />
           </div>
           <div class="bottom">
-            <button>Bid Now</button>
+            <button @click="detail">Bid Now</button>
           </div>
         </div>
       </div>
@@ -16,11 +16,11 @@
 </template>
 
 <script>
-import chainMixin from '../utils/chainMixin'
-
+import chainMixin from "../utils/chainMixin";
+import { useRouter } from "vue-router";
 export default {
   mixins: [chainMixin],
-  data(){
+  data() {
     return {
       imgs: [
         {
@@ -52,6 +52,7 @@ export default {
       loading: true,
     };
   },
+
   async mounted() {
     setTimeout(async () => {
       const tokens = await this.useApi('nft_tokens_for_owner',{account_id: this.$store.getters.account_id })
@@ -64,6 +65,16 @@ export default {
         title: e.metadata.title,
       }));
     }, 40);
+  },
+  setup() {
+    const router = useRouter();
+    return {
+      detail: () => {
+        router.push({
+          name: "Detail",
+        });
+      },
+    };
   },
 };
 </script>
