@@ -62,6 +62,7 @@ export default {
       routes,
       tip_show,
       get_class,
+      
     };
   },
 };
