@@ -5,6 +5,7 @@
         <img :src="item.img" />
       </div>
       <div class="bottom">
+        <!-- <button @click="lease(item.data)">Bid Now</button> -->
         <button>Bid Now</button>
       </div>
     </div>
@@ -15,35 +16,42 @@
 export default {
   data: () => {
     return {
-      imgs: [
-        {
-          img: "https://mfiles.alphacoders.com/957/thumb-957920.jpg",
-          title: "Art",
-        },
-        {
-          img: "https://mfiles.alphacoders.com/957/thumb-957565.jpg",
-          title: "Collectibles",
-        },
-        {
-          img: "https://img2.huashi6.com/images/resource/2021/09/25/929998h06p0.jpg?imageMogr2/quality/75/interlace/1/thumbnail/1400x>",
-          title: "Domain",
-        },
-        {
-          img: "https://img2.huashi6.com/images/resource/2019/10/25/77473h341p0.png?imageMogr2/quality/75/interlace/1/thumbnail/700x>/format/jpeg",
-          title: "Ciri",
-        },
-        {
-          img: "https://img2.huashi6.com/images/resource/2016/09/15/58h998602p0.jpg?imageMogr2/quality/75/interlace/1/thumbnail/700x>",
-          title: "Collectibles",
-        },
-        {
-          img: "https://img2.huashi6.com/images/resource/2019/10/25/77473h341p0.png?imageMogr2/quality/75/interlace/1/thumbnail/700x>/format/jpeg",
-          title: "Domain",
-        },
-      ],
+      imgs: [],
     };
   },
-};
+  methods:{
+    async lease(data){
+      // let chainData = {
+      //   nft_id: data.token_id,
+      //   bid_info: {
+      //     src_nft_id: 'paras-token-v2.testnet:'+ data.token_id,
+      //     start_at: this.$moment().format('X'),
+      //     lasts: 600,
+      //     amount: '1',
+      //     msg: '',
+      //     bid_from: this.$near.user.accountId,
+      //     bid_state: 'huishanlhr2.testnet',
+      //   }
+      // }
+      // console.log(chainData);
+      // const quote = await this.useApi('offer_bid',chainData)
+      // console.log(quote);
+    }
+  },
+  async mounted() {
+    // setTimeout(async () => {
+      // const tokens = await this.useApi('nft_tokens_for_owner',{account_id: 'huishanlhr2.testnet' })
+      // // 拼接url
+      // // this.loading=false
+      // const media_base_url = "https://ipfs.fleek.co/ipfs/";
+      // this.imgs = tokens.map((e) => ({
+      //   img: media_base_url + e.metadata.media,
+      //   title: e.metadata.title,
+      //   data: e
+      // }));
+    // }, 40);
+  },
+}
 </script>
 <style lang="scss" scoped>
 .card-group {
@@ -76,8 +84,10 @@ export default {
       height: 250px;
       overflow: hidden;
       border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       img {
-        width: 100%;
         object-fit: cover;
       }
     }

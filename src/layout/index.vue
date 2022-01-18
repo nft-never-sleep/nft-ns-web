@@ -86,7 +86,7 @@ export default {
       // let account = await this.$near.near.account(this.$near.user.accountId)
       // console.log(await account.state() );
       // console.log(this.$near.config);
-    }, 50)
+    }, 40)
     setTimeout(() => {
       this.setAccount()
     }, 4000)

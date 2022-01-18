@@ -23,7 +23,6 @@ import { onMounted } from "vue";
 import { getCurrentInstance } from "vue";
 
 export default {
-  mixins: [chainMixin],
   data: () => {
     return {
       imgs: [],
@@ -70,16 +69,15 @@ export default {
   async mounted() {
     setTimeout(async () => {
       //获取nft列表 from_index必须为staring
-      this.tokens = await this.useApi("nft_tokens", {
-        from_index: "0",
-        limit: 10,
-      });
+      let tokens = await this.useApi('nft_tokens',{from_index: '0' ,limit: 10})
+      tokens = tokens ? tokens : []
       // 拼接url
       this.loading = false;
       const media_base_url = "https://ipfs.fleek.co/ipfs/";
       this.imgs = this.tokens.map((e) => ({
         img: media_base_url + e.metadata.media,
         title: e.metadata.title,
+        data: e
       }));
     }, 40);
   },

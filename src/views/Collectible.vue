@@ -22,47 +22,20 @@ export default {
   mixins: [chainMixin],
   data() {
     return {
-      imgs: [
-        {
-          img: "https://img2.huashi6.com/images/resource/thumbnail/2021/12/16/14037_43794980032.jpg?imageMogr2/quality/75/interlace/1/thumbnail/700x>",
-          title: "Art",
-        },
-        {
-          img: "https://img2.huashi6.com/images/resource/2021/07/27/91h533226p0.jpg?imageMogr2/quality/75/interlace/1/thumbnail/700x>",
-          title: "Collectibles",
-        },
-        {
-          img: "https://img2.huashi6.com/images/resource/2021/09/25/929998h06p0.jpg?imageMogr2/quality/75/interlace/1/thumbnail/1400x>",
-          title: "Domain",
-        },
-        {
-          img: "https://img2.huashi6.com/images/resource/2019/10/25/77473h341p0.png?imageMogr2/quality/75/interlace/1/thumbnail/700x>/format/jpeg",
-          title: "Ciri",
-        },
-        {
-          img: "https://img2.huashi6.com/images/resource/2016/09/15/58h998602p0.jpg?imageMogr2/quality/75/interlace/1/thumbnail/700x>",
-          title: "Collectibles",
-        },
-        {
-          img: "https://img2.huashi6.com/images/resource/2019/10/25/77473h341p0.png?imageMogr2/quality/75/interlace/1/thumbnail/700x>/format/jpeg",
-          title: "Domain",
-        },
-      ],
       collectibles: [],
       loading: true,
     };
   },
-
   async mounted() {
     setTimeout(async () => {
       const tokens = await this.useApi('nft_tokens_for_owner',{account_id: this.$store.getters.account_id })
-      console.log(tokens);
       // 拼接url
       this.loading=false
       const media_base_url = "https://ipfs.fleek.co/ipfs/";
       this.collectibles = tokens.map((e) => ({
         img: media_base_url + e.metadata.media,
         title: e.metadata.title,
+        data: e
       }));
     }, 40);
   },
