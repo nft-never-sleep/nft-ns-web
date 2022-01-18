@@ -31,7 +31,17 @@
 
     <div class="dialog-modal" v-if="dialog_show">
       <div class="dialog-card">
-        <div class="title">Bid</div>
+        <div class="title">
+          {{
+            nft_type === 1
+              ? "Bid"
+              : type === 2
+              ? "On sale"
+              : type === 3
+              ? "Bid again"
+              : "Bid again"
+          }}
+        </div>
         <div class="main">
           <div class="input-group">
             <div class="input-item">
@@ -67,7 +77,6 @@
             </div>
           </div>
         </div>
-
         <button class="confirm-btn" @click="confirm">Confirm</button>
       </div>
     </div>
@@ -128,13 +137,24 @@
         </div>
 
         <div class="bid">
-          <div v-if="nft_type === 1">
+          <!-- 未租赁：没有人报价，新的nft还没有mint -->
+          <!-- 有报价的未租赁：有人报价，未统一，新的nft还没有mint -->
+          <!-- 已租赁&可使用：新的nft已经mint，expired time没过期 -->
+          <!-- 已租赁&不可使用：新的nft已经mint，expired time已经过期 -->
+
+          <div v-if="nft_type === '1'">
             <div class="tip">报价默认为自发起后的24小时</div>
             <button @click="dialog_show = true">Bid Now</button>
           </div>
-          <div v-if="nft_type === 2">
-            <div class="tip">报价默认为自小时</div>
-            <button @click="dialog_show = true">Bid Now</button>
+          <div v-if="nft_type === '2'">
+            <button @click="dialog_show = true">On sale</button>
+          </div>
+          <div v-if="nft_type === '3'" class="type3">
+            <button @click="dialog_show = true">Bid again</button>
+            <button @click="recall">Recall</button>
+          </div>
+          <div v-if="nft_type === '4'">
+            <button @click="dialog_show = true">Bid again</button>
           </div>
         </div>
       </div>
@@ -204,13 +224,15 @@ export default {
     // ? type = 3 已租赁&可使用：新的nft已经mint，expired time没过期
     // ? type = 4 已租赁&不可使用：新的nft已经mint，expired time已经过期
     const nft_type = ref(1);
+
     const dialog_show = ref(false);
 
     onMounted(() => {
-      const { type, data } = route.query;
-      // nft_type.value = type;
-      console.log(JSON.parse(data));
-      nft_type.value = 1;
+      let { type, data } = route.params;
+      const _data = JSON.parse(data);
+      console.log(_data);
+      console.log(type);
+      nft_type.value = type || 1;
     });
     const confirm = () => {
       dialog_show.value = false;
@@ -434,6 +456,16 @@ p {
           text-align: center;
 
           color: #000000;
+        }
+        .type3 {
+          display: flex;
+          button {
+            &:nth-of-type(2) {
+              background-color: transparent;
+              border: 1px solid #000000;
+              margin-left: 16.88px;
+            }
+          }
         }
       }
     }
