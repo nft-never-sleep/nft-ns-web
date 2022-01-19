@@ -4,13 +4,13 @@
     <div class="main">
       <Tabbar></Tabbar>
       <Category></Category>
-      <transition name="slide">
-        <router-view v-slot="{ Component }">
+      <router-view v-slot="{ Component }">
+        <transition name="slide">
           <transition name="slide">
             <component :is="Component" />
           </transition>
-        </router-view>
-      </transition>
+        </transition>
+      </router-view>
     </div>
   </div>
 </template>
