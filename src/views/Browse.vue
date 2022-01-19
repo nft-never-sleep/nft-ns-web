@@ -37,16 +37,7 @@ export default {
 
     const detail = (index) => {
       const { token_id } = tokens.values[index];
-      router.push({
-        to: "/detail/" + token_id,
-        query: {
-          token_id,
-        },
-        params: {
-          type:1,
-          data:JSON.stringify(tokens.values[index])
-        },
-      });
+      router.push("/detail/" + token_id);
     };
     onMounted(() => {
       setTimeout(async () => {
