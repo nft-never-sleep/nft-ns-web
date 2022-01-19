@@ -11,7 +11,11 @@
           <n-icon class="icon" size="18">
             <Search />
           </n-icon>
-          <input :placeholder="$t('input.placeholder')" @keyup.enter="search" v-model="searchAccountId"/>
+          <input
+            :placeholder="$t('input.placeholder')"
+            @keyup.enter="search"
+            v-model="searchAccountId"
+          />
         </div>
       </div>
       <div class="tool-btns">
@@ -39,8 +43,8 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { mapActions } from 'vuex'
+import { getCurrentInstance, ref } from "vue";
+import { mapActions } from "vuex";
 import { useMessage } from "naive-ui";
 import { useI18n } from "vue-i18n";
 
@@ -50,6 +54,7 @@ import {
   Search,
 } from "@vicons/ionicons5";
 import { reactive } from "@vue/reactivity";
+import { useRouter } from "vue-router";
 
 export default {
   name: "Layout",
@@ -61,46 +66,51 @@ export default {
   data() {
     return {
       accountId: null,
-      searchAccountId: '',
     };
   },
   methods: {
-    ...mapActions(['update']),
+    ...mapActions(["update"]),
     async nearAccount() {
       if (this.gitAccountId) {
-        this.$near.walletConnection.signOut()
-        window.location.replace(window.location.origin + window.location.pathname)
+        this.$near.walletConnection.signOut();
+        window.location.replace(
+          window.location.origin + window.location.pathname
+        );
       } else {
-        await this.$near.loginAccount()
+        await this.$near.loginAccount();
       }
     },
     setAccount(name) {
-      this.accountId = this.$near.user && this.$near.user.accountId ? this.$near.user.accountId : null
-      this.update({ key: 'account_id', value: this.accountId })
-      this.update({ key: 'account', value: { ...this.$near.user } })
+      this.accountId =
+        this.$near.user && this.$near.user.accountId
+          ? this.$near.user.accountId
+          : null;
+      this.update({ key: "account_id", value: this.accountId });
+      this.update({ key: "account", value: { ...this.$near.user } });
     },
-    async search(){
-      if (this.searchAccountId) {
-        try {
-          const tokens = await this.useApi('nft_tokens_for_owner',{account_id: this.searchAccountId })
-          console.log(tokens);
-        } catch (error) {
-          
-        }
-      }
-    }
+    // async search() {
+    //   console.log(1);
+    //   if (this.searchAccountId) {
+    //     try {
+    //       const tokens = await this.useApi("nft_tokens_for_owner", {
+    //         account_id: this.searchAccountId,
+    //       });
+    //       console.log(tokens);
+    //     } catch (error) {}
+    //   }
+    // },
   },
   mounted() {
     setTimeout(async () => {
-      this.setAccount()
+      this.setAccount();
       //余额
       // let account = await this.$near.near.account(this.$near.user.accountId)
       // console.log(await account.state() );
       // console.log(this.$near.config);
-    }, 40)
+    }, 40);
     setTimeout(() => {
-      this.setAccount()
-    }, 4000)
+      this.setAccount();
+    }, 4000);
   },
   computed: {
     gitAccountId() {
@@ -111,6 +121,27 @@ export default {
     const message = useMessage();
     const { locale } = useI18n();
     const lang = ref(localStorage.getItem("lang"));
+    const { proxy } = getCurrentInstance();
+    const router = useRouter();
+    const searchAccountId = ref(""); //搜索栏用户id
+    // 搜索用户id
+    const search = async () => {
+      console.log(searchAccountId);
+      if (searchAccountId) {
+        try {
+          const tokens = await proxy.useApi("nft_tokens_for_owner", {
+            account_id: searchAccountId.value,
+          });
+          router.push({
+            name:'Search',
+            params:{
+              data:JSON.stringify(tokens)
+            }
+          })
+          console.log(tokens);
+        } catch (error) {}
+      }
+    };
     return {
       toggle_lang(value) {
         lang.value = value;
@@ -119,6 +150,9 @@ export default {
         message.info(value);
       },
       lang,
+      // 搜索
+      search,
+      searchAccountId,
     };
   },
 };
@@ -215,7 +249,7 @@ export default {
 }
 .bg-wrap {
   flex: 1 1;
-    overflow-y: scroll;
+  overflow-y: scroll;
   background-color: #fff9e7;
   .container {
     width: 1344px;

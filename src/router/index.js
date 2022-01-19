@@ -25,8 +25,13 @@ const routes = [
   },
   {
     path: "/detail/:token_id",
-    name:"Detail",
+    name: "Detail",
     component: () => import(/* webpackChunkName: "detail" */ '../views/Detail.vue'),
+  },
+  {
+    path: "/search",
+    name: "Search",
+    component: () => import(/* webpackChunkName: "search" */ '../views/Search.vue'),
   },
   {
     path: '/about',
