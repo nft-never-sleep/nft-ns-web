@@ -11,7 +11,7 @@
           <n-icon class="icon" size="18">
             <Search />
           </n-icon>
-          <input :placeholder="$t('input.placeholder')" />
+          <input :placeholder="$t('input.placeholder')" @keyup.enter="search" v-model="searchAccountId"/>
         </div>
       </div>
       <div class="tool-btns">
@@ -61,6 +61,7 @@ export default {
   data() {
     return {
       accountId: null,
+      searchAccountId: '',
     };
   },
   methods: {
@@ -78,6 +79,16 @@ export default {
       this.update({ key: 'account_id', value: this.accountId })
       this.update({ key: 'account', value: { ...this.$near.user } })
     },
+    async search(){
+      if (this.searchAccountId) {
+        try {
+          const tokens = await this.useApi('nft_tokens_for_owner',{account_id: this.searchAccountId })
+          console.log(tokens);
+        } catch (error) {
+          
+        }
+      }
+    }
   },
   mounted() {
     setTimeout(async () => {
