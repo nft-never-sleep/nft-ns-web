@@ -88,17 +88,6 @@ export default {
       this.update({ key: "account_id", value: this.accountId });
       this.update({ key: "account", value: { ...this.$near.user } });
     },
-    // async search() {
-    //   console.log(1);
-    //   if (this.searchAccountId) {
-    //     try {
-    //       const tokens = await this.useApi("nft_tokens_for_owner", {
-    //         account_id: this.searchAccountId,
-    //       });
-    //       console.log(tokens);
-    //     } catch (error) {}
-    //   }
-    // },
   },
   mounted() {
     setTimeout(async () => {
@@ -129,7 +118,7 @@ export default {
       console.log(searchAccountId);
       if (searchAccountId) {
         try {
-          const tokens = await proxy.useApi("nft_tokens_for_owner", {
+          const tokens = await proxy.useParasApi("nft_tokens_for_owner", {
             account_id: searchAccountId.value,
           });
           router.push({

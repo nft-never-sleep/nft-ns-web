@@ -38,9 +38,10 @@ export default {
     };
     onMounted(() => {
       setTimeout(async () => {
-        tokens.values = await proxy.useApi("nft_tokens_for_owner", {
+        tokens.values = await proxy.useParasApi("nft_tokens_for_owner", {
           account_id: proxy.$store.getters.account_id,
         });
+        console.log(tokens.values);
         loading.value = false;
         const media_base_url = "https://ipfs.fleek.co/ipfs/";
         collectibles.values = tokens.values.map((e) => {

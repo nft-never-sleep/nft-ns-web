@@ -41,7 +41,7 @@ export default {
     };
     onMounted(() => {
       setTimeout(async () => {
-        tokens.values = await proxy.useApi("nft_tokens", {
+        tokens.values = await proxy.useParasApi("nft_tokens", {
           from_index: "0",
           limit: 10,
         });

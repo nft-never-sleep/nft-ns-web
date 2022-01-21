@@ -207,13 +207,20 @@ export default {
     onMounted(() => {
       setTimeout(async () => {
         // 在进入页面是通过params获取nft的token_id然后从链侧获取nft信息
-        nft_info.values = await proxy.useApi("nft_token", {token_id: route.params.token_id});
-        
+        nft_info.values = await proxy.useParasApi("nft_token", {token_id: route.params.token_id});
         // 没有热门fnt接口直接获取随机连续nft
-        const hot_nft = await proxy.useApi("nft_tokens", {
+        const hot_nft = await proxy.useParasApi("nft_tokens", {
           from_index: Math.ceil(Math.random()*30).toString(),
           limit: 6,
         });
+        // nft_info.values.owner_id === this.$near.user.accountId  为自己的nft
+        if (nft_info.values.owner_id === this.$near.user.accountId) {
+          // 获取该nft的报价信息
+          const nft_bids = await proxy.useNnsApi("list_bids_by_nft", {nft_id: route.params.token_id});
+          
+        }else{
+
+        }
         const media_base_url = "https://ipfs.fleek.co/ipfs/";
         imgs.values = hot_nft.map((e) => {
           return {
@@ -222,6 +229,7 @@ export default {
             // data: e,
           };
         });
+
         console.log(imgs);
         // let { type, data } = route.params;
         // const _data = JSON.parse(data);
