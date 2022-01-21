@@ -15,6 +15,7 @@ var myMixin = {
           'nft_tokens_for_owner',//指定account_id下nft详细信息
           'nft_tokens',//ntf列表
           'nft_token',//根据token_id获取制定nft信息
+          'list_bids_by_nft',//根据token_id获取报价列表
         ]
       })
       // console.log(this.$store.getters.account_id);
