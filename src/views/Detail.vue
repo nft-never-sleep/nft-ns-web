@@ -1,5 +1,8 @@
 <template>
   <div class="Detail">
+    <div class="loading" v-if="loading">
+      <img src="../assets/img/public/loading.gif" />
+    </div>
     <n-modal v-model:show="img_preview">
       <div class="wrap" :style="{ position: 'relative' }">
         <img
@@ -28,7 +31,6 @@
         </div>
       </div>
     </n-modal>
-
     <div class="dialog-modal" v-if="dialog_show">
       <div class="dialog-card">
         <div class="title">
@@ -47,7 +49,7 @@
             <div class="input-item">
               <p class="desc">Price</p>
               <div class="input custom">
-                <input placeholder="Amount" class="number" v-model="price"/>
+                <input placeholder="Amount" class="number" v-model="price" />
                 <img src="../assets/icon/input.png" />
               </div>
             </div>
@@ -55,13 +57,21 @@
               <div class="input-item">
                 <p class="desc">Start Time</p>
                 <div class="input">
-                  <n-date-picker type="datetime" clearable v-model:value="startTime"/>
+                  <n-date-picker
+                    type="datetime"
+                    clearable
+                    v-model:value="startTime"
+                  />
                 </div>
               </div>
               <div class="input-item">
                 <p class="desc">Ending Time</p>
                 <div class="input">
-                  <n-date-picker type="datetime" clearable v-model:value="endTime"/>
+                  <n-date-picker
+                    type="datetime"
+                    clearable
+                    v-model:value="endTime"
+                  />
                 </div>
               </div>
             </div>
@@ -69,11 +79,11 @@
           <div class="other">
             <div class="price">
               <p class="title">每秒价格</p>
-              <p class="data">{{unit_price}} Near</p>
+              <p class="data">{{ unit_price }} Near</p>
             </div>
             <div class="duration">
               <p class="title">报价时长</p>
-              <p class="data">{{duration}}</p>
+              <p class="data">{{ duration }}</p>
             </div>
           </div>
         </div>
@@ -82,9 +92,7 @@
     </div>
     <div class="exhibition">
       <div class="image-wrap">
-        <img
-         :src="'https://ipfs.fleek.co/ipfs/' + NFT_INFO.metadata.media"
-        />
+        <img :src="'https://ipfs.fleek.co/ipfs/' + NFT_INFO.metadata.media" />
         <div class="expand" @click="img_preview = true">
           <img src="../assets/icon/expand.png" />
         </div>
@@ -147,7 +155,6 @@
           <!-- 已租赁&不可使用：新的nft已经mint，expired time已经过期 -->
 
           <div v-if="nft_type === '1'">
-            <div class="tip">报价默认为自发起后的24小时</div>
             <button @click="dialog_show = true">Bid Now</button>
           </div>
           <div v-if="nft_type === '2'">
@@ -160,9 +167,34 @@
           <div v-if="nft_type === '4'">
             <button @click="dialog_show = true">Bid again</button>
           </div>
-          <div >
+
+          <!-- 不属于当前账户 填写自己的出价信息 -->
+          <div v-if="nft_type === 1">
+            <div class="tip">报价默认为自发起后的24小时</div>
             <button @click="dialog_show = true">出价</button>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="prices">
+      <p class="title">Bid list</p>
+      <div class="data-group">
+        <div class="header">
+          <div>报价者</div>
+          <div>报价金额</div>
+          <div>报价结束时间</div>
+          <div>租赁开始时间</div>
+          <div>报价状态</div>
+        </div>
+        <div class="item" v-for="(item, index) in nft_bids.values" :key="index">
+          <div>{{ item.bid_from }}</div>
+          <div>{{ item.amount }}</div>
+          <div>{{ $moment(item.lasts * 1000).format("yyyy/MM/DD hh:mm") }}</div>
+          <div>
+            {{ $moment(item.start_at * 1000).format("yyyy/MM/DD hh:mm") }}
+          </div>
+          <div>{{ item.bid_state }}</div>
+          <!-- {{ item.src_nft_id }}{{ item.src_nft_id }} -->
         </div>
       </div>
     </div>
@@ -184,127 +216,131 @@
 </template>
 
 <script>
-import { reactive, ref, toRef, toRefs ,computed} from "@vue/reactivity";
+import { reactive, ref, toRef, toRefs, computed, toRaw } from "@vue/reactivity";
 import { getCurrentInstance } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import { onMounted } from "@vue/runtime-core";
 export default {
   setup() {
-    const nft_info = reactive({
-      metadata: {
-        title: "title1",
-      },
-      owner_id: "owner", //nft拥有者
-      nft_img_url: "",
-      nft_link: "https:// ipfs.ajsf.5862",
-      production_name: "Unic - NFT Marketplace",
-      royalties: "20",
-      description:
-        "<link rel=preconnect href=https://fonts.gstatic.com crossorigin>",
-      smart_contact: "0xsmart",
-      user: {
-        avatar:
-          "http://cdn-ali-img-shstaticbz.shanhutech.cn/bizhi/staticwp/202106/87ad8b2009c489546b5d0a9482b5f08a--164538143.jpg",
-        name: "小王",
-      },
-    });
-    const imgs = reactive([]);
-    const route = useRoute();
+    const { proxy } = getCurrentInstance(); //vue
+    const loading = ref(true); //loading
+    const nft_info = reactive({}); //nft信息
+    const imgs = reactive([]); //下方热门nft
+    const route = useRoute(); //路由
     // ? type = 1  未租赁：没有人报价，新的nft还没有mint
     // ? type = 2 有报价的未租赁：有人报价，未统一，新的nft还没有mint
     // ? type = 3 已租赁&可使用：新的nft已经mint，expired time没过期
     // ? type = 4 已租赁&不可使用：新的nft已经mint，expired time已经过期
     const nft_type = ref(1);
-
-    const { proxy } = getCurrentInstance();
-
-    const dialog_show = ref(false);
+    const dialog_show = ref(false); //出价对话框
+    // 展示的信息
     let NFT_INFO = reactive({
       owner_id: "id",
       metadata: {
         title: "title",
       },
     });
+    let nft_bids = reactive([]); //报价信息
     onMounted(() => {
       setTimeout(async () => {
-        // 在进入页面是通过params获取nft的token_id然后从链侧获取nft信息
+        // ---------------在进入页面是通过params获取nft的token_id然后从链侧获取nft信息
         nft_info.values = await proxy.useParasApi("nft_token", {
           token_id: route.params.token_id,
         });
-        const data = await proxy.useParasApi("nft_token", {
-          token_id: route.params.token_id,
-        });
-        // 没有热门fnt接口直接获取随机连续nft
+        console.log(nft_info.values);
+        // ----------------在进入页面是通过params获取nft的token_id然后从链侧获取nft信息
+
+        //----------没有热门fnt接口直接获取随机连续nft
         const hot_nft = await proxy.useParasApi("nft_tokens", {
           from_index: Math.ceil(Math.random() * 30).toString(),
           limit: 6,
         });
-        console.log(nft_info.values);
-        // nft_info.values.owner_id === this.$near.user.accountId  为自己的nft
-        if (nft_info.values.owner_id === proxy.$near.user.accountId) {
-          let parasContract = process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'x.paras.near'
-          // 获取该nft的报价信息
-          const nft_bids = await proxy.useNnsApi("list_bids_by_nft", {nft_id: parasContract + ':' + route.params.token_id});
-          console.log(nft_bids);
-    
-        }else{
+        //----------没有热门fnt接口直接获取随机连续nft
 
+        // ? nft_info.values.owner_id === this.$near.user.accountId  为自己的nft
+
+        //----------获得出价信息
+        let parasContract =
+          process.env.NODE_ENV === "development"
+            ? "paras-token-v2.testnet"
+            : "x.paras.near";
+        // 获取该nft的报价信息
+        nft_bids.values = await proxy.useNnsApi("list_bids_by_nft", {
+          nft_id: parasContract + ":" + route.params.token_id,
+        });
+        console.log(nft_bids.values);
+        //----------获得出价信息
+
+        if (nft_info.values.owner_id === proxy.$near.user.accountId) {
+          // 这里是属于自己的nft
+          nft_type.value = 5;
+        } else {
+          //不是属于自己的nft
+          nft_type.value = 1;
         }
-        const media_base_url = "https://ipfs.fleek.co/ipfs/";
+        // 热门nft
         imgs.values = hot_nft.map((e) => {
           return {
-            img: media_base_url + e.metadata.media,
+            img: "https://ipfs.fleek.co/ipfs/" + e.metadata.media,
             title: e.metadata.title,
-            // data: e,
           };
         });
 
-        // console.log(imgs);
         // let { type, data } = route.params;
         // const _data = JSON.parse(data);
-        // console.log(_data); 
+        // console.log(_data);
         // console.log(type);
         // nft_type.value = type || 1;
         // NFT_INFO.values= nft_info.values
-        NFT_INFO.owner_id = data.owner_id;
-        NFT_INFO.token_id = data.token_id;
-        NFT_INFO.metadata = data.metadata;
-        NFT_INFO.approved_account_ids = data.approved_account_ids;
-        console.log(data);
-        nft_type.value = 1;
+        NFT_INFO.owner_id = toRaw(nft_info.values).owner_id;
+        NFT_INFO.token_id = toRaw(nft_info.values).token_id;
+        NFT_INFO.metadata = toRaw(nft_info.values).metadata;
+        NFT_INFO.approved_account_ids = toRaw(
+          nft_info.values
+        ).approved_account_ids;
+        loading.value = false;
       }, 40);
     });
 
     //提出报价
-    const price = ref(0)
-    const startTime = ref(proxy.$moment().toDate())
-    const endTime = ref(proxy.$moment().add(7, 'd').toDate())
-    const duration = computed(()=>{
-      let D = proxy.$moment(endTime.value).diff(startTime.value , 'days')
-      let HH = proxy.$moment(endTime.value).diff(startTime.value , 'HH') % 24
-      let mm = proxy.$moment(endTime.value).diff(startTime.value , 'mm') % 60
-      let ss = proxy.$moment(endTime.value).diff(startTime.value , 'ss') % 60
-      return  `${D}d:${HH}h:${mm}m:${ss}s`
-    })
-    const unit_price = computed(()=>{
-      let data = price.value / proxy.$moment(endTime.value).diff(startTime.value , 'ss')
-      return  data.toFixed(10)
-    })
+    const price = ref(0);
+    const startTime = ref(proxy.$moment().toDate());
+    const endTime = ref(proxy.$moment().add(7, "d").toDate());
+    const duration = computed(() => {
+      let D = proxy.$moment(endTime.value).diff(startTime.value, "days");
+      let HH = proxy.$moment(endTime.value).diff(startTime.value, "HH") % 24;
+      let mm = proxy.$moment(endTime.value).diff(startTime.value, "mm") % 60;
+      let ss = proxy.$moment(endTime.value).diff(startTime.value, "ss") % 60;
+      return `${D}d:${HH}h:${mm}m:${ss}s`;
+    });
+    const unit_price = computed(() => {
+      let data =
+        price.value / proxy.$moment(endTime.value).diff(startTime.value, "ss");
+      return data.toFixed(10);
+    });
     const confirm = async () => {
-      let parasContract = process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'x.paras.near'
+      let parasContract =
+        process.env.NODE_ENV === "development"
+          ? "paras-token-v2.testnet"
+          : "x.paras.near";
       let data = {
         nft_id: route.params.token_id,
-        bid_info:{
-          src_nft_id: parasContract + ':' + route.params.token_id,
+        bid_info: {
+          src_nft_id: parasContract + ":" + route.params.token_id,
           orgin_owner: nft_info.values.owner_id,
-          start_at: parseInt(proxy.$moment(startTime.value).format('X')),
-          lasts: parseInt(proxy.$moment(endTime.value).format('X')),
+          start_at: parseInt(proxy.$moment(startTime.value).format("X")),
+          lasts: parseInt(proxy.$moment(endTime.value).format("X")),
           amount: price.value,
-          msg: '',
-          bid_from: proxy.$near.user.accountId
-        }
-      }
-      await proxy.useNnsApi("offer_bid", data , '1000000000000000' , '1000000000000000000000000' )
+          msg: "",
+          bid_from: proxy.$near.user.accountId,
+        },
+      };
+      await proxy.useNnsApi(
+        "offer_bid",
+        data,
+        "300000000000000",
+        "1000000000000000000000000"
+      );
       // transactionHashes=33FmacPhVjBatNCGuYzNDDf1UX6EGLuVzTpW15gQCBeZ
       dialog_show.value = false;
     };
@@ -321,6 +357,8 @@ export default {
       endTime,
       duration,
       unit_price,
+      loading,
+      nft_bids,
     };
   },
 };
@@ -577,6 +615,58 @@ p {
       }
     }
   }
+  .prices {
+    .title {
+      margin-top: 20px;
+      font-family: Barlow;
+      font-style: normal;
+      font-weight: 800;
+      font-size: 24px;
+      line-height: 30px;
+      color: #000000;
+    }
+    .data-group {
+      margin-top: 10px;
+      background-color: #fff5d6;
+      padding-bottom: 50px;
+
+      & > div {
+        display: flex;
+        & > div {
+          flex: 1;
+          padding: 0 27px;
+        }
+        &.header {
+          height: 53px;
+          line-height: 53px;
+          font-family: Barlow;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 14px;
+          color: #4d4a40;
+        }
+        &.item {
+          height: 34.73px;
+          display: flex;
+          align-items: center;
+          font-family: Barlow;
+          font-style: normal;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 14px;
+          color: #000000;
+          &:hover {
+            background-color: #fff1c6;
+          }
+
+          // &:last-of-type {
+          //   width: 1px;
+          //   flex: auto;
+          // }
+        }
+      }
+    }
+  }
   .wrap {
     width: 688.2px;
     .img {
@@ -715,6 +805,21 @@ p {
         text-align: center;
         color: #000000;
       }
+    }
+  }
+  .loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    display: flex;
+    /* text-align: center; */
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 400px;
     }
   }
 }
