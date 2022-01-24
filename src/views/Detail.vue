@@ -310,7 +310,7 @@ export default {
       dialog_show.value = false;
     };
 
-    //同意报价
+    // 同意报价
     const agree = async (key) => {
       let data = {
         bid_id: Number(key),
@@ -319,7 +319,7 @@ export default {
       await proxy.useNnsApi("take_offer", data)
     }
 
-    //同意报价后租借者确认支付
+    // 同意报价后租借者确认支付
     const pay = async () => {
       let data = {
         bid_id: 5
