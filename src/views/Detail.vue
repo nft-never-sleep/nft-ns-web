@@ -331,19 +331,38 @@ export default {
           start_at: parseInt(proxy.$moment(startTime.value).format("X")),
           lasts: parseInt(proxy.$moment(endTime.value).format("X")),
           amount: price.value,
-          msg: "",
-          bid_from: proxy.$near.user.accountId,
-        },
-      };
-      await proxy.useNnsApi(
-        "offer_bid",
-        data,
-        "300000000000000",
-        "1000000000000000000000000"
-      );
+          msg: '',
+          bid_from: proxy.$near.user.accountId
+        }
+      }
+      await proxy.useNnsApi("offer_bid", data , '300000000000000' , '1000000000000000000000000' )
       // transactionHashes=33FmacPhVjBatNCGuYzNDDf1UX6EGLuVzTpW15gQCBeZ
       dialog_show.value = false;
     };
+
+    // 同意报价
+    const agree = async (key) => {
+      let data = {
+        bid_id: Number(key),
+        opinion: true
+      }
+      await proxy.useNnsApi("take_offer", data)
+    }
+
+    // 同意报价后租借者确认支付
+    const pay = async () => {
+      let data = {
+        bid_id: 5
+      }
+      let near = 0
+      for (const key in bid_state.values) {
+        if (bid_state.values[key].bid_state === 'Approved' && bid_state.values[key].bid_from === this.$near.user.accountId) {
+          near = Number(bid_state.values[key].amount) * 1000000000000000000000000
+          await proxy.useNnsApi("claim_nft", data , '300000000000000' , near.toString())
+        }
+      }
+    }
+
     return {
       NFT_INFO,
       // nft_info, //详细nft信息
@@ -359,6 +378,8 @@ export default {
       unit_price,
       loading,
       nft_bids,
+      agree,
+      pay,
     };
   },
 };

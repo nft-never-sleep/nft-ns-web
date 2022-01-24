@@ -22,6 +22,8 @@ var myMixin = {
       this.nnsApi = await this.$near.getContractInstance( this.nnsContract , {
         changeMethods: [
           'offer_bid',//发送报价
+          'take_offer',//同意报价
+          'claim_nft',//确认支付
         ],
         viewMethods: [
           'list_bids_by_nft',//根据token_id获取报价列表
