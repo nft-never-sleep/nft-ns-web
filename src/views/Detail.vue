@@ -160,9 +160,6 @@
           <div v-if="nft_type === '4'">
             <button @click="dialog_show = true">Bid again</button>
           </div>
-          <div >
-            <button @click="pay">出价</button>
-          </div>
         </div>
       </div>
     </div>
