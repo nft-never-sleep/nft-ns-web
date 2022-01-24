@@ -360,6 +360,15 @@ export default {
       await proxy.useNnsApi("take_offer", data);
     };
 
+    // 拒绝报价
+    const unAgree = async (key) => {
+      let data = {
+        bid_id: Number(key),
+        opinion: false
+      }
+      await proxy.useNnsApi("take_offer", data)
+    }
+
     // 同意报价后租借者确认支付
     const pay = async () => {
       let data = {
@@ -399,6 +408,7 @@ export default {
       loading,
       nft_bids,
       agree,
+      unAgree,
       pay,
     };
   },
