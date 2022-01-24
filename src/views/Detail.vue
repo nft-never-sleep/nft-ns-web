@@ -47,7 +47,7 @@
             <div class="input-item">
               <p class="desc">Price</p>
               <div class="input custom">
-                <input placeholder="Amount" class="number" />
+                <input placeholder="Amount" class="number" v-model="price"/>
                 <img src="../assets/icon/input.png" />
               </div>
             </div>
@@ -55,13 +55,13 @@
               <div class="input-item">
                 <p class="desc">Start Time</p>
                 <div class="input">
-                  <n-date-picker type="datetime" clearable />
+                  <n-date-picker type="datetime" clearable v-model:value="startTime"/>
                 </div>
               </div>
               <div class="input-item">
                 <p class="desc">Ending Time</p>
                 <div class="input">
-                  <n-date-picker type="datetime" clearable />
+                  <n-date-picker type="datetime" clearable v-model:value="endTime"/>
                 </div>
               </div>
             </div>
@@ -69,11 +69,11 @@
           <div class="other">
             <div class="price">
               <p class="title">每秒价格</p>
-              <p class="data">0 Near</p>
+              <p class="data">{{unit_price}} Near</p>
             </div>
             <div class="duration">
               <p class="title">报价时长</p>
-              <p class="data">2d：14h：54m：32s</p>
+              <p class="data">{{duration}}</p>
             </div>
           </div>
         </div>
@@ -156,6 +156,9 @@
           <div v-if="nft_type === '4'">
             <button @click="dialog_show = true">Bid again</button>
           </div>
+          <div >
+            <button @click="dialog_show = true">出价</button>
+          </div>
         </div>
       </div>
     </div>
@@ -173,7 +176,7 @@
 </template>
 
 <script>
-import { reactive, ref } from "@vue/reactivity";
+import { reactive, ref , toRef , computed} from "@vue/reactivity";
 import { getCurrentInstance } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import { onMounted } from "@vue/runtime-core";
@@ -214,10 +217,12 @@ export default {
           limit: 6,
         });
         // nft_info.values.owner_id === this.$near.user.accountId  为自己的nft
-        if (nft_info.values.owner_id === this.$near.user.accountId) {
+        if (nft_info.values.owner_id === proxy.$near.user.accountId) {
+          let parasContract = process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'x.paras.near'
           // 获取该nft的报价信息
-          const nft_bids = await proxy.useNnsApi("list_bids_by_nft", {nft_id: route.params.token_id});
-          
+          const nft_bids = await proxy.useNnsApi("list_bids_by_nft", {nft_id: parasContract + ':' + route.params.token_id});
+          console.log(nft_bids);
+    
         }else{
 
         }
@@ -233,13 +238,44 @@ export default {
         console.log(imgs);
         // let { type, data } = route.params;
         // const _data = JSON.parse(data);
-        // console.log(_data);
+        // console.log(_data); 
         // console.log(type);
         // nft_type.value = type || 1;
         nft_type.value = 1;
       }, 40);
     });
-    const confirm = () => {
+
+    //提出报价
+    const price = ref(0)
+    const startTime = ref(proxy.$moment().toDate())
+    const endTime = ref(proxy.$moment().add(7, 'd').toDate())
+    const duration = computed(()=>{
+      let D = proxy.$moment(endTime.value).diff(startTime.value , 'days')
+      let HH = proxy.$moment(endTime.value).diff(startTime.value , 'HH') % 24
+      let mm = proxy.$moment(endTime.value).diff(startTime.value , 'mm') % 60
+      let ss = proxy.$moment(endTime.value).diff(startTime.value , 'ss') % 60
+      return  `${D}d:${HH}h:${mm}m:${ss}s`
+    })
+    const unit_price = computed(()=>{
+      let data = price.value / proxy.$moment(endTime.value).diff(startTime.value , 'ss')
+      return  data.toFixed(10)
+    })
+    const confirm = async () => {
+      let parasContract = process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'x.paras.near'
+      let data = {
+        nft_id: route.params.token_id,
+        bid_info:{
+          src_nft_id: parasContract + ':' + route.params.token_id,
+          orgin_owner: nft_info.values.owner_id,
+          start_at: parseInt(proxy.$moment(startTime.value).format('X')),
+          lasts: parseInt(proxy.$moment(endTime.value).format('X')),
+          amount: price.value,
+          msg: '',
+          bid_from: proxy.$near.user.accountId
+        }
+      }
+      await proxy.useNnsApi("offer_bid", data , '1000000000000000' , '1000000000000000000000000' )
+      // transactionHashes=33FmacPhVjBatNCGuYzNDDf1UX6EGLuVzTpW15gQCBeZ
       dialog_show.value = false;
     };
     return {
@@ -249,6 +285,11 @@ export default {
       nft_type, //当前nft状况
       confirm,
       dialog_show,
+      price,
+      startTime,
+      endTime,
+      duration,
+      unit_price,
     };
   },
 };

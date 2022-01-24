@@ -34,14 +34,18 @@ var myMixin = {
       // console.log(tokens2);
     },
     //调用api，分别传入API名称和传入参数
-    async useParasApi(apiName,data){
+    async useParasApi(apiName , data , attachedGAS , attachedDeposit){
       if (this.$store.getters.account_id) {
         let chainRes = null
         let promise = () => {
           return new Promise((resolve , reject) =>{
             try {
               setTimeout(async() => {
-                chainRes = await this.parasApi[apiName](data)
+                if (attachedGAS && attachedDeposit) {
+                  chainRes = await this.parasApi[apiName](data , attachedGAS , attachedDeposit)
+                }else{
+                  chainRes = await this.parasApi[apiName](data)
+                }
                 resolve(chainRes)              
               }, 40);
             } catch (error) {
@@ -59,15 +63,18 @@ var myMixin = {
         await this.$near.loginAccount()
       }
     },
-
-    async useNnsApi(apiName,data){
+    async useNnsApi(apiName , data , attachedGAS , attachedDeposit){
       if (this.$store.getters.account_id) {
         let chainRes = null
         let promise = () => {
           return new Promise((resolve , reject) =>{
             try {
               setTimeout(async() => {
-                chainRes = await this.nnsApi[apiName](data)
+                if (attachedGAS && attachedDeposit) {
+                  chainRes = await this.nnsApi[apiName](data , attachedGAS , attachedDeposit)
+                }else{
+                  chainRes = await this.nnsApi[apiName](data)
+                }
                 resolve(chainRes)              
               }, 40);
             } catch (error) {
