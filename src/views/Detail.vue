@@ -196,8 +196,8 @@
           </div>
           <div>{{ item.bid_state }}</div>
           <div v-if="nft_type === 5" class="operate-btns">
-            <button>Refuse</button>
-            <button @click="()=>agree(index)">Agree</button>
+            <button @click="() => unAgree(index)" :disabled="is_bided">Refuse</button>
+            <button @click="() => agree(index)" :disabled="is_bided">Agree</button>
           </div>
           <!-- {{ item.src_nft_id }}{{ item.src_nft_id }} -->
         </div>
@@ -232,10 +232,12 @@ export default {
     const nft_info = reactive({}); //nft信息
     const imgs = reactive([]); //下方热门nft
     const route = useRoute(); //路由
+    const is_bided = ref(false); //是否已经出借
     // ? type = 1  未租赁：没有人报价，新的nft还没有mint
     // ? type = 2 有报价的未租赁：有人报价，未统一，新的nft还没有mint
     // ? type = 3 已租赁&可使用：新的nft已经mint，expired time没过期
     // ? type = 4 已租赁&不可使用：新的nft已经mint，expired time已经过期
+
     const nft_type = ref(1);
     const dialog_show = ref(false); //出价对话框
     // 展示的信息
@@ -273,7 +275,13 @@ export default {
         nft_bids.values = await proxy.useNnsApi("list_bids_by_nft", {
           nft_id: parasContract + ":" + route.params.token_id,
         });
-        console.log(nft_bids.values);
+        for (let item in nft_bids.values) {
+          // 已经出借
+          if (toRaw(nft_bids.values[item]).bid_state === "Consumed") {
+            is_bided.value = true;
+            break;
+          }
+        }
         //----------获得出价信息
 
         if (nft_info.values.owner_id === proxy.$near.user.accountId) {
@@ -364,10 +372,10 @@ export default {
     const unAgree = async (key) => {
       let data = {
         bid_id: Number(key),
-        opinion: false
-      }
-      await proxy.useNnsApi("take_offer", data)
-    }
+        opinion: false,
+      };
+      await proxy.useNnsApi("take_offer", data);
+    };
 
     // 同意报价后租借者确认支付
     const pay = async () => {
@@ -410,6 +418,7 @@ export default {
       agree,
       unAgree,
       pay,
+      is_bided
     };
   },
 };
