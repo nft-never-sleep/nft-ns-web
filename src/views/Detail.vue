@@ -185,6 +185,7 @@
           <div>报价结束时间</div>
           <div>租赁开始时间</div>
           <div>报价状态</div>
+          <div class="operate" v-if="nft_type === 5">操作</div>
         </div>
         <div class="item" v-for="(item, index) in nft_bids.values" :key="index">
           <div>{{ item.bid_from }}</div>
@@ -194,6 +195,10 @@
             {{ $moment(item.start_at * 1000).format("yyyy/MM/DD hh:mm") }}
           </div>
           <div>{{ item.bid_state }}</div>
+          <div v-if="nft_type === 5" class="operate-btns">
+            <button>Refuse</button>
+            <button @click="()=>agree(index)">Agree</button>
+          </div>
           <!-- {{ item.src_nft_id }}{{ item.src_nft_id }} -->
         </div>
       </div>
@@ -272,6 +277,7 @@ export default {
         //----------获得出价信息
 
         if (nft_info.values.owner_id === proxy.$near.user.accountId) {
+          console.log("your nft");
           // 这里是属于自己的nft
           nft_type.value = 5;
         } else {
@@ -331,11 +337,16 @@ export default {
           start_at: parseInt(proxy.$moment(startTime.value).format("X")),
           lasts: parseInt(proxy.$moment(endTime.value).format("X")),
           amount: price.value,
-          msg: '',
-          bid_from: proxy.$near.user.accountId
-        }
-      }
-      await proxy.useNnsApi("offer_bid", data , '300000000000000' , '1000000000000000000000000' )
+          msg: "",
+          bid_from: proxy.$near.user.accountId,
+        },
+      };
+      await proxy.useNnsApi(
+        "offer_bid",
+        data,
+        "300000000000000",
+        "1000000000000000000000000"
+      );
       // transactionHashes=33FmacPhVjBatNCGuYzNDDf1UX6EGLuVzTpW15gQCBeZ
       dialog_show.value = false;
     };
@@ -344,24 +355,33 @@ export default {
     const agree = async (key) => {
       let data = {
         bid_id: Number(key),
-        opinion: true
-      }
-      await proxy.useNnsApi("take_offer", data)
-    }
+        opinion: true,
+      };
+      await proxy.useNnsApi("take_offer", data);
+    };
 
     // 同意报价后租借者确认支付
     const pay = async () => {
       let data = {
-        bid_id: 5
-      }
-      let near = 0
+        bid_id: 5,
+      };
+      let near = 0;
       for (const key in bid_state.values) {
-        if (bid_state.values[key].bid_state === 'Approved' && bid_state.values[key].bid_from === this.$near.user.accountId) {
-          near = Number(bid_state.values[key].amount) * 1000000000000000000000000
-          await proxy.useNnsApi("claim_nft", data , '300000000000000' , near.toString())
+        if (
+          bid_state.values[key].bid_state === "Approved" &&
+          bid_state.values[key].bid_from === this.$near.user.accountId
+        ) {
+          near =
+            Number(bid_state.values[key].amount) * 1000000000000000000000000;
+          await proxy.useNnsApi(
+            "claim_nft",
+            data,
+            "300000000000000",
+            near.toString()
+          );
         }
       }
-    }
+    };
 
     return {
       NFT_INFO,
@@ -679,7 +699,25 @@ p {
           &:hover {
             background-color: #fff1c6;
           }
-
+          .operate-btns {
+            button {
+              width: 71.7px;
+              height: 30px;
+              border: none;
+              background-color: transparent;
+              outline: none;
+              box-sizing: border-box;
+              border-radius: 5px;
+              cursor: pointer;
+              &:first-of-type {
+                border: 1px solid #000000;
+              }
+              &:last-of-type {
+                background: #fecc00;
+                margin-left: 9px;
+              }
+            }
+          }
           // &:last-of-type {
           //   width: 1px;
           //   flex: auto;
