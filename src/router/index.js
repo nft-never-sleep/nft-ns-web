@@ -21,6 +21,10 @@ const routes = [
         path: "recent",
         component: () => import(/* webpackChunkName: "recent" */ '../views/Recent.vue')
       },
+      {
+        path: "test",
+        component: () => import(/* webpackChunkName: "recent" */ '../views/test.vue')
+      },
     ]
   },
   {

@@ -4,7 +4,7 @@
       <div class="logo">
         <!-- <p class="p1">NFT Lease</p>
         <p class="p2">NFT Lease</p> -->
-        <img src="../assets/img/public/logo.png" />
+        <img src="../assets/img/public/logo.svg" />
       </div>
       <div class="search-area">
         <div class="input">
