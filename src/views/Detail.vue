@@ -161,7 +161,7 @@
             <button @click="dialog_show = true">Bid again</button>
           </div>
           <div >
-            <button @click="dialog_show = true">出价</button>
+            <button @click="pay">出价</button>
           </div>
         </div>
       </div>
@@ -225,6 +225,8 @@ export default {
         title: "title",
       },
     });
+
+    const nft_bids = reactive({}); // 报价信息
     onMounted(() => {
       setTimeout(async () => {
         // 在进入页面是通过params获取nft的token_id然后从链侧获取nft信息
@@ -244,9 +246,8 @@ export default {
         if (nft_info.values.owner_id === proxy.$near.user.accountId) {
           let parasContract = process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'x.paras.near'
           // 获取该nft的报价信息
-          const nft_bids = await proxy.useNnsApi("list_bids_by_nft", {nft_id: parasContract + ':' + route.params.token_id});
+          nft_bids.values = await proxy.useNnsApi("list_bids_by_nft", {nft_id: parasContract + ':' + route.params.token_id});
           console.log(nft_bids);
-    
         }else{
 
         }
@@ -272,7 +273,7 @@ export default {
         NFT_INFO.approved_account_ids = data.approved_account_ids;
         console.log(data);
         nft_type.value = 1;
-      }, 40);
+      }, 50);
     });
 
     //提出报价
@@ -304,10 +305,34 @@ export default {
           bid_from: proxy.$near.user.accountId
         }
       }
-      await proxy.useNnsApi("offer_bid", data , '1000000000000000' , '1000000000000000000000000' )
+      await proxy.useNnsApi("offer_bid", data , '300000000000000' , '1000000000000000000000000' )
       // transactionHashes=33FmacPhVjBatNCGuYzNDDf1UX6EGLuVzTpW15gQCBeZ
       dialog_show.value = false;
     };
+
+    //同意报价
+    const agree = async (key) => {
+      let data = {
+        bid_id: Number(key),
+        opinion: true
+      }
+      await proxy.useNnsApi("take_offer", data)
+    }
+
+    //同意报价后租借者确认支付
+    const pay = async () => {
+      let data = {
+        bid_id: 5
+      }
+      let near = 0
+      for (const key in bid_state.values) {
+        if (bid_state.values[key].bid_state === 'Approved' && bid_state.values[key].bid_from === this.$near.user.accountId) {
+          near = Number(bid_state.values[key].amount) * 1000000000000000000000000
+          await proxy.useNnsApi("claim_nft", data , '300000000000000' , near.toString())
+        }
+      }
+    }
+
     return {
       NFT_INFO,
       // nft_info, //详细nft信息
@@ -321,6 +346,8 @@ export default {
       endTime,
       duration,
       unit_price,
+      agree,
+      pay,
     };
   },
 };
