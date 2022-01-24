@@ -23,7 +23,7 @@
         >
           <img
             :style="{ width: '100%', display: 'block' }"
-            src="http://cdn-ali-img-shstaticbz.shanhutech.cn/bizhi/staticwp/202106/87ad8b2009c489546b5d0a9482b5f08a--164538143.jpg"
+            :src="'https://ipfs.fleek.co/ipfs/' + NFT_INFO.metadata.media"
           />
         </div>
       </div>
@@ -83,7 +83,7 @@
     <div class="exhibition">
       <div class="image-wrap">
         <img
-          src="http://cdn-ali-img-shstaticbz.shanhutech.cn/bizhi/staticwp/202106/87ad8b2009c489546b5d0a9482b5f08a--164538143.jpg"
+         :src="'https://ipfs.fleek.co/ipfs/' + NFT_INFO.metadata.media"
         />
         <div class="expand" @click="img_preview = true">
           <img src="../assets/icon/expand.png" />
@@ -95,10 +95,12 @@
           <div class="top">
             <div class="user">
               <div class="avatar">
-                <img :src="nft_info.user.avatar" />
+                <!-- <img :src="nft_info.user.avatar" /> -->
               </div>
               <div class="info">
-                <p class="name">{{ nft_info.user.name }}</p>
+                <p class="name">
+                  {{ NFT_INFO.owner_id }}
+                </p>
                 <p class="tag">Owner</p>
               </div>
             </div>
@@ -106,30 +108,32 @@
           </div>
           <div class="nft-info">
             <p class="name">
-              {{ nft_info.production_name }}
+              {{ NFT_INFO.metadata.title }}
             </p>
             <p class="tag">Production name</p>
-            <p class="desc">{{ nft_info.description }}</p>
+            <p class="desc">
+              {{ NFT_INFO.metadata.description || "没有 description" }}
+            </p>
             <div class="process">
               <div class="royal">
                 <p class="name">Royalties:</p>
                 <div class="line"></div>
                 <div class="content">
-                  {{ nft_info.royalties }}
+                  <!-- {{ nft_info.royalties }} -->
                 </div>
               </div>
               <div class="smart-contact">
                 <p class="name">Smart contract:</p>
                 <div class="line"></div>
                 <div class="content">
-                  {{ nft_info.royalties }}
+                  <!-- {{ nft_info.royalties }} -->
                 </div>
               </div>
               <div class="nft-link">
                 <p class="name">NFT Link:</p>
                 <div class="line"></div>
                 <div class="content">
-                  {{ nft_info.nft_link }}
+                  <!-- {{ nft_info.nft_link }} -->
                 </div>
               </div>
             </div>
@@ -162,7 +166,11 @@
     <div class="other-nft">
       <p class="title">🔥Hot NFTs</p>
       <div class="card-group">
-        <div class="card-wrap" v-for="(item, index) in imgs.values" :key="index">
+        <div
+          class="card-wrap"
+          v-for="(item, index) in imgs.values"
+          :key="index"
+        >
           <div class="card">
             <img :src="item.img" />
           </div>
@@ -173,13 +181,17 @@
 </template>
 
 <script>
-import { reactive, ref } from "@vue/reactivity";
+import { reactive, ref, toRef, toRefs } from "@vue/reactivity";
 import { getCurrentInstance } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import { onMounted } from "@vue/runtime-core";
 export default {
   setup() {
     const nft_info = reactive({
+      metadata: {
+        title: "title1",
+      },
+      owner_id: "owner", //nft拥有者
       nft_img_url: "",
       nft_link: "https:// ipfs.ajsf.5862",
       production_name: "Unic - NFT Marketplace",
@@ -204,22 +216,34 @@ export default {
     const { proxy } = getCurrentInstance();
 
     const dialog_show = ref(false);
+    let NFT_INFO = reactive({
+      owner_id: "id",
+      metadata: {
+        title: "title",
+      },
+    });
     onMounted(() => {
       setTimeout(async () => {
         // 在进入页面是通过params获取nft的token_id然后从链侧获取nft信息
-        nft_info.values = await proxy.useParasApi("nft_token", {token_id: route.params.token_id});
+        nft_info.values = await proxy.useParasApi("nft_token", {
+          token_id: route.params.token_id,
+        });
+        const data = await proxy.useParasApi("nft_token", {
+          token_id: route.params.token_id,
+        });
         // 没有热门fnt接口直接获取随机连续nft
         const hot_nft = await proxy.useParasApi("nft_tokens", {
-          from_index: Math.ceil(Math.random()*30).toString(),
+          from_index: Math.ceil(Math.random() * 30).toString(),
           limit: 6,
         });
+        console.log(nft_info.values);
         // nft_info.values.owner_id === this.$near.user.accountId  为自己的nft
-        if (nft_info.values.owner_id === this.$near.user.accountId) {
+        if (nft_info.values.owner_id === proxy.$near.user.accountId) {
           // 获取该nft的报价信息
-          const nft_bids = await proxy.useNnsApi("list_bids_by_nft", {nft_id: route.params.token_id});
-          
-        }else{
-
+          const nft_bids = await proxy.useNnsApi("list_bids_by_nft", {
+            nft_id: route.params.token_id,
+          });
+        } else {
         }
         const media_base_url = "https://ipfs.fleek.co/ipfs/";
         imgs.values = hot_nft.map((e) => {
@@ -230,12 +254,18 @@ export default {
           };
         });
 
-        console.log(imgs);
+        // console.log(imgs);
         // let { type, data } = route.params;
         // const _data = JSON.parse(data);
         // console.log(_data);
         // console.log(type);
         // nft_type.value = type || 1;
+        // NFT_INFO.values= nft_info.values
+        NFT_INFO.owner_id = data.owner_id;
+        NFT_INFO.token_id = data.token_id;
+        NFT_INFO.metadata = data.metadata;
+        NFT_INFO.approved_account_ids = data.approved_account_ids;
+        console.log(data);
         nft_type.value = 1;
       }, 40);
     });
@@ -243,7 +273,8 @@ export default {
       dialog_show.value = false;
     };
     return {
-      nft_info, //详细nft信息
+      NFT_INFO,
+      // nft_info, //详细nft信息
       imgs, //下方热点nft
       img_preview: ref(false), //是否显示预览图
       nft_type, //当前nft状况
