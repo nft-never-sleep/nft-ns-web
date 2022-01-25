@@ -361,7 +361,7 @@ export default {
           orgin_owner: nft_info.values.owner_id,
           start_at: parseInt(proxy.$moment(startTime.value).format("X")),
           lasts: parseInt(proxy.$moment(endTime.value).format("X")),
-          amount: price.value,
+          amount: price.value.toString() + '',
           msg: "",
           bid_from: proxy.$near.user.accountId,
         },

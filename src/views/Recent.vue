@@ -63,7 +63,7 @@ export default {
             nftData[index].metadata.img =
               "https://ipfs.fleek.co/ipfs/" + data.metadata.media;
           } else if (
-            nftData[index].token_id === nftData[nftData.length - 1].token_id
+            nftData[index].token_id === nftData[nftData.length - 1].token_id 
           ) {
             nftData[nftData.length - 1].metadata = nftData[index].metadata;
             break;
