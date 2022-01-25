@@ -118,7 +118,6 @@
               </div>
             </div>
             <div class="like">
-              <div :class="!like ? 'like' : 'dislike'" @click="like=!like"></div>
               <div :class="like ? 'like' : 'dislike'"  @click="like=!like"></div>
             </div>
           </div>
