@@ -37,7 +37,7 @@ export default {
     detail(index) {
       // console.log(this.imgs[index]);
       // const { token_id } = tokens.values[index];
-      router.push("/detail/" + this.imgs[index].token_id);
+      this.$router.push("/detail/" + this.imgs[index].token_id);
     },
   },
   mounted() {
@@ -67,7 +67,7 @@ export default {
             nftData[index].metadata.img =
               "https://ipfs.fleek.co/ipfs/" + data.metadata.media;
           } else if (
-            nftData[index].token_id === nftData[nftData.length - 1].token_id
+            nftData[index].token_id === nftData[nftData.length - 1].token_id 
           ) {
             nftData[nftData.length - 1].metadata = nftData[index].metadata;
             break;

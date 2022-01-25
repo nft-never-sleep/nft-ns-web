@@ -95,6 +95,26 @@ var myMixin = {
       }else{
         await this.$near.loginAccount()
       }
+    },
+    digitalProcessing(value){
+      let value_ = value.toString().split(".")
+      if (value_[1]) {
+        let r = value_[1].length
+        for (let index = 0; index < r; index++) {
+          if (value_[1][0] === '0') {
+            value_[1] = value_[1].substr(1)
+          }
+        }
+        for (let index = 0; index < (23 - r); index++) {
+          value_[1] += '0'
+        }
+        value_[0] = value_[0] === '0' ? '' : value_[0]
+      }else if (value_[0] !== '0') {
+        value_.push('00000000000000000000000')
+      }else{
+        value_.push('')
+      }
+      return value_[0] + value_[1]
     }
   },
   mounted(){
