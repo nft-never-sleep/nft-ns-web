@@ -69,9 +69,10 @@ export default {
             break;
           }
         }
-        this.imgs = nftData;
-        this.loading = false;
       }
+      this.imgs = nftData;
+      console.log(this.imgs);
+      this.loading = false;
     }, 40);
     // setTimeout(async () => {
     // const tokens = await this.useApi('nft_tokens_for_owner',{account_id: 'huishanlhr2.testnet' })
