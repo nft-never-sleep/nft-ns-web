@@ -196,11 +196,16 @@
           </div>
           <div>{{ item.bid_state }}</div>
           <div v-if="nft_type === 5" class="operate-btns">
-            <button @click="() => unAgree(index)" :disabled="is_bided">Refuse</button>
-            <button @click="() => agree(index)" :disabled="is_bided">Agree</button>
+            <button @click="() => unAgree(index)" :disabled="is_bided">
+              Refuse
+            </button>
+            <button @click="() => agree(index)" :disabled="is_bided">
+              Agree
+            </button>
           </div>
           <!-- {{ item.src_nft_id }}{{ item.src_nft_id }} -->
         </div>
+        <n-empty description="暂无报价" v-if="Object.keys(nft_bids.values).length === 0"> </n-empty>
       </div>
     </div>
     <div class="other-nft">
@@ -418,7 +423,7 @@ export default {
       agree,
       unAgree,
       pay,
-      is_bided
+      is_bided,
     };
   },
 };
