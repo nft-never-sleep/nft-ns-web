@@ -53,6 +53,7 @@
                   placeholder="Amount"
                   class="number"
                   v-model="price"
+                  type="number"
                 />
                 <img src="../assets/icon/input.png" />
               </div>
