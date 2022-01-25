@@ -16,7 +16,8 @@ var myMixin = {
           'nft_tokens_for_owner',//指定account_id下nft详细信息
           'nft_tokens',//ntf列表
           'nft_token',//根据token_id获取制定nft信息
-          'nft_supply_for_owner',//根据token_id获取nft数量
+          'nft_supply_for_owner',//根据account_id获取nft数量
+          'nft_total_supply',//nft总量
         ]
       })
       this.nnsApi = await this.$near.getContractInstance( this.nnsContract , {

@@ -15,6 +15,9 @@
           </div>
         </div>
       </div>
+      <div class="next-page">
+        <button v-if="collectibles.values.length < nft_supply_for_owner" @click="nexPage()">Nex Page</button>
+      </div>
     </div>
   </n-spin>
 </template>
@@ -36,28 +39,61 @@ export default {
       const { token_id } = tokens.values[index];
       router.push("/detail/" + token_id);
     };
+    const nft_supply_for_owner = ref(0)
+    const media_base_url = "https://ipfs.fleek.co/ipfs/";
     onMounted(() => {
       setTimeout(async () => {
-        tokens.values = await proxy.useParasApi("nft_tokens_for_owner", {
+        nft_supply_for_owner.value  = await proxy.useParasApi("nft_supply_for_owner", {
           account_id: proxy.$store.getters.account_id,
         });
-        console.log(tokens.values);
+        nft_supply_for_owner.value = parseInt(nft_supply_for_owner.value)
+        if (nft_supply_for_owner.value !== 0) {
+          tokens.values = await proxy.useParasApi("nft_tokens_for_owner", {
+            account_id: proxy.$store.getters.account_id,
+            from_index: '0',
+            limit: nft_supply_for_owner.value > 10 ? 10 : nft_supply_for_owner.value
+          });
+          collectibles.values = tokens.values.map((e) => {
+            return {
+              img: media_base_url + e.metadata.media,
+              title: e.metadata.title,
+              data: e,
+            };
+          });
+        }
         loading.value = false;
-        const media_base_url = "https://ipfs.fleek.co/ipfs/";
-        collectibles.values = tokens.values.map((e) => {
-          return {
-            img: media_base_url + e.metadata.media,
-            title: e.metadata.title,
-            data: e,
-          };
-        });
+        console.log(nft_supply_for_owner.value);
       }, 40);
     });
+
+    const nexPage = async () =>{
+      loading.value = true
+      let remaining = nft_supply_for_owner.value - tokens.values.length
+      console.log(nft_supply_for_owner.value,tokens.values.length,{account_id: proxy.$store.getters.account_id,
+        from_index: tokens.values.length.toString(),
+        limit: remaining > 10 ? 10 : remaining});
+      let data  = await proxy.useParasApi("nft_tokens_for_owner", {
+        account_id: proxy.$store.getters.account_id,
+        from_index: tokens.values.length.toString(),
+        limit: remaining > 10 ? 10 : remaining
+      });
+      let newData = data.map((e) => {
+        return {
+          img: media_base_url + e.metadata.media,
+          title: e.metadata.title,
+          data: e,
+        };
+      });
+      collectibles.values.push(...newData)
+      loading.value = false
+    }
     return {
       detail,
       loading,
       collectibles,
       tokens,
+      nft_supply_for_owner,
+      nexPage,
     };
   },
 };
@@ -120,6 +156,24 @@ export default {
           color: #000000;
         }
       }
+    }
+  }
+  .next-page{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-top: 10px;
+    button {
+      background: #fecc00;
+      border-radius: 6px;
+      width: 200px;
+      height: 32px;
+      border: none;
+      font-family: Barlow;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 15px;
+      color: #000000;
     }
   }
 }
