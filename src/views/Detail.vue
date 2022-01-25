@@ -49,7 +49,7 @@
             <div class="input-item">
               <p class="desc">Price</p>
               <div class="input custom">
-                <input placeholder="Amount" class="number" v-model="price" />
+                <input placeholder="Amount" class="number" v-model="price" type="number"/>
                 <img src="../assets/icon/input.png" />
               </div>
             </div>

@@ -2,11 +2,11 @@
   <div class="card-group">
     <div class="card" v-for="(item, index) in imgs" :key="index">
       <div class="top">
-        <img :src="item.img" />
+        <img :src="item.metadata.img" />
       </div>
       <div class="bottom">
         <!-- <button @click="lease(item.data)">Bid Now</button> -->
-        <button>Bid Now</button>
+        <button @click="detail(index)">Bid Now</button>
       </div>
     </div>
   </div>
@@ -20,25 +20,44 @@ export default {
     };
   },
   methods:{
-    async lease(data){
-      // let chainData = {
-      //   nft_id: data.token_id,
-      //   bid_info: {
-      //     src_nft_id: 'paras-token-v2.testnet:'+ data.token_id,
-      //     start_at: this.$moment().format('X'),
-      //     lasts: 600,
-      //     amount: '1',
-      //     msg: '',
-      //     bid_from: this.$near.user.accountId,
-      //     bid_state: 'huishanlhr2.testnet',
-      //   }
-      // }
-      // console.log(chainData);
-      // const quote = await this.useApi('offer_bid',chainData)
-      // console.log(quote);
+    detail(index) {
+      // console.log(this.imgs[index]);
+      // const { token_id } = tokens.values[index];
+      router.push("/detail/" + this.imgs[index].token_id);
     }
   },
-  async mounted() {
+  mounted() {
+    setTimeout(async() => {
+    let bidData = await this.useNnsApi("list_bids_by_sender", {sender_id: this.$store.getters.account_id});
+    let nftData = []
+    console.log(bidData);
+    // 循环报价历史
+    for (const key in bidData) {
+      let token_id_meta = bidData[key].src_nft_id.split(':')
+      let data = {
+        ...bidData[key],
+        bid_id: key,
+        metadata:{},
+        token_id: token_id_meta[1] + ':' + token_id_meta[2]
+      }
+      nftData.push(data)
+      // 循环nft数据信息
+      for (let index = 0; index < nftData.length; index++) {
+        // 如果在此之前有相同的token_id数据就将其metadata拷贝至末位，如果没有就向链侧获取数据
+        if (index === nftData.length - 1) {
+          console.log(1);
+          let data = await this.useParasApi("nft_token", {token_id: nftData[index].token_id});
+          nftData[index].metadata = data.metadata
+          nftData[index].metadata.img = "https://ipfs.fleek.co/ipfs/" + data.metadata.media
+        }else if(nftData[index].token_id === nftData[nftData.length - 1].token_id){
+          console.log(2);
+          nftData[nftData.length - 1].metadata = nftData[index].metadata
+          break; 
+        }
+      }
+    }
+    this.imgs = nftData
+    }, 40);
     // setTimeout(async () => {
       // const tokens = await this.useApi('nft_tokens_for_owner',{account_id: 'huishanlhr2.testnet' })
       // // 拼接url

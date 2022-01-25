@@ -27,6 +27,7 @@ var myMixin = {
         ],
         viewMethods: [
           'list_bids_by_nft',//根据token_id获取报价列表
+          'list_bids_by_sender',//根据AccountId获取报价列表
         ]
       })
       // console.log(this.$store.getters.account_id);
