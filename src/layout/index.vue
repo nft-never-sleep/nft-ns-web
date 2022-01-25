@@ -1,7 +1,7 @@
 <template>
   <div class="Layout">
     <div class="TopBar">
-      <div class="logo">
+      <div class="logo" @click="back">
         <!-- <p class="p1">NFT Lease</p>
         <p class="p2">NFT Lease</p> -->
         <img src="../assets/img/public/logo.svg" />
@@ -122,14 +122,18 @@ export default {
             account_id: searchAccountId.value,
           });
           router.push({
-            name:'Search',
-            params:{
-              data:JSON.stringify(tokens)
-            }
-          })
+            name: "Search",
+            params: {
+              data: JSON.stringify(tokens),
+            },
+          });
           console.log(tokens);
         } catch (error) {}
       }
+    };
+
+    const back = () => {
+       router.push("/home")
     };
     return {
       toggle_lang(value) {
@@ -142,6 +146,7 @@ export default {
       // 搜索
       search,
       searchAccountId,
+      back,
     };
   },
 };
@@ -169,6 +174,7 @@ export default {
     justify-content: center;
   }
   .logo {
+    cursor: pointer;
     width: 183px;
     font-size: 30px;
     position: relative;
@@ -194,6 +200,7 @@ export default {
       position: relative;
       width: 938px;
       height: 34px;
+
       .icon {
         position: absolute;
         color: #fde47c;
@@ -201,6 +208,8 @@ export default {
         top: 10px;
       }
       input {
+        width: 100%;
+        box-sizing: border-box;
         width: 100%;
         height: 100%;
         border: 1px solid #fde47c;
@@ -220,7 +229,7 @@ export default {
     .connect-btn {
       font-family: "Barlow", sans-serif;
       cursor: pointer;
-      width: 120px;
+      width: 140px;
       height: 34px;
       background: #fde47c;
       border: 1px solid #fdcc01;
