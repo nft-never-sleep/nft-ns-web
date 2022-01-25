@@ -26,8 +26,8 @@ export default {
   setup() {
     const tip_show = ref(false);
     const routes = reactive([
-      { to: "collectible", desc: "My Collectibles", active: true },
-      { to: "browse", desc: "Browse by category", active: false },
+      { to: "browse", desc: "Browse by category", active:  true },
+      { to: "collectible", desc: "My Collectibles", active: false},
       { to: "recent", desc: "Recent activity", active: false },
     ]);
     const set_cur_active_route = (path) => {
@@ -62,7 +62,6 @@ export default {
       routes,
       tip_show,
       get_class,
-      
     };
   },
 };

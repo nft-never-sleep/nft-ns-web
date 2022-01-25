@@ -4,6 +4,7 @@
       :class="get_class(item.active)"
       v-for="(item, index) in imgs"
       :key="index"
+      @click="() => toggle(index)"
     >
       <div class="img">
         <img :src="get_img(item.img)" />
@@ -17,9 +18,10 @@
 
 <script>
 import { reactive } from "@vue/reactivity";
+import { toRaw } from "vue";
 export default {
-  setup() {
-    const imgs = reactive([
+  setup(props, context) {
+    let imgs = reactive([
       {
         img: "all.png",
         desc: "All NFTs",
@@ -83,10 +85,30 @@ export default {
     ]);
     const get_img = (name) => require("../../assets/img/tab/" + name);
     const get_class = (active) => "tab " + (active ? "active" : "unactive");
+    const toggle = (index) => {
+      if (index === 0 || index === 1) {
+        const _imgs = toRaw(imgs);
+        let cur = _imgs.filter((e) => e.active)[0];
+        let cur_index;
+        _imgs.forEach((e, i) => {
+          if (e.active) {
+            cur_index = i;
+          }
+        });
+        if (_imgs[index].desc != cur.desc) {
+          console.log("tog");
+          imgs[cur_index].active = false;
+          imgs[index].active = true;
+          context.emit("toggle", imgs[index].desc);
+        }
+      }
+    };
+
     return {
       imgs,
       get_img,
-      get_class
+      get_class,
+      toggle,
     };
   },
 };
@@ -103,13 +125,13 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    &.unactive{
-        .img{
-            opacity: .6;
-        }
-        .desc{
-            opacity: .2;
-        }
+    &.unactive {
+      .img {
+        opacity: 0.6;
+      }
+      .desc {
+        opacity: 0.2;
+      }
     }
     .img {
       width: 62px;

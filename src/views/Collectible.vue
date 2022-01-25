@@ -11,12 +11,20 @@
             <img :src="item.img" />
           </div>
           <div class="bottom">
-            <button @click="() => detail(index)">Bid Now</button>
+            <button @click="() => detail(index)">On Sale</button>
           </div>
         </div>
       </div>
+      <div class="empty" v-if="collectibles.values.length === 0">
+        <img src="../assets/img/public/no-nft.png" />
+      </div>
       <div class="next-page">
-        <button v-if="collectibles.values.length < nft_supply_for_owner" @click="nexPage()">Nex Page</button>
+        <button
+          v-if="collectibles.values.length < nft_supply_for_owner"
+          @click="nexPage()"
+        >
+          Nex Page
+        </button>
       </div>
     </div>
   </n-spin>
@@ -39,19 +47,23 @@ export default {
       const { token_id } = tokens.values[index];
       router.push("/detail/" + token_id);
     };
-    const nft_supply_for_owner = ref(0)
+    const nft_supply_for_owner = ref(0);
     const media_base_url = "https://ipfs.fleek.co/ipfs/";
     onMounted(() => {
       setTimeout(async () => {
-        nft_supply_for_owner.value  = await proxy.useParasApi("nft_supply_for_owner", {
-          account_id: proxy.$store.getters.account_id,
-        });
-        nft_supply_for_owner.value = parseInt(nft_supply_for_owner.value)
+        nft_supply_for_owner.value = await proxy.useParasApi(
+          "nft_supply_for_owner",
+          {
+            account_id: proxy.$store.getters.account_id,
+          }
+        );
+        nft_supply_for_owner.value = parseInt(nft_supply_for_owner.value);
         if (nft_supply_for_owner.value !== 0) {
           tokens.values = await proxy.useParasApi("nft_tokens_for_owner", {
             account_id: proxy.$store.getters.account_id,
-            from_index: '0',
-            limit: nft_supply_for_owner.value > 10 ? 10 : nft_supply_for_owner.value
+            from_index: "0",
+            limit:
+              nft_supply_for_owner.value > 10 ? 10 : nft_supply_for_owner.value,
           });
           collectibles.values = tokens.values.map((e) => {
             return {
@@ -66,16 +78,18 @@ export default {
       }, 40);
     });
 
-    const nexPage = async () =>{
-      loading.value = true
-      let remaining = nft_supply_for_owner.value - tokens.values.length
-      console.log(nft_supply_for_owner.value,tokens.values.length,{account_id: proxy.$store.getters.account_id,
-        from_index: tokens.values.length.toString(),
-        limit: remaining > 10 ? 10 : remaining});
-      let data  = await proxy.useParasApi("nft_tokens_for_owner", {
+    const nexPage = async () => {
+      loading.value = true;
+      let remaining = nft_supply_for_owner.value - tokens.values.length;
+      console.log(nft_supply_for_owner.value, tokens.values.length, {
         account_id: proxy.$store.getters.account_id,
         from_index: tokens.values.length.toString(),
-        limit: remaining > 10 ? 10 : remaining
+        limit: remaining > 10 ? 10 : remaining,
+      });
+      let data = await proxy.useParasApi("nft_tokens_for_owner", {
+        account_id: proxy.$store.getters.account_id,
+        from_index: tokens.values.length.toString(),
+        limit: remaining > 10 ? 10 : remaining,
       });
       let newData = data.map((e) => {
         return {
@@ -84,9 +98,9 @@ export default {
           data: e,
         };
       });
-      collectibles.values.push(...newData)
-      loading.value = false
-    }
+      collectibles.values.push(...newData);
+      loading.value = false;
+    };
     return {
       detail,
       loading,
@@ -134,6 +148,7 @@ export default {
         overflow: hidden;
         border-radius: 10px;
         img {
+          height: 100%;
           width: 100%;
           object-fit: cover;
         }
@@ -158,7 +173,7 @@ export default {
       }
     }
   }
-  .next-page{
+  .next-page {
     display: flex;
     justify-content: center;
     align-content: center;
@@ -174,6 +189,18 @@ export default {
       font-weight: 600;
       font-size: 15px;
       color: #000000;
+    }
+  }
+  .empty {
+    margin-top: 100px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    img {
+      width: 140px;
     }
   }
 }

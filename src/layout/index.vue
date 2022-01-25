@@ -22,7 +22,7 @@
         <button class="connect-btn" @click="nearAccount">
           {{ gitAccountId ? gitAccountId : "connect-wallet" }}
         </button>
-        <n-switch
+        <!-- <n-switch
           class="toggle-lang-btn"
           :value="lang"
           checked-value="zh"
@@ -31,7 +31,7 @@
         >
           <template #checked>EN</template>
           <template #unchecked>中文</template>
-        </n-switch>
+        </n-switch> -->
       </div>
     </div>
     <div class="bg-wrap">

@@ -107,9 +107,6 @@
         <div class="content">
           <div class="top">
             <div class="user">
-              <div class="avatar">
-                <!-- <img :src="nft_info.user.avatar" /> -->
-              </div>
               <div class="info">
                 <p class="name">
                   {{ NFT_INFO.owner_id }}
@@ -470,6 +467,7 @@ p {
       img {
         display: block;
         height: 100%;
+        width: 100%;
         object-fit: cover;
       }
     }
@@ -506,7 +504,6 @@ p {
               display: flex;
               flex-direction: column;
               margin-top: 2px;
-              margin-left: 10px;
               p {
                 margin: 0;
                 &.name {
@@ -700,6 +697,8 @@ p {
           overflow: hidden;
           img {
             width: 100%;
+            height: 100%;
+            object-fit: cover;
           }
         }
       }

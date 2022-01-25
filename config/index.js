@@ -1,3 +1,3 @@
 export default {
-    default_lang: "zh"//默认中文
+    default_lang: "en"//默认中文
 }

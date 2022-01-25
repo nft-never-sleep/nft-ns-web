@@ -1,6 +1,7 @@
 <template>
   <n-spin :show="loading">
     <div class="card-group">
+      
       <div class="card-wrap" v-for="(item, index) in imgs" :key="index">
         <div :class="'card ' + item.bid_state">
           <div class="top">
@@ -12,9 +13,12 @@
           </div>
           <div class="bottom">
             <!-- <button @click="lease(item.data)">Bid Now</button> -->
-            <button @click="detail(index)">Bid Now</button>
+            <button @click="detail(index)">Bid Again</button>
           </div>
         </div>
+      </div>
+       <div class="empty" v-if="imgs.length === 0">
+        <img src="../assets/img/public/no-nft.png" />
       </div>
     </div>
   </n-spin>
@@ -117,6 +121,7 @@ export default {
           display: block;
           position: absolute;
           width: 31px;
+          height: 40px;
           right: 24px;
         }
       }
@@ -139,6 +144,7 @@ export default {
         overflow: hidden;
         border-radius: 10px;
         img {
+          height: 100%;
           width: 100%;
           object-fit: cover;
         }
@@ -161,6 +167,18 @@ export default {
           color: #000000;
         }
       }
+    }
+  }
+   .empty {
+    margin-top: 100px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    img {
+      width: 140px;
     }
   }
 }
