@@ -115,7 +115,10 @@
               </div>
             </div>
             <div class="like">
-              <div :class="like ? 'like' : 'dislike'"  @click="like=!like"></div>
+              <div
+                :class="like ? 'like' : 'dislike'"
+                @click="like = !like"
+              ></div>
             </div>
           </div>
           <div class="nft-info">
@@ -139,6 +142,7 @@
                 <div class="line"></div>
                 <div class="content">
                   <!-- {{ nft_info.royalties }} -->
+                  paras-token-v2.testnet
                 </div>
               </div>
               <div class="nft-link">
@@ -146,6 +150,7 @@
                 <div class="line"></div>
                 <div class="content">
                   <!-- {{ nft_info.nft_link }} -->
+                  {{ "https://ipfs.fleek.co/ipfs/" + NFT_INFO.metadata.media }}
                 </div>
               </div>
             </div>
@@ -330,7 +335,7 @@ export default {
     });
 
     //提出报价
-    const price = ref('0');
+    const price = ref("0");
     const startTime = ref(proxy.$moment().toDate());
     const endTime = ref(proxy.$moment().add(7, "d").toDate());
     const duration = computed(() => {
@@ -341,7 +346,9 @@ export default {
       return `${D}d:${HH}h:${mm}m:${ss}s`;
     });
     const unit_price = computed(() => {
-      let data = Number(price.value) / proxy.$moment(endTime.value).diff(startTime.value, "ss");
+      let data =
+        Number(price.value) /
+        proxy.$moment(endTime.value).diff(startTime.value, "ss");
       return data.toFixed(10);
     });
     const confirm = async () => {
@@ -355,7 +362,11 @@ export default {
           src_nft_id: parasContract + ":" + route.params.token_id,
           orgin_owner: nft_info.values.owner_id,
           start_at: parseInt(proxy.$moment(startTime.value).format("X")),
-          lasts: parseInt(proxy.$moment(endTime.value).diff(proxy.$moment(startTime.value),"X")),
+          lasts: parseInt(
+            proxy
+              .$moment(endTime.value)
+              .diff(proxy.$moment(startTime.value), "X")
+          ),
           amount: proxy.digitalProcessing(price.value),
           msg: "",
           bid_from: proxy.$near.user.accountId,
@@ -376,7 +387,7 @@ export default {
         bid_id: Number(key),
         opinion: true,
       };
-      await proxy.useNnsApi("take_offer", data , "300000000000000" , '1');
+      await proxy.useNnsApi("take_offer", data, "300000000000000", "1");
     };
 
     // 拒绝报价
@@ -385,7 +396,7 @@ export default {
         bid_id: Number(key),
         opinion: false,
       };
-      await proxy.useNnsApi("take_offer", data , "300000000000000" , '1');
+      await proxy.useNnsApi("take_offer", data, "300000000000000", "1");
     };
 
     // 同意报价后租借者确认支付
@@ -522,17 +533,17 @@ p {
               }
             }
           }
-          &>.like{
-            &>div{
+          & > .like {
+            & > div {
               margin-left: 8px;
               display: inline-block;
               width: 24.19px;
               height: 20.56px;
-              background-image: url('../assets/img/public/unactive-like.png');
+              background-image: url("../assets/img/public/unactive-like.png");
               background-size: 100%;
             }
-            &>.like{
-              background-image: url('../assets/img/public/active-like.png');
+            & > .like {
+              background-image: url("../assets/img/public/active-like.png");
             }
           }
         }
@@ -599,6 +610,12 @@ p {
                 &::before {
                   background: #2af192;
                 }
+              }
+              .content {
+                max-width: 200px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
               }
               .name {
                 margin-left: 10px;
@@ -924,7 +941,7 @@ p {
     align-items: center;
     justify-content: center;
     img {
-      width: 400px;
+      width: 140px;
     }
   }
 }

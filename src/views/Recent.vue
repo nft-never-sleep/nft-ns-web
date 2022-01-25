@@ -1,14 +1,12 @@
 <template>
   <n-spin :show="loading">
     <div class="card-group">
-      
       <div class="card-wrap" v-for="(item, index) in imgs" :key="index">
-        <div :class="'card ' + item.bid_state">
+        <div :class="'card'">
           <div class="top">
-            <img
-              class="inprogress"
-              src="../assets/img/public/on-progress.png"
-            />
+            <div :class="'mask ' + item.bid_state">
+              <img src="../assets/img/public/expired.png" />
+            </div>
             <img :src="item.metadata.img" />
           </div>
           <div class="bottom">
@@ -17,7 +15,7 @@
           </div>
         </div>
       </div>
-       <div class="empty" v-if="imgs.length === 0">
+      <div class="empty" v-if="imgs.length === 0">
         <img src="../assets/img/public/no-nft.png" />
       </div>
     </div>
@@ -67,7 +65,7 @@ export default {
             nftData[index].metadata.img =
               "https://ipfs.fleek.co/ipfs/" + data.metadata.media;
           } else if (
-            nftData[index].token_id === nftData[nftData.length - 1].token_id 
+            nftData[index].token_id === nftData[nftData.length - 1].token_id
           ) {
             nftData[nftData.length - 1].metadata = nftData[index].metadata;
             break;
@@ -116,21 +114,7 @@ export default {
       margin-top: 16px;
       transform: translateY(0);
       // 等待响应
-      &.InProgress {
-        .inprogress {
-          display: block;
-          position: absolute;
-          width: 31px;
-          height: 40px;
-          right: 24px;
-        }
-      }
-      .inprogress {
-        display: none;
-        position: absolute;
-        width: 31px;
-        right: 24px;
-      }
+  
       &:hover {
         cursor: pointer;
         transform: translateY(-3px);
@@ -143,6 +127,15 @@ export default {
         height: 250px;
         overflow: hidden;
         border-radius: 10px;
+        position: relative;
+        .mask {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          background-color: rgba(0, 0, 0, 0.4); //出价了
+        }
         img {
           height: 100%;
           width: 100%;
@@ -169,7 +162,7 @@ export default {
       }
     }
   }
-   .empty {
+  .empty {
     margin-top: 100px;
     display: flex;
     width: 100%;

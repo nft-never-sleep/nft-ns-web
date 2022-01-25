@@ -57,6 +57,7 @@ export default {
             account_id: proxy.$store.getters.account_id,
           }
         );
+        console.log()
         nft_supply_for_owner.value = parseInt(nft_supply_for_owner.value);
         if (nft_supply_for_owner.value !== 0) {
           tokens.values = await proxy.useParasApi("nft_tokens_for_owner", {
@@ -65,6 +66,7 @@ export default {
             limit:
               nft_supply_for_owner.value > 10 ? 10 : nft_supply_for_owner.value,
           });
+          console.log(tokens.values)
           collectibles.values = tokens.values.map((e) => {
             return {
               img: media_base_url + e.metadata.media,
