@@ -49,7 +49,12 @@
             <div class="input-item">
               <p class="desc">Price</p>
               <div class="input custom">
-                <input placeholder="Amount" class="number" v-model="price" type="number"/>
+                <input
+                  placeholder="Amount"
+                  class="number"
+                  v-model="price"
+                  type="number"
+                />
                 <img src="../assets/icon/input.png" />
               </div>
             </div>
@@ -112,7 +117,10 @@
                 <p class="tag">Owner</p>
               </div>
             </div>
-            <div class="like"></div>
+            <div class="like">
+              <div :class="!like ? 'like' : 'dislike'" @click="like=!like"></div>
+              <div :class="like ? 'like' : 'dislike'"  @click="like=!like"></div>
+            </div>
           </div>
           <div class="nft-info">
             <p class="name">
@@ -196,11 +204,20 @@
           </div>
           <div>{{ item.bid_state }}</div>
           <div v-if="nft_type === 5" class="operate-btns">
-            <button @click="() => unAgree(index)" :disabled="is_bided">Refuse</button>
-            <button @click="() => agree(index)" :disabled="is_bided">Agree</button>
+            <button @click="() => unAgree(index)" :disabled="is_bided">
+              Refuse
+            </button>
+            <button @click="() => agree(index)" :disabled="is_bided">
+              Agree
+            </button>
           </div>
           <!-- {{ item.src_nft_id }}{{ item.src_nft_id }} -->
         </div>
+        <n-empty
+          description="暂无报价"
+          v-if="Object.keys(nft_bids.values).length === 0"
+        >
+        </n-empty>
       </div>
     </div>
     <div class="other-nft">
@@ -399,8 +416,9 @@ export default {
         }
       }
     };
-
+    const like = ref(false);
     return {
+      like, //右上角的喜欢
       NFT_INFO,
       // nft_info, //详细nft信息
       imgs, //下方热点nft
@@ -418,7 +436,7 @@ export default {
       agree,
       unAgree,
       pay,
-      is_bided
+      is_bided,
     };
   },
 };
@@ -508,6 +526,19 @@ p {
                   opacity: 0.5;
                 }
               }
+            }
+          }
+          &>.like{
+            &>div{
+              margin-left: 8px;
+              display: inline-block;
+              width: 24.19px;
+              height: 20.56px;
+              background-image: url('../assets/img/public/unactive-like.png');
+              background-size: 100%;
+            }
+            &>.like{
+              background-image: url('../assets/img/public/active-like.png');
             }
           }
         }
