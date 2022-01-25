@@ -53,6 +53,9 @@ export default {
             from_index: "0",
             limit: nft_total_supply.value > 10 ? 10 : nft_total_supply.value,
           });
+          console.log('====================================');
+          console.log(tokens.values);
+          console.log('====================================');
           // 拼接url
           loading.value = false;
           collectibles.values = tokens.values.map((e) => {
