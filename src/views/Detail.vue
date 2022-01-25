@@ -53,7 +53,6 @@
                   placeholder="Amount"
                   class="number"
                   v-model="price"
-                  type="number"
                 />
                 <img src="../assets/icon/input.png" />
               </div>
@@ -333,7 +332,7 @@ export default {
     });
 
     //提出报价
-    const price = ref(0);
+    const price = ref('0');
     const startTime = ref(proxy.$moment().toDate());
     const endTime = ref(proxy.$moment().add(7, "d").toDate());
     const duration = computed(() => {
@@ -344,8 +343,7 @@ export default {
       return `${D}d:${HH}h:${mm}m:${ss}s`;
     });
     const unit_price = computed(() => {
-      let data =
-        price.value / proxy.$moment(endTime.value).diff(startTime.value, "ss");
+      let data = Number(price.value) / proxy.$moment(endTime.value).diff(startTime.value, "ss");
       return data.toFixed(10);
     });
     const confirm = async () => {
@@ -359,8 +357,8 @@ export default {
           src_nft_id: parasContract + ":" + route.params.token_id,
           orgin_owner: nft_info.values.owner_id,
           start_at: parseInt(proxy.$moment(startTime.value).format("X")),
-          lasts: parseInt(proxy.$moment(endTime.value).format("X")),
-          amount: price.value.toString() + '',
+          lasts: parseInt(proxy.$moment(endTime.value).diff(proxy.$moment(startTime.value),"X")),
+          amount: proxy.digitalProcessing(price.value),
           msg: "",
           bid_from: proxy.$near.user.accountId,
         },
@@ -371,7 +369,6 @@ export default {
         "300000000000000",
         "1000000000000000000000000"
       );
-      // transactionHashes=33FmacPhVjBatNCGuYzNDDf1UX6EGLuVzTpW15gQCBeZ
       dialog_show.value = false;
     };
 
@@ -381,7 +378,7 @@ export default {
         bid_id: Number(key),
         opinion: true,
       };
-      await proxy.useNnsApi("take_offer", data);
+      await proxy.useNnsApi("take_offer", data , "300000000000000" , '1');
     };
 
     // 拒绝报价
@@ -390,7 +387,7 @@ export default {
         bid_id: Number(key),
         opinion: false,
       };
-      await proxy.useNnsApi("take_offer", data);
+      await proxy.useNnsApi("take_offer", data , "300000000000000" , '1');
     };
 
     // 同意报价后租借者确认支付

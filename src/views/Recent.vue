@@ -12,7 +12,7 @@
           </div>
           <div class="bottom">
             <!-- <button @click="lease(item.data)">Bid Now</button> -->
-            <button @click="detail(index)">Bid Now</button>
+            <button @click="() => detail(index)">Bid Now</button>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@ export default {
     detail(index) {
       // console.log(this.imgs[index]);
       // const { token_id } = tokens.values[index];
-      router.push("/detail/" + this.imgs[index].token_id);
+      this.$router.push("/detail/" + this.imgs[index].token_id);
     },
   },
   mounted() {
