@@ -3,7 +3,7 @@
     <n-modal :show="tip_show">
       <div class="tip">
         <img src="../../assets/img/public/no-link.png" />
-        <button @click="tip_show = false">Connect wallet</button>
+        <button @click="logoin">Connect wallet</button>
       </div>
     </n-modal>
     <div class="tab-group">
@@ -18,12 +18,12 @@
 <script >
 import { useStore } from "vuex";
 import { reactive, ref } from "@vue/reactivity";
-import { onMounted } from "vue";
-import { toRaw } from "vue";
+import { onMounted , getCurrentInstance , toRaw} from "vue";
 import { onBeforeRouteUpdate, useRouter } from "vue-router";
 export default {
   methods: {},
   setup() {
+    const { proxy } = getCurrentInstance();
     const tip_show = ref(false);
     const routes = reactive([
       { to: "browse", desc: "Browse by category", active:  true },
@@ -58,10 +58,15 @@ export default {
       }
     });
     const get_class = (item) => "tab " + (item.active ? "active" : "unactive");
+
+    const logoin = async () => {
+      await proxy.$near.loginAccount()
+    }
     return {
       routes,
       tip_show,
       get_class,
+      logoin
     };
   },
 };
