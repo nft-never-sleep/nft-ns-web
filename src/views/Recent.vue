@@ -11,13 +11,14 @@
           <div class="top">
             <div :class="'mask '">
               <img
-                v-if="item.bid_state === 'InProgress'"
-                src="../assets/img/public/inprogress.png"
-              />
-              <img
                 v-if="item.expired"
                 src="../assets/img/public/expired.png"
               />
+              <img
+                v-if="item.bid_state === 'InProgress'"
+                src="../assets/img/public/inprogress.png"
+              />
+              
             </div>
             <img :src="item.metadata.img" />
           </div>
@@ -66,7 +67,7 @@ export default {
           metadata: {},
           token_id: token_id_meta[1] + ":" + token_id_meta[2],
           expired:
-            1643185366 * 1000 + bidData[key].lasts < new Date().getTime(),
+            (bidData[key].start_at * 1000 + bidData[key].lasts) < new Date().getTime(),
         };
         nftData.push(data);
         // 循环nft数据信息

@@ -61,7 +61,6 @@ export default {
             account_id: proxy.$store.getters.account_id,
           }
         );
-        console.log();
         nft_supply_for_owner.value = parseInt(nft_supply_for_owner.value);
         if (nft_supply_for_owner.value !== 0) {
           tokens.values = await proxy.useParasApi("nft_tokens_for_owner", {
@@ -95,7 +94,6 @@ export default {
             //------------ 获得拥有的每一个nft的报价列表
 
             collectibles.values = tokens.values.map((e, i) => {
-              console.log(have_price_group);
               return {
                 img: media_base_url + e.metadata.media,
                 title: e.metadata.title,
@@ -113,14 +111,14 @@ export default {
     const nexPage = async () => {
       loading.value = true;
       let remaining = nft_supply_for_owner.value - tokens.values.length;
-      console.log(nft_supply_for_owner.value, tokens.values.length, {
+      console.log({
         account_id: proxy.$store.getters.account_id,
-        from_index: tokens.values.length.toString(),
+        from_index: collectibles.values.length.toString(),
         limit: remaining > 10 ? 10 : remaining,
       });
       let data = await proxy.useParasApi("nft_tokens_for_owner", {
         account_id: proxy.$store.getters.account_id,
-        from_index: tokens.values.length.toString(),
+        from_index: collectibles.values.length.toString(),
         limit: remaining > 10 ? 10 : remaining,
       });
       let newData = data.map((e) => {
