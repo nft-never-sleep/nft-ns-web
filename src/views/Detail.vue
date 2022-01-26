@@ -421,18 +421,16 @@ export default {
         bid_id: 5,
       };
       let near = 0;
-      for (const key in bid_state.values) {
+      for (const key in nft_bids.values) {
         if (
-          bid_state.values[key].bid_state === "Approved" &&
-          bid_state.values[key].bid_from === this.$near.user.accountId
+          nft_bids.values[key].bid_state === "Approved" &&
+          nft_bids.values[key].bid_from === proxy.$near.user.accountId
         ) {
-          near =
-            Number(bid_state.values[key].amount) * 1000000000000000000000000;
           await proxy.useNnsApi(
             "claim_nft",
             data,
             "300000000000000",
-            near.toString()
+            nft_bids.values[key].amount
           );
         }
       }
