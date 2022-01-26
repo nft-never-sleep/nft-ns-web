@@ -294,6 +294,11 @@ export default {
           nft_id: parasContract + ":" + route.params.token_id,
         });
         for (let item in nft_bids.values) {
+          if (nft_bids.values[item].bid_state === 'Expired') {
+            delete nft_bids.values[item]
+          }
+        }
+        for (let item in nft_bids.values) {
           // 已经出借
           if (toRaw(nft_bids.values[item]).bid_state === "Consumed") {
             is_bided.value = true;
