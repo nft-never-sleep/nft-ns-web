@@ -5,7 +5,14 @@
         <div :class="'card'">
           <div class="top">
             <div :class="'mask ' + item.bid_state">
-              <img src="../assets/img/public/expired.png" />
+              <img
+                v-if="item.bid_state === 'InProgress'"
+                src="../assets/img/public/inprogress.png"
+              />
+              <img
+                v-if="item.bid_state === 'Expired'"
+                src="../assets/img/public/expired.png"
+              />
             </div>
             <img :src="item.metadata.img" />
           </div>
@@ -43,6 +50,7 @@ export default {
       let bidData = await this.useNnsApi("list_bids_by_sender", {
         sender_id: this.$store.getters.account_id,
       });
+
       let nftData = [];
       // 循环报价历史
       for (const key in bidData) {
@@ -114,7 +122,7 @@ export default {
       margin-top: 16px;
       transform: translateY(0);
       // 等待响应
-  
+
       &:hover {
         cursor: pointer;
         transform: translateY(-3px);
@@ -135,6 +143,13 @@ export default {
           top: 0;
           left: 0;
           background-color: rgba(0, 0, 0, 0.4); //出价了
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          img {
+            width: 40px;
+            height: 40px;
+          }
         }
         img {
           height: 100%;

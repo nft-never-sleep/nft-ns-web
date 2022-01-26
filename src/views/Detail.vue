@@ -182,6 +182,10 @@
             <div class="tip">报价默认为自发起后的24小时</div>
             <button @click="dialog_show = true">出价</button>
           </div>
+          <div v-if="nft_type === 2">
+            <div class="tip">报价默认为自发起后的24小时</div>
+            <button @click="dialog_show = true">出价</button>
+          </div>
         </div>
       </div>
     </div>
@@ -251,10 +255,6 @@ export default {
     const imgs = reactive([]); //下方热门nft
     const route = useRoute(); //路由
     const is_bided = ref(false); //是否已经出借
-    // ? type = 1  未租赁：没有人报价，新的nft还没有mint
-    // ? type = 2 有报价的未租赁：有人报价，未统一，新的nft还没有mint
-    // ? type = 3 已租赁&可使用：新的nft已经mint，expired time没过期
-    // ? type = 4 已租赁&不可使用：新的nft已经mint，expired time已经过期
 
     const nft_type = ref(1);
     const dialog_show = ref(false); //出价对话框
