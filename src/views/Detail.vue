@@ -417,15 +417,15 @@ export default {
 
     // 同意报价后租借者确认支付
     const pay = async () => {
-      let data = {
-        bid_id: 5,
-      };
       let near = 0;
       for (const key in nft_bids.values) {
         if (
           nft_bids.values[key].bid_state === "Approved" &&
           nft_bids.values[key].bid_from === proxy.$near.user.accountId
         ) {
+          let data = {
+            bid_id: parseInt(key),
+          };
           await proxy.useNnsApi(
             "claim_nft",
             data,
