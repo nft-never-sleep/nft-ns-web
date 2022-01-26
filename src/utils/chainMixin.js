@@ -39,7 +39,9 @@ var myMixin = {
     },
     //调用api，分别传入API名称和传入参数
     async useParasApi(apiName , data , attachedGAS , attachedDeposit){
-      if (this.$store.getters.account_id) {
+      if (!this.$store.getters.account_id && apiName === 'nft_supply_for_owner') {
+        await this.$near.loginAccount()
+      }else{
         let chainRes = null
         let promise = () => {
           return new Promise((resolve , reject) =>{
@@ -48,6 +50,7 @@ var myMixin = {
                 if (attachedGAS && attachedDeposit) {
                   chainRes = await this.parasApi[apiName](data , attachedGAS , attachedDeposit)
                 }else{
+                  console.log(this.parasApi);
                   chainRes = await this.parasApi[apiName](data)
                 }
                 resolve(chainRes)              
@@ -63,8 +66,6 @@ var myMixin = {
         }else{
           return err
         }
-      }else{
-        await this.$near.loginAccount()
       }
     },
     async useNnsApi(apiName , data , attachedGAS , attachedDeposit){
@@ -103,7 +104,7 @@ var myMixin = {
         for (let index = 0; index < r; index++) {
           if (value_[1][0] === '0') {
             value_[1] = value_[1].substr(1)
-          }
+          } 
         }
         for (let index = 0; index < (23 - r); index++) {
           value_[1] += '0'

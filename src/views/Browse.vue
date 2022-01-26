@@ -1,6 +1,5 @@
 <template>
   <Category @toggle="toggle"></Category>
-
   <n-spin :show="loading">
     <div class="card-group">
       <div
@@ -57,7 +56,23 @@ export default {
     const media_base_url = "https://ipfs.fleek.co/ipfs/";
     onMounted(() => {
       setTimeout(async () => {
-        get_and_clear_nfts();
+        nft_total_supply.value  = await proxy.useParasApi("nft_total_supply");
+        nft_total_supply.value = parseInt(nft_total_supply.value)
+        if (nft_total_supply.value !== 0) {
+          tokens.values = await proxy.useParasApi("nft_tokens", {
+            from_index: "0",
+            limit: nft_total_supply.value > 10 ? 10 : nft_total_supply.value,
+          });
+          // 拼接url
+          loading.value = false;
+          collectibles.values = tokens.values.map((e) => {
+            return {
+              img: media_base_url + e.metadata.media,
+              title: e.metadata.title,
+              data: e,
+            };
+          });
+        }
       }, 40);
     });
     const get_and_clear_nfts = async () => {
