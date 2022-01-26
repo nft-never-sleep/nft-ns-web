@@ -5,13 +5,17 @@
         class="card-wrap"
         v-for="(item, index) in collectibles.values"
         :key="index"
+        @click="() => detail(index)"
       >
-        <div class="card">
+        <div :class="'card ' + (item.price ? 'price' : '')">
           <div class="top">
+            <div class="mask">
+              <img src="../assets/img/public/price.png" />
+            </div>
             <img :src="item.img" />
           </div>
           <div class="bottom">
-            <button @click="() => detail(index)">On Sale</button>
+            <button>On Sale</button>
           </div>
         </div>
       </div>
@@ -33,7 +37,7 @@
 <script>
 import chainMixin from "../utils/chainMixin";
 import { useRouter } from "vue-router";
-import { getCurrentInstance, onMounted, ref, reactive } from "vue";
+import { getCurrentInstance, onMounted, ref, reactive, toRaw } from "vue";
 export default {
   mixins: [chainMixin],
   setup() {
@@ -57,7 +61,7 @@ export default {
             account_id: proxy.$store.getters.account_id,
           }
         );
-        console.log()
+        console.log();
         nft_supply_for_owner.value = parseInt(nft_supply_for_owner.value);
         if (nft_supply_for_owner.value !== 0) {
           tokens.values = await proxy.useParasApi("nft_tokens_for_owner", {
@@ -66,17 +70,43 @@ export default {
             limit:
               nft_supply_for_owner.value > 10 ? 10 : nft_supply_for_owner.value,
           });
-          console.log(tokens.values)
-          collectibles.values = tokens.values.map((e) => {
-            return {
-              img: media_base_url + e.metadata.media,
-              title: e.metadata.title,
-              data: e,
-            };
+
+          //------------ 获得拥有的每一个nft的报价列表
+          let have_price_group = []; //有报价的nft索引值
+          let parasContract =
+            process.env.NODE_ENV === "development"
+              ? "paras-token-v2.testnet"
+              : "x.paras.near";
+          const token_ids = toRaw(tokens.values).map((e) => e.token_id);
+          console.log(token_ids);
+          Promise.all(
+            token_ids.map((e) => {
+              return proxy.useNnsApi("list_bids_by_nft", {
+                nft_id: parasContract + ":" + e,
+              });
+            })
+          ).then((res) => {
+            console.log("promise all", res);
+            res.forEach((e, i) => {
+              if (Object.keys(e).length > 0) {
+                have_price_group.push(i);
+              }
+            });
+            //------------ 获得拥有的每一个nft的报价列表
+
+            collectibles.values = tokens.values.map((e, i) => {
+              console.log(have_price_group);
+              return {
+                img: media_base_url + e.metadata.media,
+                title: e.metadata.title,
+                data: e,
+                price: have_price_group.includes(i),
+              };
+            });
+            loading.value = false;
+            console.log(nft_supply_for_owner.value);
           });
         }
-        loading.value = false;
-        console.log(nft_supply_for_owner.value);
       }, 40);
     });
 
@@ -137,6 +167,25 @@ export default {
       transition: 0.3s;
       margin-top: 16px;
       transform: translateY(0);
+      .mask {
+        display: none;
+      }
+      &.price {
+        .mask {
+          background-color: rgba(0, 0, 0, 0.4);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: absolute;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          img {
+            width: 42px;
+            height: auto;
+          }
+        }
+      }
       &:hover {
         cursor: pointer;
         transform: translateY(-3px);
@@ -149,6 +198,8 @@ export default {
         height: 250px;
         overflow: hidden;
         border-radius: 10px;
+        position: relative;
+
         img {
           height: 100%;
           width: 100%;

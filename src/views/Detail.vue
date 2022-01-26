@@ -134,7 +134,7 @@
                 <p class="name">Royalties:</p>
                 <div class="line"></div>
                 <div class="content">
-                  <!-- {{ nft_info.royalties }} -->
+                  {{ "have not royalties" }}
                 </div>
               </div>
               <div class="smart-contact">
@@ -150,7 +150,15 @@
                 <div class="line"></div>
                 <div class="content">
                   <!-- {{ nft_info.nft_link }} -->
-                  {{ "https://ipfs.fleek.co/ipfs/" + NFT_INFO.metadata.media }}
+                  <a
+                    :href="
+                      'https://ipfs.fleek.co/ipfs/' + NFT_INFO.metadata.media
+                    "
+                  >
+                    {{
+                      "https://ipfs.fleek.co/ipfs/" + NFT_INFO.metadata.media
+                    }}
+                  </a>
                 </div>
               </div>
             </div>
@@ -202,7 +210,13 @@
         </div>
         <div class="item" v-for="(item, index) in nft_bids.values" :key="index">
           <div>{{ item.bid_from }}</div>
-          <div>{{ item.amount }}</div>
+          <div>
+            {{
+              item.amount > 1e20
+                ? (item.amount / 1e24).toFixed(3) + "NEAR"
+                : item.amount + " yocto"
+            }}
+          </div>
           <div>{{ $moment(item.lasts * 1000).format("yyyy/MM/DD hh:mm") }}</div>
           <div>
             {{ $moment(item.start_at * 1000).format("yyyy/MM/DD hh:mm") }}
@@ -294,13 +308,16 @@ export default {
           nft_id: parasContract + ":" + route.params.token_id,
         });
         for (let item in nft_bids.values) {
-          if (nft_bids.values[item].bid_state === 'Expired') {
-            delete nft_bids.values[item]
+          if (nft_bids.values[item].bid_state === "Expired") {
+            delete nft_bids.values[item];
           }
         }
         for (let item in nft_bids.values) {
           // 已经出借
-          if ((toRaw(nft_bids.values[item]).bid_state === "Consumed")||(toRaw(nft_bids.values[item]).bid_state === "Approved")) {
+          if (
+            toRaw(nft_bids.values[item]).bid_state === "Consumed" ||
+            toRaw(nft_bids.values[item]).bid_state === "Approved"
+          ) {
             is_bided.value = true;
             break;
           }
@@ -423,6 +440,7 @@ export default {
           nft_bids.values[key].bid_state === "Approved" &&
           nft_bids.values[key].bid_from === proxy.$near.user.accountId
         ) {
+          console.log(key);
           let data = {
             bid_id: parseInt(key),
           };
@@ -788,7 +806,7 @@ p {
               cursor: pointer;
               &:first-of-type {
                 border: 1px solid #000000;
-                &:disabled{
+                &:disabled {
                   border: 1px solid #ddd;
                 }
               }

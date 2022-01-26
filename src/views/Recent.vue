@@ -1,10 +1,15 @@
 <template>
   <n-spin :show="loading">
     <div class="card-group">
-      <div class="card-wrap" v-for="(item, index) in imgs" :key="index">
-        <div :class="'card'">
+      <div
+        class="card-wrap"
+        v-for="(item, index) in imgs"
+        :key="index"
+        @click="detail(index)"
+      >
+        <div :class="'card ' + item.bid_state">
           <div class="top">
-            <div :class="'mask ' + item.bid_state">
+            <div :class="'mask '">
               <img
                 v-if="item.bid_state === 'InProgress'"
                 src="../assets/img/public/inprogress.png"
@@ -18,7 +23,7 @@
           </div>
           <div class="bottom">
             <!-- <button @click="lease(item.data)">Bid Now</button> -->
-            <button @click="detail(index)">Bid Again</button>
+            <button>Bid Again</button>
           </div>
         </div>
       </div>
@@ -122,7 +127,11 @@ export default {
       margin-top: 16px;
       transform: translateY(0);
       // 等待响应
-
+      &.InProgress {
+        .top .mask {
+          display: flex;
+        }
+      }
       &:hover {
         cursor: pointer;
         transform: translateY(-3px);
@@ -136,6 +145,7 @@ export default {
         overflow: hidden;
         border-radius: 10px;
         position: relative;
+
         .mask {
           width: 100%;
           height: 100%;
@@ -143,7 +153,7 @@ export default {
           top: 0;
           left: 0;
           background-color: rgba(0, 0, 0, 0.4); //出价了
-          display: flex;
+          display: none;
           align-items: center;
           justify-content: center;
           img {
