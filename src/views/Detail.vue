@@ -295,7 +295,7 @@ export default {
         });
         for (let item in nft_bids.values) {
           // 已经出借
-          if (toRaw(nft_bids.values[item]).bid_state === "Consumed") {
+          if ((toRaw(nft_bids.values[item]).bid_state === "Consumed")||(toRaw(nft_bids.values[item]).bid_state === "Approved")) {
             is_bided.value = true;
             break;
           }
@@ -785,6 +785,9 @@ p {
               cursor: pointer;
               &:first-of-type {
                 border: 1px solid #000000;
+                &:disabled{
+                  border: 1px solid #ddd;
+                }
               }
               &:last-of-type {
                 background: #fecc00;
