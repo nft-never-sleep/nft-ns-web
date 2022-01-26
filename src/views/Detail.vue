@@ -215,7 +215,7 @@
           <div>
             {{
               item.amount > 1e20
-                ? (item.amount / 1e24).toFixed(3) + "NEAR"
+                ? (item.amount / 1e23).toFixed(3) + "NEAR"
                 : item.amount + " yocto"
             }}
           </div>
