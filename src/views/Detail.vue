@@ -307,6 +307,7 @@ export default {
         nft_bids.values = await proxy.useNnsApi("list_bids_by_nft", {
           nft_id: parasContract + ":" + route.params.token_id,
         });
+        console.log(nft_bids.values);
         for (let item in nft_bids.values) {
           if (nft_bids.values[item].bid_state === "Expired") {
             delete nft_bids.values[item];
@@ -372,16 +373,20 @@ export default {
     const startTime = ref(proxy.$moment().toDate());
     const endTime = ref(proxy.$moment().add(7, "d").toDate());
     const duration = computed(() => {
-      let D = proxy.$moment(endTime.value).diff(startTime.value, "days");
-      let HH = proxy.$moment(endTime.value).diff(startTime.value, "HH") % 24;
-      let mm = proxy.$moment(endTime.value).diff(startTime.value, "mm") % 60;
-      let ss = proxy.$moment(endTime.value).diff(startTime.value, "ss") % 60;
+      let start = new Date(startTime.value)
+      let end = new Date(endTime.value)
+      let D = proxy.$moment(end).diff(proxy.$moment(start), "days");
+      let HH = proxy.$moment(end).diff(proxy.$moment(start), "h") % 24;
+      let mm = proxy.$moment(end).diff(proxy.$moment(start), "m") % 60;
+      let ss = proxy.$moment(end).diff(proxy.$moment(start), "s") % 60;
       return `${D}d:${HH}h:${mm}m:${ss}s`;
     });
     const unit_price = computed(() => {
+      let start = new Date(startTime.value)
+      let end = new Date(endTime.value)
       let data =
         Number(price.value) /
-        proxy.$moment(endTime.value).diff(startTime.value, "ss");
+        proxy.$moment(end).diff(start, "s");
       return data.toFixed(10);
     });
     const confirm = async () => {
@@ -389,17 +394,15 @@ export default {
         process.env.NODE_ENV === "development"
           ? "paras-token-v2.testnet"
           : "x.paras.near";
+      let start = new Date(startTime.value)
+      let end = new Date(endTime.value)
       let data = {
         nft_id: route.params.token_id,
         bid_info: {
           src_nft_id: parasContract + ":" + route.params.token_id,
           orgin_owner: nft_info.values.owner_id,
-          start_at: parseInt(proxy.$moment(startTime.value).format("X")),
-          lasts: parseInt(
-            proxy
-              .$moment(endTime.value)
-              .diff(proxy.$moment(startTime.value), "X")
-          ),
+          start_at: parseInt(proxy.$moment(start).format("X")),
+          lasts: parseInt(proxy.$moment(end).diff(proxy.$moment(start), "s")),
           amount: proxy.digitalProcessing(price.value),
           msg: "",
           bid_from: proxy.$near.user.accountId,
