@@ -1,6 +1,6 @@
 <template>
   <div>
-    <n-modal :show="tip_show">
+    <n-modal v-model:show="tip_show">
       <div class="tip">
         <img src="../../assets/img/public/no-link.png" />
         <button @click="logoin">Connect wallet</button>

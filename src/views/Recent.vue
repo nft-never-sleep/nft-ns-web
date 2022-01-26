@@ -7,7 +7,7 @@
         :key="index"
         @click="detail(index)"
       >
-        <div :class="'card ' + item.bid_state">
+        <div :class="'card ' + (item.expired ? 'Expired' : item.bid_state)">
           <div class="top">
             <div :class="'mask '">
               <img
@@ -15,7 +15,7 @@
                 src="../assets/img/public/inprogress.png"
               />
               <img
-                v-if="item.bid_state === 'Expired'"
+                v-if="item.expired"
                 src="../assets/img/public/expired.png"
               />
             </div>
@@ -65,6 +65,8 @@ export default {
           bid_id: key,
           metadata: {},
           token_id: token_id_meta[1] + ":" + token_id_meta[2],
+          expired:
+            1643185366 * 1000 + bidData[key].lasts < new Date().getTime(),
         };
         nftData.push(data);
         // 循环nft数据信息
@@ -127,7 +129,7 @@ export default {
       margin-top: 16px;
       transform: translateY(0);
       // 等待响应
-      &.InProgress {
+      &.InProgress,&.Expired {
         .top .mask {
           display: flex;
         }
