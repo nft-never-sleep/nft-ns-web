@@ -15,6 +15,9 @@
           </div>
         </div>
       </div>
+      <div class="empty" v-if="collectibles.values.length === 0">
+        <img src="../assets/img/public/no-nft.png" />
+      </div>
     </div>
   </n-spin>
 </template>
@@ -25,7 +28,7 @@ import { useRouter, useRoute } from "vue-router";
 import chainMixin from "../utils/chainMixin";
 import { onMounted } from "vue";
 import { getCurrentInstance } from "vue";
-
+import bus from "vue3-eventbus";
 export default {
   name: "Search",
   setup() {
@@ -36,23 +39,31 @@ export default {
     const collectibles = reactive([]);
     const loading = ref(true);
     const route = useRoute();
+
+    bus.on("search", (e) => {
+      console.log("on seach");
+      render(e.tokens);
+    });
+    const render = (_tokens) => {
+      const media_base_url = "https://ipfs.fleek.co/ipfs/";
+      tokens.values = _tokens;
+      loading.value = false;
+      collectibles.values = tokens.values.map((e) => {
+        return {
+          img: media_base_url + e.metadata.media,
+          title: e.metadata.title,
+          data: e,
+        };
+      });
+    };
     const detail = (index) => {
       const { token_id } = tokens.values[index];
       router.push("/detail/" + token_id);
     };
     onMounted(() => {
       if (route.params.data) {
-        const media_base_url = "https://ipfs.fleek.co/ipfs/";
         console.log(route.params);
-        tokens.values = JSON.parse(route.params.data);
-        loading.value = false;
-        collectibles.values = tokens.values.map((e) => {
-          return {
-            img: media_base_url + e.metadata.media,
-            title: e.metadata.title,
-            data: e,
-          };
-        });
+        render(JSON.parse(route.params.data));
       } else {
         loading.value = false;
       }
@@ -128,6 +139,16 @@ export default {
           color: #000000;
         }
       }
+    }
+  }
+  .empty {
+    margin-top: 200px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 147px;
     }
   }
 }

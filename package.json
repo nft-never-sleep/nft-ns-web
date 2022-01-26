@@ -19,6 +19,7 @@
     "vue-i18n": "^9.2.0-beta.26",
     "vue-near": "^0.2.1",
     "vue-router": "^4.0.0-0",
+    "vue3-eventbus": "^2.0.0",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

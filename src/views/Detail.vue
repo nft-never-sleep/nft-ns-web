@@ -203,7 +203,7 @@
         <div class="header">
           <div>报价者</div>
           <div>报价金额</div>
-          <div>报价结束时间</div>
+          <div>持续时间</div>
           <div>租赁开始时间</div>
           <div>报价状态</div>
           <div class="operate" v-if="nft_type === 5">操作</div>
@@ -217,7 +217,22 @@
                 : item.amount + " yocto"
             }}
           </div>
-          <div>{{ $moment(item.lasts * 1000).format("yyyy/MM/DD hh:mm") }}</div>
+          <div>
+            <!-- {{ $moment(item.lasts * 1000).format("yyyy/MM/DD hh:mm") }} -->
+            {{ Math.floor(item.lasts / (60 * 60 * 24)) + "d" }}
+            :
+            {{ Math.floor(item.lasts / (60 * 60 * 24)) + "h" }}
+            :
+            {{ Math.floor(item.lasts / (60 * 60 * 24)) + "m" }}
+            :
+            {{ Math.floor(item.lasts / (60 * 60 * 24)) + "s" }}
+            <!-- {{ $moment(item.lasts.value, "days") }} -->
+            <!-- let D = proxy.$moment(endTime.value).diff(startTime.value, "days");
+      let HH = proxy.$moment(endTime.value).diff(startTime.value, "HH") % 24;
+      let mm = proxy.$moment(endTime.value).diff(startTime.value, "mm") % 60;
+      let ss = proxy.$moment(endTime.value).diff(startTime.value, "ss") % 60;
+      return `${D}d:${HH}h:${mm}m:${ss}s`; -->
+          </div>
           <div>
             {{ $moment(item.start_at * 1000).format("yyyy/MM/DD hh:mm") }}
           </div>
@@ -307,6 +322,7 @@ export default {
         nft_bids.values = await proxy.useNnsApi("list_bids_by_nft", {
           nft_id: parasContract + ":" + route.params.token_id,
         });
+        console.log(nft_bids)
         for (let item in nft_bids.values) {
           if (nft_bids.values[item].bid_state === "Expired") {
             delete nft_bids.values[item];

@@ -7,13 +7,14 @@ import i18n from './i18n/i18n'
 import VueNear from './utils/vueNear'
 import moment from 'moment'
 import chainMixin from './utils/chainMixin'
-
+import eventBus from 'vue3-eventbus'
 const app = createApp(App);
 
 app.use(store)
 app.use(router)
 app.use(naive)
 app.use(i18n)
+app.use(eventBus)
 app.use(VueNear, { env: process.env.NODE_ENV || 'development' })
 app.mixin(chainMixin)
 

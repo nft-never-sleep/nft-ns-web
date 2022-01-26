@@ -47,7 +47,7 @@ import { getCurrentInstance, ref } from "vue";
 import { mapActions } from "vuex";
 import { useMessage } from "naive-ui";
 import { useI18n } from "vue-i18n";
-
+import bus from "vue3-eventbus";
 import {
   GameControllerOutline,
   GameController,
@@ -121,6 +121,7 @@ export default {
           const tokens = await proxy.useParasApi("nft_tokens_for_owner", {
             account_id: searchAccountId.value,
           });
+          bus.emit("search", { tokens });
           router.push({
             name: "Search",
             params: {
@@ -133,7 +134,7 @@ export default {
     };
 
     const back = () => {
-       router.push("/home")
+      router.push("/home");
     };
     return {
       toggle_lang(value) {
