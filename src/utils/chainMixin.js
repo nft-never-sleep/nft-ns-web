@@ -102,19 +102,23 @@ var myMixin = {
       if (value_[1]) {
         let r = value_[1].length
         for (let index = 0; index < r; index++) {
+          console.log(1);
           if (value_[1][0] === '0') {
             value_[1] = value_[1].substr(1)
           } 
         }
-        for (let index = 0; index < (23 - r); index++) {
+        for (let index = 0; index < (24 - r); index++) {
           value_[1] += '0'
         }
         value_[0] = value_[0] === '0' ? '' : value_[0]
       }else if (value_[0] !== '0') {
-        value_.push('00000000000000000000000')
+        console.log(2);
+        value_.push('000000000000000000000000')
       }else{
+        console.log(3);
         value_.push('')
       }
+      console.log(value_[0] + value_[1]);
       return value_[0] + value_[1]
     }
   },

@@ -307,7 +307,6 @@ export default {
         nft_info.values = await proxy.useParasApi("nft_token", {
           token_id: route.params.token_id,
         });
-        console.log(nft_info.values);
         // ----------------在进入页面是通过params获取nft的token_id然后从链侧获取nft信息
 
         //----------没有热门fnt接口直接获取随机连续nft
@@ -470,6 +469,7 @@ export default {
           let data = {
             bid_id: parseInt(key),
           };
+          console.log(nft_bids.values[key].amount);
           await proxy.useNnsApi(
             "claim_nft",
             data,

@@ -48,7 +48,7 @@ export default {
     const collectibles = reactive([]);
     const loading = ref(true);
     const detail = (index) => {
-      const { token_id } = tokens.values[index];
+      const { token_id } = collectibles.values[index].data;
       router.push("/detail/" + token_id);
     };
     const nft_supply_for_owner = ref(0);
@@ -113,11 +113,6 @@ export default {
     const nexPage = async () => {
       loading.value = true;
       let remaining = nft_supply_for_owner.value - tokens.values.length;
-      console.log({
-        account_id: proxy.$store.getters.account_id,
-        from_index: collectibles.values.length.toString(),
-        limit: remaining > 10 ? 10 : remaining,
-      });
       let data = await proxy.useParasApi("nft_tokens_for_owner", {
         account_id: proxy.$store.getters.account_id,
         from_index: collectibles.values.length.toString(),
@@ -130,7 +125,7 @@ export default {
           data: e,
         };
       });
-      collectibles.values.push(...newData);
+      collectibles.values.push(...newData) ;
       loading.value = false;
     };
     return {
