@@ -182,9 +182,9 @@
             <div class="tip">报价默认为自发起后的24小时</div>
             <button @click="dialog_show = true">出价</button>
           </div>
+          <!-- 当前nft有approved状态的出价，且出价人是本用户 -->
           <div v-if="nft_type === 2">
-            <div class="tip">报价默认为自发起后的24小时</div>
-            <button @click="dialog_show = true">出价</button>
+            <button @click="pay">pay</button>
           </div>
         </div>
       </div>
@@ -309,6 +309,17 @@ export default {
         } else {
           //不是属于自己的nft
           nft_type.value = 1;
+          // 判断是否nft的状态为同意出价 bid_state=Approved 且bid_from为当前用户
+          for (let item in nft_bids.values) {
+            let _item = toRaw(nft_bids.values[item]);
+            if (
+              _item.bid_state === "Approved" &&
+              _item.bid_from === proxy.$store.getters.account_id
+            ) {
+              console.log("该nft是当前账户出价且卖家已经同意出价");
+              nft_type.value = 2;
+            }
+          }
         }
         // 热门nft
         imgs.values = hot_nft.map((e) => {
