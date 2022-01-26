@@ -8,6 +8,7 @@ import VueNear from './utils/vueNear'
 import moment from 'moment'
 import chainMixin from './utils/chainMixin'
 import eventBus from 'vue3-eventbus'
+import './assets/style/modal.scss'
 const app = createApp(App);
 
 app.use(store)

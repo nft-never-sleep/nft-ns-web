@@ -31,7 +31,8 @@
         </div>
       </div>
     </n-modal>
-    <div class="dialog-modal" v-if="dialog_show">
+
+    <n-modal v-model:show="dialog_show">
       <div class="dialog-card">
         <div class="title">
           {{
@@ -94,7 +95,8 @@
         </div>
         <button class="confirm-btn" @click="confirm">Confirm</button>
       </div>
-    </div>
+    </n-modal>
+
     <div class="exhibition">
       <div class="image-wrap">
         <img :src="'https://ipfs.fleek.co/ipfs/' + NFT_INFO.metadata.media" />
@@ -219,24 +221,28 @@
           </div>
           <div>
             <!-- {{ $moment(item.lasts * 1000).format("yyyy/MM/DD hh:mm") }} -->
-            {{ Math.floor(item.lasts / (60 * 60 * 24)) + "d" }}
-            :
-            {{ Math.floor(item.lasts / (60 * 60 * 24)) + "h" }}
-            :
-            {{ Math.floor(item.lasts / (60 * 60 * 24)) + "m" }}
-            :
-            {{ Math.floor(item.lasts / (60 * 60 * 24)) + "s" }}
-            <!-- {{ $moment(item.lasts.value, "days") }} -->
-            <!-- let D = proxy.$moment(endTime.value).diff(startTime.value, "days");
-      let HH = proxy.$moment(endTime.value).diff(startTime.value, "HH") % 24;
-      let mm = proxy.$moment(endTime.value).diff(startTime.value, "mm") % 60;
-      let ss = proxy.$moment(endTime.value).diff(startTime.value, "ss") % 60;
-      return `${D}d:${HH}h:${mm}m:${ss}s`; -->
+            {{
+              (() => {
+                const days = Math.floor(
+                  $moment.duration(item.lasts * 1000).asDays()
+                );
+                const hh = Math.floor(
+                  (item.lasts - days * 24 * 60 * 60) / 60 / 60
+                );
+                const mm = Math.floor(
+                  (item.lasts - days * 24 * 60 * 60 - hh * 60 * 60) / 60
+                );
+                const ss = Math.floor(
+                  item.lasts - days * 24 * 60 * 60 - hh * 60 * 60 - mm * 60
+                );
+                return `${days}d:${hh}h:${mm}m:${ss}s`;
+              })()
+            }}
           </div>
           <div>
-            {{ $moment(item.start_at * 1000).format("yyyy/MM/DD hh:mm") }}
+            {{ $moment(item.start_at * 1000).format("yyyy/MM/DD HH:mm") }}
           </div>
-          <div>{{ item.bid_state }}</div>
+          <div>{{ item.expired ? "Expired" : item.bid_state }}</div>
           <div v-if="nft_type === 5" class="operate-btns">
             <button @click="() => unAgree(index)" :disabled="is_bided">
               Refuse
@@ -322,9 +328,14 @@ export default {
         nft_bids.values = await proxy.useNnsApi("list_bids_by_nft", {
           nft_id: parasContract + ":" + route.params.token_id,
         });
-        console.log(nft_bids)
+        console.log(nft_bids.values);
         for (let item in nft_bids.values) {
-          if (nft_bids.values[item].bid_state === "Expired") {
+          // 计算持续时间加上开始时间是否过期
+          if (
+            nft_bids.values[item].lasts +
+              nft_bids.values[item].start_at * 1000 <
+            new Date().getTime()
+          ) {
             delete nft_bids.values[item];
           }
         }
@@ -339,7 +350,6 @@ export default {
           }
         }
         //----------获得出价信息
-
         if (nft_info.values.owner_id === proxy.$near.user.accountId) {
           console.log("your nft");
           // 这里是属于自己的nft
@@ -388,16 +398,18 @@ export default {
     const startTime = ref(proxy.$moment().toDate());
     const endTime = ref(proxy.$moment().add(7, "d").toDate());
     const duration = computed(() => {
-      let D = proxy.$moment(endTime.value).diff(startTime.value, "days");
-      let HH = proxy.$moment(endTime.value).diff(startTime.value, "HH") % 24;
-      let mm = proxy.$moment(endTime.value).diff(startTime.value, "mm") % 60;
-      let ss = proxy.$moment(endTime.value).diff(startTime.value, "ss") % 60;
+      let start = new Date(startTime.value);
+      let end = new Date(endTime.value);
+      let D = proxy.$moment(end).diff(proxy.$moment(start), "days");
+      let HH = proxy.$moment(end).diff(proxy.$moment(start), "h") % 24;
+      let mm = proxy.$moment(end).diff(proxy.$moment(start), "m") % 60;
+      let ss = proxy.$moment(end).diff(proxy.$moment(start), "s") % 60;
       return `${D}d:${HH}h:${mm}m:${ss}s`;
     });
     const unit_price = computed(() => {
-      let data =
-        Number(price.value) /
-        proxy.$moment(endTime.value).diff(startTime.value, "ss");
+      let start = new Date(startTime.value);
+      let end = new Date(endTime.value);
+      let data = Number(price.value) / proxy.$moment(end).diff(start, "s");
       return data.toFixed(10);
     });
     const confirm = async () => {
@@ -405,17 +417,15 @@ export default {
         process.env.NODE_ENV === "development"
           ? "paras-token-v2.testnet"
           : "x.paras.near";
+      let start = new Date(startTime.value);
+      let end = new Date(endTime.value);
       let data = {
         nft_id: route.params.token_id,
         bid_info: {
           src_nft_id: parasContract + ":" + route.params.token_id,
           orgin_owner: nft_info.values.owner_id,
-          start_at: parseInt(proxy.$moment(startTime.value).format("X")),
-          lasts: parseInt(
-            proxy
-              .$moment(endTime.value)
-              .diff(proxy.$moment(startTime.value), "X")
-          ),
+          start_at: parseInt(proxy.$moment(start).format("X")),
+          lasts: parseInt(proxy.$moment(end).diff(proxy.$moment(start), "s")),
           amount: proxy.digitalProcessing(price.value),
           msg: "",
           bid_from: proxy.$near.user.accountId,
