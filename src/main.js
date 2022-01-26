@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import naive from 'naive-ui'
 import i18n from './i18n/i18n'
-import VueNear from 'vue-near'
+import VueNear from './utils/vueNear'
 import moment from 'moment'
 import chainMixin from './utils/chainMixin'
 
