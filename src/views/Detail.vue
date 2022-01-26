@@ -136,7 +136,7 @@
                 <p class="name">Royalties:</p>
                 <div class="line"></div>
                 <div class="content">
-                  {{ "have not royalties" }}
+                  {{ "/" }}
                 </div>
               </div>
               <div class="smart-contact">

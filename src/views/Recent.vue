@@ -15,7 +15,7 @@
                 src="../assets/img/public/expired.png"
               />
               <img
-                v-if="item.bid_state === 'InProgress'"
+                v-else-if="item.bid_state === 'InProgress'"
                 src="../assets/img/public/inprogress.png"
               />
               

@@ -104,6 +104,8 @@ export default {
             loading.value = false;
             console.log(nft_supply_for_owner.value);
           });
+        } else {
+          loading.value = false;
         }
       }, 40);
     });
