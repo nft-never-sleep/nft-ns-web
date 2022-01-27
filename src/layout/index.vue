@@ -12,7 +12,7 @@
             <Search />
           </n-icon>
           <input
-            :placeholder="$t('input.placeholder')"
+            placeholder="Search: Account Id"
             @keyup.enter="search"
             v-model="searchAccountId"
           />
@@ -22,7 +22,11 @@
         <button class="connect-btn" @click="nearAccount">
           {{ gitAccountId ? gitAccountId : "connect-wallet" }}
         </button>
-        <button v-if="gitAccountId" class="connect-btn signOut" @click="signOut">
+        <button
+          v-if="gitAccountId"
+          class="connect-btn signOut"
+          @click="signOut"
+        >
           Sign out
         </button>
         <!-- <n-switch
@@ -79,12 +83,12 @@ export default {
         // window.location.replace(
         //   window.location.origin + window.location.pathname
         // );
-        window.open('https://wallet.testnet.near.org/')
+        window.open("https://wallet.testnet.near.org/");
       } else {
         await this.$near.loginAccount();
       }
     },
-    signOut(){
+    signOut() {
       this.$near.walletConnection.signOut();
       window.location.replace(
         window.location.origin + window.location.pathname
@@ -173,20 +177,35 @@ export default {
 }
 .TopBar {
   background: white;
-  width: 100%;
+  width: 1344px;
   height: 60px;
   display: flex;
   justify-content: space-between;
-  padding: 0 52px;
-  box-sizing: border-box;
+  margin: 0 auto;
   align-items: center;
+  @media screen and (max-width: 720px) {
+    width: 100%;
+    flex-direction: column;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+    height: auto;
+    & > .search-area {
+      width: 90% !important;
+      margin: 10px auto;
+    }
+    // .tool-btns{
+    //   display: none !important;
+    // }
+  }
   & > div {
     display: flex;
     justify-content: center;
   }
   .logo {
     cursor: pointer;
-    width: 183px;
+    width: fit-content;
+    margin-right: 10px;
     font-size: 30px;
     position: relative;
     letter-spacing: 2px;
@@ -203,6 +222,7 @@ export default {
     }
   }
   .search-area {
+    width: 0;
     flex: 1;
     display: flex;
     align-items: center;
@@ -237,6 +257,7 @@ export default {
     width: 217px;
     display: flex;
     align-items: center;
+    margin-left: 10px;
     .connect-btn {
       font-family: "Barlow", sans-serif;
       cursor: pointer;
@@ -251,7 +272,7 @@ export default {
       text-align: center;
       color: #000000;
     }
-    .signOut{
+    .signOut {
       margin-left: 10px;
       background: #ec1a1a;
       border: 1px solid #fd0101;

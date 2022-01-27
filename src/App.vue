@@ -1,10 +1,12 @@
 <template>
   <n-message-provider>
+    <n-dialog-provider>
     <Layout>
       <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
         <router-view></router-view>
       </n-config-provider>
     </Layout>
+    </n-dialog-provider>
   </n-message-provider>
 </template>
 <script>
