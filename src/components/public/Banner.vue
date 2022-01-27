@@ -8,6 +8,7 @@
     <div class="desc">
       {{$t('banner.desc')}}
     </div> -->
+    <a target="_blank" href="https://github.com/nft-never-sleep">How</a>
   </div>
 </template>
 
@@ -34,7 +35,7 @@ export default {
   padding-top: 13px;
   background-origin: content-box;
   background-repeat: no-repeat;
-  background-image: url("../../assets/img/public/banner.png");
+  background-image: url("../../assets/img/public/banner.svg");
   .slogen {
     position: relative;
     height: 100px;
@@ -82,6 +83,20 @@ export default {
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+  }
+  a {
+    position: absolute;
+    color: #fccb01;
+    text-decoration: none;
+    background-color: black;
+    height: 34px;
+    width: 90px;
+    text-align: center;
+    display: block;
+    line-height: 34px;
+    border-radius: 7px;
+    left: 47.27px;
+    bottom: 30.78px;
   }
 }
 </style>
