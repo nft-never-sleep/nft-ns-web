@@ -22,6 +22,9 @@
         <button class="connect-btn" @click="nearAccount">
           {{ gitAccountId ? gitAccountId : "connect-wallet" }}
         </button>
+        <button v-if="gitAccountId" class="connect-btn signOut" @click="signOut">
+          Sign out
+        </button>
         <!-- <n-switch
           class="toggle-lang-btn"
           :value="lang"
@@ -72,13 +75,20 @@ export default {
     ...mapActions(["update"]),
     async nearAccount() {
       if (this.gitAccountId) {
-        this.$near.walletConnection.signOut();
-        window.location.replace(
-          window.location.origin + window.location.pathname
-        );
+        // this.$near.walletConnection.signOut();
+        // window.location.replace(
+        //   window.location.origin + window.location.pathname
+        // );
+        window.open('https://wallet.testnet.near.org/')
       } else {
         await this.$near.loginAccount();
       }
+    },
+    signOut(){
+      this.$near.walletConnection.signOut();
+      window.location.replace(
+        window.location.origin + window.location.pathname
+      );
     },
     setAccount(name) {
       this.accountId =
@@ -240,6 +250,12 @@ export default {
       line-height: 14px;
       text-align: center;
       color: #000000;
+    }
+    .signOut{
+      margin-left: 10px;
+      background: #ec1a1a;
+      border: 1px solid #fd0101;
+      color: #fff;
     }
     .toggle-lang-btn {
       margin-left: 10px;
