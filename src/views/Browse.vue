@@ -50,7 +50,7 @@ export default {
     const category_type = ref("All NFTs");
 
     const detail = (index) => {
-      const { token_id } = tokens.values[index];
+      const { token_id } = collectibles.values[index].data;
       router.push("/detail/" + token_id);
     };
     const nft_total_supply = ref(0);

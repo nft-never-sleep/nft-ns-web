@@ -3,7 +3,8 @@ var myMixin = {
     return{
       parasApi: null,
       nnsApi:null,
-      parasContract: process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'x.paras.near',
+      // parasContract: process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'x.paras.near',
+      parasContract: process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'paras-token-v2.testnet',
       nnsContract: process.env.NODE_ENV === 'development' ? 'nns.dipoletech.testnet' : 'nns.dipoletech.testnet',
     }
   },

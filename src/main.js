@@ -16,7 +16,7 @@ app.use(router)
 app.use(naive)
 app.use(i18n)
 app.use(eventBus)
-app.use(VueNear, { env: process.env.NODE_ENV || 'development' })
+app.use(VueNear, { env: 'development' })
 app.mixin(chainMixin)
 
 app.config.globalProperties.$moment = moment
