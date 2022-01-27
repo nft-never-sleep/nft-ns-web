@@ -273,7 +273,7 @@
           </div>
 
           <div class="NFT-data">
-            <button @click="nft_data_show = true">NFT信息</button>
+            <button @click="nft_data_show = true">NFT Metadata</button>
           </div>
         </div>
       </div>
@@ -1175,6 +1175,10 @@ p {
           position: absolute;
           right: 10px;
           bottom: 0px;
+          button{
+            background-color: black;
+            color: #fecc00;
+          }
         }
       }
     }
