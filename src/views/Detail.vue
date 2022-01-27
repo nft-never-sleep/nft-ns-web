@@ -271,9 +271,133 @@
           <div v-if="nft_type === 5">
             <button @click="dialog_show = true">On Sale</button>
           </div>
+
+          <div class="NFT-data">
+            <button @click="nft_data_show = true">NFT信息</button>
+          </div>
         </div>
       </div>
     </div>
+
+    <n-modal v-model:show="nft_data_show">
+      <div v-if="nft_info_nns" class="dialog-card nft-data-card" style="word-wrap:break-word;">
+        <div class="item">
+          <div class="key">owner_id</div>
+          <div class="value">{{nft_info_nns.owner_id}}</div>
+        </div>
+        <div class="item">
+          <div class="key">token_id</div>
+          <div class="value">{{nft_info_nns.token_id}}</div>
+        </div>
+        <div class="item">
+          <div class="key">metadata</div>
+          <div class="value"></div>
+        </div>
+        <div class="item metadata">
+          <div class="key">copies</div>
+          <div class="value">{{nft_info_nns.metadata.copies}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">description</div>
+          <div class="value">{{nft_info_nns.metadata.description}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">expires_at</div>
+          <div class="value">{{nft_info_nns.metadata.expires_at}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">extra</div>
+          <div class="value">{{nft_info_nns.metadata.extra}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">issued_at</div>
+          <div class="value">{{nft_info_nns.metadata.issued_at}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">media</div>
+          <div class="value">{{nft_info_nns.metadata.media}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">media_hash</div>
+          <div class="value">{{nft_info_nns.metadata.media_hash}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">reference</div>
+          <div class="value">{{nft_info_nns.metadata.reference}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">starts_at</div>
+          <div class="value">{{nft_info_nns.metadata.starts_at}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">title</div>
+          <div class="value">{{nft_info_nns.metadata.title}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">updated_at</div>
+          <div class="value">{{nft_info_nns.metadata.updated_at}}</div>
+        </div>
+      </div>
+      <div v-else class="dialog-card nft-data-card" style="word-wrap:break-word;">
+        <div class="item">
+          <div class="key">owner_id</div>
+          <div class="value">{{NFT_INFO.owner_id ? NFT_INFO.owner_id : 'NULL'}}</div>
+        </div>
+        <div class="item">
+          <div class="key">token_id</div>
+          <div class="value">{{NFT_INFO.token_id ? NFT_INFO.token_id : 'NULL'}}</div>
+        </div>
+        <div class="item">
+          <div class="key">metadata</div>
+          <div class="value"></div>
+        </div>
+        <div class="item metadata">
+          <div class="key">copies</div>
+          <div class="value">{{NFT_INFO.metadata.copies ? NFT_INFO.metadata.copies : 'NULL'}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">description</div>
+          <div class="value">{{NFT_INFO.metadata.description ? NFT_INFO.metadata.description : 'NULL'}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">expires_at</div>
+          <div class="value">{{NFT_INFO.metadata.expires_at ? NFT_INFO.metadata.expires_at : 'NULL'}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">extra</div>
+          <div class="value">{{NFT_INFO.metadata.extra ? NFT_INFO.metadata.extra : 'NULL'}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">issued_at</div>
+          <div class="value">{{NFT_INFO.metadata.issued_at ? NFT_INFO.metadata.issued_at : 'NULL'}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">media</div>
+          <div class="value">{{NFT_INFO.metadata.media ? NFT_INFO.metadata.media : 'NULL'}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">media_hash</div>
+          <div class="value">{{NFT_INFO.metadata.media_hash ? NFT_INFO.metadata.media_hash : 'NULL'}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">reference</div>
+          <div class="value">{{NFT_INFO.metadata.reference ? NFT_INFO.metadata.reference : 'NULL'}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">starts_at</div>
+          <div class="value">{{NFT_INFO.metadata.starts_at ? NFT_INFO.metadata.starts_at : 'NULL'}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">title</div>
+          <div class="value">{{NFT_INFO.metadata.title ? NFT_INFO.metadata.title : 'NULL'}}</div>
+        </div>
+        <div class="item metadata">
+          <div class="key">updated_at</div>
+          <div class="value">{{NFT_INFO.metadata.updated_at ? NFT_INFO.metadata.updated_at : 'NULL'}}</div>
+        </div>
+      </div>
+    </n-modal>
+
     <div class="prices">
       <p class="title">Bid list</p>
       <div class="data-group">
@@ -373,6 +497,7 @@ export default {
     const loading = ref(true); //loading
     const message = useMessage();
     const nft_info = reactive({}); //nft信息
+    const nft_info_nns = ref(); //nns_nft信息
     const imgs = reactive([]); //下方热门nft
     const route = useRoute(); //路由
     const is_approved = ref(false); //是否有同意出价阶段的nft报价
@@ -381,6 +506,7 @@ export default {
     const nft_type = ref(1);
     const dialog = useDialog();
     const dialog_show = ref(false); //出价对话框
+    const nft_data_show = ref(false); //nft-data对话框
     // 展示的信息
     let NFT_INFO = reactive({
       owner_id: "id",
@@ -388,6 +514,7 @@ export default {
         title: "title",
       },
     });
+
     let nft_bids = reactive([]); //报价信息
     onMounted(() => {
       setTimeout(async () => {
@@ -503,6 +630,22 @@ export default {
           nft_info.values
         ).approved_account_ids;
         loading.value = false;
+        let nns_nft = await proxy.useNnsApi('nft_tokens',{})
+        for (let index = 0; index < nns_nft.length; index++) {
+          let data = nns_nft[index].metadata.description.split(":")
+          let token_id = data[1] + ":" + data[2]
+          if (token_id === route.params.token_id) {
+            nft_info_nns.value = nns_nft[index]
+            for (const key in nft_info_nns.value.metadata) {
+              if (nft_info_nns.value.metadata[key]) {
+                nft_info_nns.value.metadata[key] = nft_info_nns.value.metadata[key]
+              }else{
+                nft_info_nns.value.metadata[key] = 'NULL'
+              }
+            }
+            break
+          }
+        }
       }, 40);
     });
 
@@ -663,12 +806,14 @@ export default {
       dateLocale: ref(null), //i18n
       like, //右上角的喜欢
       NFT_INFO,
+      nft_info_nns,
       // nft_info, //详细nft信息
       imgs, //下方热点nft
       img_preview: ref(false), //是否显示预览图
       nft_type, //当前nft状况
       confirm,
       dialog_show,
+      nft_data_show,
       price,
       startTime,
       endTime,
@@ -969,6 +1114,7 @@ p {
       }
 
       .bid {
+        position: relative;
         .tip {
           font-family: Barlow;
           font-style: normal;
@@ -1010,6 +1156,11 @@ p {
               margin-left: 16.88px;
             }
           }
+        }
+        .NFT-data {
+          position: absolute;
+          right: 10px;
+          bottom: 0px;
         }
       }
     }
@@ -1137,8 +1288,8 @@ p {
     justify-content: center;
     align-items: center;
     .dialog-card {
-      width: 300px;
-      height: 336px;
+      min-width: 300px;
+      min-height: 336px;
       background-color: white;
       border: 4px solid #fccb01;
       border-radius: 10px;

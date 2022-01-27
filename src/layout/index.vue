@@ -41,7 +41,7 @@
         </n-switch> -->
       </div>
     </div>
-    <div class="bg-wrap">
+    <div class="bg-wrap" @scroll="scroll">
       <div class="container">
         <slot></slot>
       </div>
@@ -102,6 +102,21 @@ export default {
       this.update({ key: "account_id", value: this.accountId });
       this.update({ key: "account", value: { ...this.$near.user } });
     },
+    scroll(e){
+      if (e.srcElement.scrollTop + e.srcElement.offsetHeight > e.srcElement.scrollHeight - 1) {
+        switch (this.$route.path) {
+          case '/home/browse':
+            window.nexPageBrowse()
+            break;
+          case '/home/collectible':
+            window.nexPageCollectible()
+            break;
+          default:
+            break;
+        }
+      }
+      console.log();
+    }
   },
   mounted() {
     setTimeout(async () => {
@@ -111,7 +126,7 @@ export default {
       // console.log(await account.state() );
       // console.log(this.$near.config);
     }, 40);
-    setTimeout(() => {
+    setTimeout(async() => {
       this.setAccount();
     }, 4000);
   },

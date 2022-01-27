@@ -27,8 +27,11 @@ var myMixin = {
           'claim_nft',//确认支付
         ],
         viewMethods: [
+          'nft_tokens',
           'list_bids_by_nft',//根据token_id获取报价列表
           'list_bids_by_sender',//根据AccountId获取报价列表
+          'nft_token',//ntf列表
+          'nft_tokens_for_owner',//根据token_id获取制定nft信息
         ]
       })
       // console.log(this.$store.getters.account_id);
@@ -50,7 +53,6 @@ var myMixin = {
                 if (attachedGAS && attachedDeposit) {
                   chainRes = await this.parasApi[apiName](data , attachedGAS , attachedDeposit)
                 }else{
-                  console.log(this.parasApi);
                   chainRes = await this.parasApi[apiName](data)
                 }
                 resolve(chainRes)              

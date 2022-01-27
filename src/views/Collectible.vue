@@ -111,23 +111,26 @@ export default {
     });
 
     const nexPage = async () => {
-      loading.value = true;
-      let remaining = nft_supply_for_owner.value - tokens.values.length;
-      let data = await proxy.useParasApi("nft_tokens_for_owner", {
-        account_id: proxy.$store.getters.account_id,
-        from_index: collectibles.values.length.toString(),
-        limit: remaining > 10 ? 10 : remaining,
-      });
-      let newData = data.map((e) => {
-        return {
-          img: media_base_url + e.metadata.media,
-          title: e.metadata.title,
-          data: e,
-        };
-      });
-      collectibles.values.push(...newData) ;
-      loading.value = false;
+      if (collectibles.values.length < nft_supply_for_owner.value) {
+        loading.value = true;
+        let remaining = nft_supply_for_owner.value - tokens.values.length;
+        let data = await proxy.useParasApi("nft_tokens_for_owner", {
+          account_id: proxy.$store.getters.account_id,
+          from_index: collectibles.values.length.toString(),
+          limit: remaining > 10 ? 10 : remaining,
+        });
+        let newData = data.map((e) => {
+          return {
+            img: media_base_url + e.metadata.media,
+            title: e.metadata.title,
+            data: e,
+          };
+        });
+        collectibles.values.push(...newData) ;
+        loading.value = false;
+      }
     };
+    window.nexPageCollectible = nexPage
     return {
       detail,
       loading,

@@ -1,122 +1,152 @@
 .dialog-card {
-    width: 300px;
-    height: 336px;
-    background-color: white;
-    border: 4px solid #fccb01;
-    border-radius: 10px;
-    padding: 20px;
+  width: 300px;
+  height: 336px;
+  background-color: white;
+  border: 4px solid #fccb01;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .title {
+    font-family: Barlow;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 14px;
+    color: #000000;
+  }
+  .main {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    .title {
-      font-family: Barlow;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 24px;
-      line-height: 14px;
-      color: #000000;
+    .input-group {
+      .input-item {
+        position: relative;
+        margin-top: 21px;
+        .desc {
+          font-family: Barlow;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 14px;
+          color: #333333;
+        }
+        .input.custom {
+          // 自定义的input区域需要
+          &::before {
+            content: "";
+            display: block;
+            position: absolute;
+            height: 10px;
+            width: 2px;
+            background-color: #f7941d;
+            left: 12px;
+            bottom: 12px;
+          }
+          input.number {
+            box-sizing: border-box;
+            padding: 0 19px;
+            width: 100%;
+            outline: none;
+            height: 34px;
+            border: 1px solid #fde47c;
+            border-radius: 6px;
+            color: #333333;
+            font-family: Barlow;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 16px;
+            &:focus-visible {
+              border: 1px solid #fde47c;
+            }
+          }
+          img {
+            position: absolute;
+            right: 10px;
+            bottom: 8px;
+          }
+        }
+      }
+      .time-input {
+        display: flex;
+        .input-item {
+          &:nth-of-type(1) {
+            margin-right: 5px;
+          }
+          &:nth-of-type(2) {
+            margin-left: 5px;
+          }
+        }
+      }
     }
-    .main {
+    .other {
       flex: 1;
       display: flex;
+      justify-content: flex-end;
       flex-direction: column;
-      justify-content: space-between;
-      .input-group {
-        .input-item {
-          position: relative;
-          margin-top: 21px;
-          .desc {
-            font-family: Barlow;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 14px;
-            color: #333333;
-          }
-          .input.custom {
-            // 自定义的input区域需要
-            &::before {
-              content: "";
-              display: block;
-              position: absolute;
-              height: 10px;
-              width: 2px;
-              background-color: #f7941d;
-              left: 12px;
-              bottom: 12px;
-            }
-            input.number {
-              box-sizing: border-box;
-              padding: 0 19px;
-              width: 100%;
-              outline: none;
-              height: 34px;
-              border: 1px solid #fde47c;
-              border-radius: 6px;
-              color: #333333;
-              font-family: Barlow;
-              font-style: normal;
-              font-weight: bold;
-              font-size: 16px;
-              &:focus-visible {
-                border: 1px solid #fde47c;
-              }
-            }
-            img {
-              position: absolute;
-              right: 10px;
-              bottom: 8px;
-            }
-          }
-        }
-        .time-input {
-          display: flex;
-          .input-item {
-            &:nth-of-type(1) {
-              margin-right: 5px;
-            }
-            &:nth-of-type(2) {
-              margin-left: 5px;
-            }
-          }
-        }
-      }
-      .other {
-        flex: 1;
+      .duration,
+      .price {
         display: flex;
-        justify-content: flex-end;
-        flex-direction: column;
-        .duration,
-        .price {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 18px;
-          .title {
-            font-family: Barlow;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 14px;
-          }
-          .data {
-            color: #0c9f59;
-          }
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+        .title {
+          font-family: Barlow;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 14px;
+        }
+        .data {
+          color: #0c9f59;
         }
       }
-    }
-
-    .confirm-btn {
-      cursor: pointer;
-      height: 42px;
-      line-height: 42px;
-      outline: none;
-      border: none;
-      background: #fecc00;
-      border-radius: 10px;
-      font-family: Barlow;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 15px;
-      text-align: center;
-      color: #000000;
     }
   }
+
+  .confirm-btn {
+    cursor: pointer;
+    height: 42px;
+    line-height: 42px;
+    outline: none;
+    border: none;
+    background: #fecc00;
+    border-radius: 10px;
+    font-family: Barlow;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    text-align: center;
+    color: #000000;
+  }
+}
+.nft-data-card{
+  width: 500px;
+  height: 336px;
+  background-color: black;
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  .item{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    div{
+      box-sizing: border-box;
+      padding: 2px 5px;
+    }
+    .key{
+      width: 40%;
+    }
+    .vlaue{
+      width: 60%;
+    }
+  }
+  .metadata{
+    box-sizing: border-box;
+    padding-left: 10px;
+  }
+}
