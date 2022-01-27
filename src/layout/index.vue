@@ -60,7 +60,6 @@ import {
   GameController,
   Search,
 } from "@vicons/ionicons5";
-import { reactive } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 
 export default {
@@ -102,21 +101,24 @@ export default {
       this.update({ key: "account_id", value: this.accountId });
       this.update({ key: "account", value: { ...this.$near.user } });
     },
-    scroll(e){
-      if (e.srcElement.scrollTop + e.srcElement.offsetHeight > e.srcElement.scrollHeight - 1) {
+    scroll(e) {
+      if (
+        e.srcElement.scrollTop + e.srcElement.offsetHeight >
+        e.srcElement.scrollHeight - 1
+      ) {
         switch (this.$route.path) {
-          case '/home/browse':
-            window.nexPageBrowse()
+          case "/home/browse":
+            window.nexPageBrowse();
             break;
-          case '/home/collectible':
-            window.nexPageCollectible()
+          case "/home/collectible":
+            window.nexPageCollectible();
             break;
           default:
             break;
         }
       }
       console.log();
-    }
+    },
   },
   mounted() {
     setTimeout(async () => {
@@ -126,7 +128,7 @@ export default {
       // console.log(await account.state() );
       // console.log(this.$near.config);
     }, 40);
-    setTimeout(async() => {
+    setTimeout(async () => {
       this.setAccount();
     }, 4000);
   },
@@ -153,8 +155,9 @@ export default {
           bus.emit("search", { tokens });
           router.push({
             name: "Search",
-            params: {
-              data: JSON.stringify(tokens),
+            query: {
+              id: searchAccountId.value,
+              // data: JSON.stringify(tokens),
             },
           });
           console.log(tokens);

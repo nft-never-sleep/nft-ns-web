@@ -3,7 +3,7 @@
     <div class="card-group">
       <div
         class="card-wrap"
-         @click="() => detail(index)"
+        @click="() => detail(index)"
         v-for="(item, index) in collectibles.values"
         :key="index"
       >
@@ -24,14 +24,16 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { reactive, ref } from "@vue/reactivity";
 import { useRouter, useRoute } from "vue-router";
-import chainMixin from "../utils/chainMixin";
+// import chainMixin from "../utils/chainMixin";
 import { onMounted } from "vue";
 import { getCurrentInstance } from "vue";
 import bus from "vue3-eventbus";
 export default {
   name: "Search",
+
   setup() {
     const router = useRouter();
 
@@ -42,9 +44,14 @@ export default {
     const route = useRoute();
 
     bus.on("search", (e) => {
-      console.log("on seach");
-      render(e.tokens);
+      // console.log("on seach");
+      // render(e.tokens);
+      setTimeout(() => {
+        console.log(route.query);
+        get_data(route.query.id);
+      }, 40);
     });
+
     const render = (_tokens) => {
       const media_base_url = "https://ipfs.fleek.co/ipfs/";
       tokens.values = _tokens;
@@ -61,13 +68,31 @@ export default {
       const { token_id } = tokens.values[index];
       router.push("/detail/" + token_id);
     };
+
+    const get_data = async (id) => {
+      loading.value = true;
+
+      console.log(id);
+      const _tokens = await proxy.useParasApi("nft_tokens_for_owner", {
+        account_id: id,
+      });
+      loading.value = false;
+      render(_tokens);
+      // console.log(tokens);
+    };
     onMounted(() => {
-      if (route.params.data) {
-        console.log(route.params);
-        render(JSON.parse(route.params.data));
-      } else {
-        loading.value = false;
-      }
+      // search by route
+      setTimeout(() => {
+        console.log(route.query);
+        if (route.query.id) {
+          get_data(route.query.id);
+        }
+      }, 40);
+      // if (route.params.data) {
+      //   console.log(route.params);
+      //   render(JSON.parse(route.params.data));
+      // } else {
+      // }
     });
     return {
       detail,

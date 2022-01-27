@@ -53,6 +53,7 @@ export default {
     };
     const nft_supply_for_owner = ref(0);
     const media_base_url = "https://ipfs.fleek.co/ipfs/";
+
     onMounted(() => {
       setTimeout(async () => {
         nft_supply_for_owner.value = await proxy.useParasApi(
@@ -71,39 +72,37 @@ export default {
           });
 
           //------------ 获得拥有的每一个nft的报价列表
-          let have_price_group = []; //有报价的nft索引值
+          // let have_price_group = []; //有报价的nft索引值
           let parasContract =
             process.env.NODE_ENV === "development"
               ? "paras-token-v2.testnet"
               : "x.paras.near";
           const token_ids = toRaw(tokens.values).map((e) => e.token_id);
-          console.log(token_ids);
-          Promise.all(
+          const result = await Promise.all(
             token_ids.map((e) => {
               return proxy.useNnsApi("list_bids_by_nft", {
                 nft_id: parasContract + ":" + e,
               });
             })
-          ).then((res) => {
-            console.log("promise all", res);
-            res.forEach((e, i) => {
-              if (Object.keys(e).length > 0) {
-                have_price_group.push(i);
-              }
-            });
-            //------------ 获得拥有的每一个nft的报价列表
+          );
+          console.log("promise all", result);
+          // result.forEach((e, i) => {
+          //   if (Object.keys(e).length > 0) {
+          //     have_price_group.push(i);
+          //   }
+          // });
+          //------------ 获得拥有的每一个nft的报价列表
 
-            collectibles.values = tokens.values.map((e, i) => {
-              return {
-                img: media_base_url + e.metadata.media,
-                title: e.metadata.title,
-                data: e,
-                price: have_price_group.includes(i),
-              };
-            });
-            loading.value = false;
-            console.log(nft_supply_for_owner.value);
+          collectibles.values = tokens.values.map((e, i) => {
+            return {
+              img: media_base_url + e.metadata.media,
+              title: e.metadata.title,
+              data: e,
+              price: Object.keys(result[i]).length > 0,
+            };
           });
+          loading.value = false;
+          console.log(nft_supply_for_owner.value);
         } else {
           loading.value = false;
         }
@@ -119,18 +118,39 @@ export default {
           from_index: collectibles.values.length.toString(),
           limit: remaining > 10 ? 10 : remaining,
         });
-        let newData = data.map((e) => {
+        const token_ids = data.map((e) => e.token_id); //获得新的tokens_id
+        let parasContract =
+          process.env.NODE_ENV === "development"
+            ? "paras-token-v2.testnet"
+            : "x.paras.near";
+        // 获得每一个nft的报价列表
+        const result = await Promise.all(
+          token_ids.map((e) => {
+            return proxy.useNnsApi("list_bids_by_nft", {
+              nft_id: parasContract + ":" + e,
+            });
+          })
+        );
+
+        // console.log(have_price_group);
+        // result.forEach
+        let newData = data.map((e, i) => {
+          console.log(result[i]);
           return {
             img: media_base_url + e.metadata.media,
             title: e.metadata.title,
             data: e,
+            price: Object.keys(result[i]).length > 0,
           };
         });
-        collectibles.values.push(...newData) ;
+
+        collectibles.values.push(...newData); //添加新数据
+        console.log(token_ids);
+
         loading.value = false;
       }
     };
-    window.nexPageCollectible = nexPage
+    window.nexPageCollectible = nexPage;
     return {
       detail,
       loading,
