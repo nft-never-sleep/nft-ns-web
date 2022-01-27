@@ -14,9 +14,9 @@
             </div>
             <img :src="item.img" />
           </div>
-          <div class="bottom">
+          <!-- <div class="bottom">
             <button>On Sale</button>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="empty" v-if="collectibles.values.length === 0">
@@ -158,7 +158,6 @@ export default {
       box-sizing: border-box;
       border-radius: 10px;
       width: 232px;
-      height: 325.63px;
       overflow: hidden;
       box-sizing: border-box;
       padding: 16px;

@@ -3,6 +3,7 @@
     <div class="card-group">
       <div
         class="card-wrap"
+         @click="() => detail(index)"
         v-for="(item, index) in collectibles.values"
         :key="index"
       >
@@ -11,7 +12,7 @@
             <img :src="item.img" />
           </div>
           <div class="bottom">
-            <button @click="() => detail(index)">Bid Now</button>
+            <button>Bid Now</button>
           </div>
         </div>
       </div>
