@@ -111,7 +111,8 @@
             <div class="user">
               <div class="info">
                 <p class="name">
-                  {{ NFT_INFO.owner_id }}
+                  <!--  -->
+                  {{ is_consumed ? consume_info.bid_from : NFT_INFO.owner_id }}
                 </p>
                 <p class="tag">Owner</p>
               </div>
@@ -124,10 +125,42 @@
             </div>
           </div>
           <div class="nft-info">
-            <p class="name">
-              {{ NFT_INFO.metadata.title }}
-            </p>
-            <p class="tag">Production name</p>
+            <div class="general-info">
+              <div class="left">
+                <p class="name">
+                  {{ NFT_INFO.metadata.title }}
+                </p>
+                <p class="tag">Production name</p>
+              </div>
+              <!-- 有消费展示 -->
+              <div class="right" v-if="is_consumed">
+                <div class="near">
+                  <div class="head">
+                    <p>
+                      {{
+                        consume_info.amount > 1e20
+                          ? (consume_info.amount / 1e24).toFixed(3)
+                          : consume_info.amount
+                      }}
+                      <span>
+                        {{
+                          consume_info.amount > 1e20 ? "NEAR" : " yocto"
+                        }}</span
+                      >
+                    </p>
+                    <img src="../assets/img/public/near.png" />
+                  </div>
+                  <div class="desc">Lease price</div>
+                </div>
+                <div class="period">
+                  <div class="head">
+                    <p>{{ consume_info.lasts }}s</p>
+                  </div>
+                  <div class="desc">Lease period</div>
+                </div>
+              </div>
+            </div>
+
             <p class="desc">
               {{ NFT_INFO.metadata.description || "没有 description" }}
             </p>
@@ -163,6 +196,42 @@
                   </a>
                 </div>
               </div>
+              <!-- 只有出价列表里有才展示这个数据 -->
+              <template v-if="is_consumed">
+                <div class="start-time">
+                  <p class="name">Lease commencement date:</p>
+                  <div class="line"></div>
+                  <div class="content">
+                    <!-- {{ nft_info.royalties }} -->
+                    {{
+                      $moment(consume_info.start_at * 1000).format(
+                        "yyyy/MM/DD HH:mm"
+                      )
+                    }}
+                  </div>
+                </div>
+                <div class="expire-time">
+                  <p class="name">Lease expiry time:</p>
+                  <div class="line"></div>
+                  <div class="content">
+                    <!-- {{ nft_info.royalties }} -->
+                    {{
+                      $moment(
+                        (consume_info.start_at + consume_info.lasts) * 1000
+                      ).format("yyyy/MM/DD HH:mm")
+                    }}
+                  </div>
+                </div>
+                <div class="per-seconds-price">
+                  <p class="name">每秒价格:</p>
+                  <div class="line"></div>
+                  <div class="content">
+                    <!-- {{ nft_info.royalties }} -->
+                    {{ (consume_info.amount / consume_info.lasts).toFixed(10) }}
+                    yocto
+                  </div>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -195,6 +264,11 @@
           <!-- 当前nft有approved状态的出价，且出价人是本用户 -->
           <div v-if="nft_type === 2">
             <button @click="pay">pay</button>
+          </div>
+          <!-- 当前nft是本人，且有一个报价在process -->
+          <div v-if="nft_type === 3" class="type3">
+            <button>Bid again</button>
+            <button>Recall</button>
           </div>
         </div>
       </div>
@@ -244,10 +318,20 @@
           </div>
           <div>{{ item.expired ? "Expired" : item.bid_state }}</div>
           <div v-if="nft_type === 5" class="operate-btns">
-            <button @click="() => unAgree(index)" :disabled="is_bided">
+            <button
+              @click="() => unAgree(index)"
+              :disabled="
+                is_approved || is_consumed || item.bid_state === 'Rejected'
+              "
+            >
               Refuse
             </button>
-            <button @click="() => agree(index)" :disabled="is_bided">
+            <button
+              @click="() => agree(index)"
+              :disabled="
+                is_approved || is_consumed || item.bid_state === 'Rejected'
+              "
+            >
               Agree
             </button>
           </div>
@@ -289,8 +373,9 @@ export default {
     const nft_info = reactive({}); //nft信息
     const imgs = reactive([]); //下方热门nft
     const route = useRoute(); //路由
-    const is_bided = ref(false); //是否已经出借
-
+    const is_approved = ref(false); //是否有同意出价阶段的nft报价
+    const is_consumed = ref(false); //是否有已经消费的nft
+    let consume_info = reactive({}); //消费/租借信息
     const nft_type = ref(1);
     const dialog_show = ref(false); //出价对话框
     // 展示的信息
@@ -331,26 +416,37 @@ export default {
         for (let item in nft_bids.values) {
           // 计算持续时间加上开始时间是否过期
           if (
-            nft_bids.values[item].lasts +
-              nft_bids.values[item].start_at * 1000 <
+            (nft_bids.values[item].lasts + nft_bids.values[item].start_at) *
+              1000 <
             new Date().getTime()
           ) {
             delete nft_bids.values[item];
           }
         }
         for (let item in nft_bids.values) {
-          // 已经出借
-          if (
-            toRaw(nft_bids.values[item]).bid_state === "Consumed" ||
-            toRaw(nft_bids.values[item]).bid_state === "Approved"
-          ) {
-            is_bided.value = true;
-            break;
+          const _item = toRaw(nft_bids.values[item]);
+
+          if (_item.bid_state === "Approved") {
+            // 已经至少有一条记录是赞同出价
+            is_approved.value = true;
+          }
+          // 已经有一条记录是出借
+          if (_item.bid_state === "Consumed") {
+            console.log(_item);
+            consume_info.amount = _item.amount;
+            consume_info.bid_from = _item.bid_from;
+            consume_info.bid_state = _item.bid_state;
+            consume_info.lasts = _item.lasts;
+            consume_info.msg = _item.msg;
+            consume_info.orgin_owner = _item.orgin_owner;
+            consume_info.src_nft_id = _item.src_nft_id;
+            consume_info.start_at = _item.start_at;
+            is_consumed.value = true; //
           }
         }
         //----------获得出价信息
         if (nft_info.values.owner_id === proxy.$near.user.accountId) {
-          console.log("your nft");
+          console.log("这是属于本人的nft");
           // 这里是属于自己的nft
           nft_type.value = 5;
         } else {
@@ -365,6 +461,13 @@ export default {
             ) {
               console.log("该nft是当前账户出价且卖家已经同意出价");
               nft_type.value = 2;
+            }
+            if (
+              _item.bid_from === proxy.$near.user.accountId &&
+              _item.bid_state === "InProgress"
+            ) {
+              nft_type.value = 3;
+              console.log("这是本人出价的nft且状态为Inprocess");
             }
           }
         }
@@ -382,6 +485,7 @@ export default {
         // console.log(type);
         // nft_type.value = type || 1;
         // NFT_INFO.values= nft_info.values
+        console.log(nft_info.values);
         NFT_INFO.owner_id = toRaw(nft_info.values).owner_id;
         NFT_INFO.token_id = toRaw(nft_info.values).token_id;
         NFT_INFO.metadata = toRaw(nft_info.values).metadata;
@@ -499,7 +603,9 @@ export default {
       agree,
       unAgree,
       pay,
-      is_bided,
+      is_approved,
+      is_consumed,
+      consume_info,
     };
   },
 };
@@ -606,17 +712,88 @@ p {
           }
         }
         .nft-info {
-          & > .name {
+          & > .general-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .left {
+              & > .name {
+                font-family: Barlow;
+                font-style: normal;
+                font-weight: 800;
+                font-size: 30px;
+                line-height: 30px;
+                color: #000000;
+                margin-bottom: 0;
+                margin-top: 28px;
+              }
+              & .desc {
+                font-family: Barlow;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 24px;
+                /* identical to box height, or 150% */
+                margin-top: 25px;
+                color: #000000;
+              }
+            }
+            .right {
+              margin-top: 20px;
+              display: flex;
+              height: 50px;
+
+              & > div {
+                height: 50px;
+                display: flex;
+                align-items: center;
+
+                flex-direction: column;
+                justify-content: space-between;
+                &.period {
+                  margin-left: 50px;
+                }
+                .head {
+                  height: 30px;
+                  display: flex;
+                  align-items: center;
+                  font-family: Barlow;
+                  font-style: normal;
+                  font-weight: 800;
+                  font-size: 30px;
+                  line-height: 30px;
+                  img {
+                    margin-left: 8px;
+                  }
+                  span {
+                    font-size: 8px;
+                    color: #4d4a40;
+                  }
+                }
+                .desc {
+                  font-family: Barlow;
+                  font-style: normal;
+                  font-weight: 500;
+                  font-size: 12px;
+                  line-height: 16px;
+                  color: #000000;
+                  opacity: 0.5;
+                  text-align: left;
+                  width: 100%;
+                }
+              }
+            }
+          }
+          & > .desc {
             font-family: Barlow;
             font-style: normal;
-            font-weight: 800;
-            font-size: 30px;
-            line-height: 30px;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            /* identical to box height, or 150% */
+            margin-top: 25px;
             color: #000000;
-            margin-bottom: 0;
-            margin-top: 28px;
           }
-
           .tag {
             font-family: Barlow;
             font-style: normal;
@@ -627,16 +804,7 @@ p {
             opacity: 0.5;
             margin-top: 5px;
           }
-          .desc {
-            font-family: Barlow;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            /* identical to box height, or 150% */
-            margin-top: 25px;
-            color: #000000;
-          }
+
           .process {
             width: 474px;
 
@@ -669,6 +837,18 @@ p {
                   background: #2af192;
                 }
               }
+              &.start-time {
+                &::before {
+                  background: #2a3ef1;
+                }
+              }
+              &.expire-time,
+              &.per-seconds-price {
+                &::before {
+                  background: #000000;
+                }
+              }
+
               .content {
                 max-width: 200px;
                 overflow: hidden;
