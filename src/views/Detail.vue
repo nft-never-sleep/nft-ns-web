@@ -280,134 +280,244 @@
     </div>
 
     <n-modal v-model:show="nft_data_show">
-      <div v-if="nft_info_nns" class="dialog-card nft-data-card" style="word-wrap:break-word;">
+      <div
+        v-if="nft_info_nns"
+        class="dialog-card nft-data-card"
+        style="word-wrap: break-word"
+      >
         <h3>NFT REIFICATION</h3>
-        <img src="../assets/img/detail/delete.svg" alt="" style="position: absolute;top: 19px;right: 24px;" @click="nft_data_show = false">
+        <img
+          src="../assets/img/detail/delete.svg"
+          alt=""
+          style="position: absolute; top: 19px; right: 24px"
+          @click="nft_data_show = false"
+        />
         <div class="item">
           <div class="key">owner_id:</div>
-          <div class="value">{{nft_info_nns.owner_id}}</div>
+          <div class="value">{{ nft_info_nns.owner_id }}</div>
         </div>
         <div class="item">
           <div class="key">token_id:</div>
-          <div class="value">{{nft_info_nns.token_id}}</div>
+          <div class="value">{{ nft_info_nns.token_id }}</div>
         </div>
         <div class="item">
-          <div class="key" style="color: #FECC00;opacity: 1;">metadata</div>
+          <div class="key" style="color: #fecc00; opacity: 1">metadata</div>
           <div class="value"></div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">copies:</div>
-          <div class="value">{{nft_info_nns.metadata.copies}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />copies:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.copies }}</div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">description:</div>
-          <div class="value">{{nft_info_nns.metadata.description}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />description:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.description }}</div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">expires_at:</div>
-          <div class="value">{{nft_info_nns.metadata.expires_at}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />expires_at:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.expires_at }}</div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">extra:</div>
-          <div class="value">{{nft_info_nns.metadata.extra}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />extra:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.extra }}</div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">issued_at:</div>
-          <div class="value">{{nft_info_nns.metadata.issued_at}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />issued_at:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.issued_at }}</div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">media_hash:</div>
-          <div class="value">{{nft_info_nns.metadata.media_hash}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />media_hash:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.media_hash }}</div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">starts_at:</div>
-          <div class="value">{{nft_info_nns.metadata.starts_at}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />starts_at:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.starts_at }}</div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">title:</div>
-          <div class="value">{{nft_info_nns.metadata.title}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />title:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.title }}</div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">updated_at:</div>
-          <div class="value">{{nft_info_nns.metadata.updated_at}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />updated_at:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.updated_at }}</div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">media:</div>
-          <div class="value">{{nft_info_nns.metadata.media}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />media:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.media }}</div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">reference:</div>
-          <div class="value">{{nft_info_nns.metadata.reference}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />reference:
+          </div>
+          <div class="value">{{ nft_info_nns.metadata.reference }}</div>
         </div>
         <div class="dibu">
-          <img src="../assets/img/detail/left.svg">
+          <img src="../assets/img/detail/left.svg" />
           <span>NFT Never Sleep</span>
-          <img src="../assets/img/detail/right.svg">
+          <img src="../assets/img/detail/right.svg" />
         </div>
       </div>
-      <div v-else class="dialog-card nft-data-card" style="word-wrap:break-word;">
+      <div
+        v-else
+        class="dialog-card nft-data-card"
+        style="word-wrap: break-word"
+      >
         <h3>NFT REIFICATION</h3>
-        <img src="../assets/img/detail/delete.svg" alt="" style="position: absolute;top: 19px;right: 24px;" @click="nft_data_show = false">
+        <img
+          src="../assets/img/detail/delete.svg"
+          alt=""
+          style="position: absolute; top: 19px; right: 24px"
+          @click="nft_data_show = false"
+        />
         <div class="item">
           <div class="key">owner_id:</div>
-          <div class="value">{{NFT_INFO.owner_id ? NFT_INFO.owner_id : 'NULL'}}</div>
+          <div class="value">
+            {{ NFT_INFO.owner_id ? NFT_INFO.owner_id : "NULL" }}
+          </div>
         </div>
         <div class="item">
           <div class="key">token_id:</div>
-          <div class="value">{{NFT_INFO.token_id ? NFT_INFO.token_id : 'NULL'}}</div>
+          <div class="value">
+            {{ NFT_INFO.token_id ? NFT_INFO.token_id : "NULL" }}
+          </div>
         </div>
         <div class="item">
-          <div class="key" style="color: #FECC00;opacity: 1;">metadata</div>
+          <div class="key" style="color: #fecc00; opacity: 1">metadata</div>
           <div class="value"></div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">copies:</div>
-          <div class="value">{{NFT_INFO.metadata.copies ? NFT_INFO.metadata.copies : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />copies:
+          </div>
+          <div class="value">
+            {{ NFT_INFO.metadata.copies ? NFT_INFO.metadata.copies : "NULL" }}
+          </div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">description:</div>
-          <div class="value">{{NFT_INFO.metadata.description ? NFT_INFO.metadata.description : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />description:
+          </div>
+          <div class="value">
+            {{
+              NFT_INFO.metadata.description
+                ? NFT_INFO.metadata.description
+                : "NULL"
+            }}
+          </div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">expires_at:</div>
-          <div class="value">{{NFT_INFO.metadata.expires_at ? NFT_INFO.metadata.expires_at : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />expires_at:
+          </div>
+          <div class="value">
+            {{
+              NFT_INFO.metadata.expires_at
+                ? NFT_INFO.metadata.expires_at
+                : "NULL"
+            }}
+          </div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">extra:</div>
-          <div class="value">{{NFT_INFO.metadata.extra ? NFT_INFO.metadata.extra : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />extra:
+          </div>
+          <div class="value">
+            {{ NFT_INFO.metadata.extra ? NFT_INFO.metadata.extra : "NULL" }}
+          </div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">issued_at:</div>
-          <div class="value">{{NFT_INFO.metadata.issued_at ? NFT_INFO.metadata.issued_at : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />issued_at:
+          </div>
+          <div class="value">
+            {{
+              NFT_INFO.metadata.issued_at ? NFT_INFO.metadata.issued_at : "NULL"
+            }}
+          </div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">media_hash:</div>
-          <div class="value">{{NFT_INFO.metadata.media_hash ? NFT_INFO.metadata.media_hash : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />media_hash:
+          </div>
+          <div class="value">
+            {{
+              NFT_INFO.metadata.media_hash
+                ? NFT_INFO.metadata.media_hash
+                : "NULL"
+            }}
+          </div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">starts_at:</div>
-          <div class="value">{{NFT_INFO.metadata.starts_at ? NFT_INFO.metadata.starts_at : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />starts_at:
+          </div>
+          <div class="value">
+            {{
+              NFT_INFO.metadata.starts_at ? NFT_INFO.metadata.starts_at : "NULL"
+            }}
+          </div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">title:</div>
-          <div class="value">{{NFT_INFO.metadata.title ? NFT_INFO.metadata.title : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />title:
+          </div>
+          <div class="value">
+            {{ NFT_INFO.metadata.title ? NFT_INFO.metadata.title : "NULL" }}
+          </div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">updated_at:</div>
-          <div class="value">{{NFT_INFO.metadata.updated_at ? NFT_INFO.metadata.updated_at : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />updated_at:
+          </div>
+          <div class="value">
+            {{
+              NFT_INFO.metadata.updated_at
+                ? NFT_INFO.metadata.updated_at
+                : "NULL"
+            }}
+          </div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">media:</div>
-          <div class="value">{{NFT_INFO.metadata.media ? NFT_INFO.metadata.media : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />media:
+          </div>
+          <div class="value">
+            {{ NFT_INFO.metadata.media ? NFT_INFO.metadata.media : "NULL" }}
+          </div>
         </div>
         <div class="item metadata">
-          <div class="key"><img src="../assets/img/detail/dian.png">reference:</div>
-          <div class="value">{{NFT_INFO.metadata.reference ? NFT_INFO.metadata.reference : 'NULL'}}</div>
+          <div class="key">
+            <img src="../assets/img/detail/dian.png" />reference:
+          </div>
+          <div class="value">
+            {{
+              NFT_INFO.metadata.reference ? NFT_INFO.metadata.reference : "NULL"
+            }}
+          </div>
         </div>
         <div class="dibu">
-          <img src="../assets/img/detail/left.svg">
+          <img src="../assets/img/detail/left.svg" />
           <span>NFT Never Sleep</span>
-          <img src="../assets/img/detail/right.svg">
+          <img src="../assets/img/detail/right.svg" />
         </div>
       </div>
     </n-modal>
@@ -451,7 +561,9 @@
           <div>
             {{ $moment(item.start_at * 1000).format("yyyy/MM/DD HH:mm") }}
           </div>
-          <div>{{ item.expired ? "Expired" : item.bid_state }}</div>
+          <div :class="item.expired ? 'Expired' : item.bid_state">
+            {{ item.expired ? "Expired" : item.bid_state }}
+          </div>
           <div v-if="nft_type === 5" class="operate-btns">
             <button
               @click="() => unAgree(index)"
@@ -644,20 +756,21 @@ export default {
           nft_info.values
         ).approved_account_ids;
         loading.value = false;
-        let nns_nft = await proxy.useNnsApi('nft_tokens',{})
+        let nns_nft = await proxy.useNnsApi("nft_tokens", {});
         for (let index = 0; index < nns_nft.length; index++) {
-          let data = nns_nft[index].metadata.description.split(":")
-          let token_id = data[1] + ":" + data[2]
+          let data = nns_nft[index].metadata.description.split(":");
+          let token_id = data[1] + ":" + data[2];
           if (token_id === route.params.token_id) {
-            nft_info_nns.value = nns_nft[index]
+            nft_info_nns.value = nns_nft[index];
             for (const key in nft_info_nns.value.metadata) {
               if (nft_info_nns.value.metadata[key]) {
-                nft_info_nns.value.metadata[key] = nft_info_nns.value.metadata[key]
-              }else{
-                nft_info_nns.value.metadata[key] = 'NULL'
+                nft_info_nns.value.metadata[key] =
+                  nft_info_nns.value.metadata[key];
+              } else {
+                nft_info_nns.value.metadata[key] = "NULL";
               }
             }
-            break
+            break;
           }
         }
       }, 40);
@@ -1175,7 +1288,7 @@ p {
           position: absolute;
           right: 10px;
           bottom: 0px;
-          button{
+          button {
             background-color: black;
             color: #fecc00;
           }
@@ -1257,6 +1370,16 @@ p {
           color: #000000;
           &:hover {
             background-color: #fff1c6;
+          }
+          // .C
+          .InProgress {
+            color: #0c9f59;
+          }
+          .Consumed {
+            color: #f7941d;
+          }
+          .Rejected {
+            color: #ff3232;
           }
           .operate-btns {
             button {
