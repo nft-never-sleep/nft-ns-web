@@ -74,6 +74,25 @@ export default {
             };
           });
         }
+        // let a = await proxy.useParasApi('nft_tokens',{
+        //     from_index: "0",
+        //     limit: nft_total_supply.value > 10 ? 10 : nft_total_supply.value,
+        //   })
+        // let b = await proxy.useNnsApi('nft_tokens',{
+        //     from_index: "0",
+        //     limit: nft_total_supply.value > 10 ? 10 : nft_total_supply.value,
+        //   })
+        // let d= await proxy.useNnsApi("nft_tokens_for_owner", {
+        //   account_id: proxy.$store.getters.account_id,
+        // });
+        // console.log( d);
+        // let c = await proxy.useNnsApi("nft_token", {
+        //   token_id: '0',
+        // });
+
+        // console.log(a );
+        // console.log( b );
+        console.log( c );
       }, 40);
     });
     const get_and_clear_nfts = async () => {

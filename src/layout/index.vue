@@ -107,7 +107,7 @@ export default {
       // console.log(await account.state() );
       // console.log(this.$near.config);
     }, 40);
-    setTimeout(() => {
+    setTimeout(async() => {
       this.setAccount();
     }, 4000);
   },

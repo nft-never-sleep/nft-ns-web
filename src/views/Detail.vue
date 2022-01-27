@@ -196,9 +196,20 @@
           <div v-if="nft_type === 2">
             <button @click="pay">pay</button>
           </div>
+
+          <div class="NFT-data">
+            <button @click="nft_data_show = true">NFT信息</button>
+          </div>
         </div>
       </div>
     </div>
+
+    <n-modal v-model:show="nft_data_show">
+      <div class="dialog-card nft-data" style="word-wrap:break-word">
+        {{ nft_info_nns }}
+      </div>
+    </n-modal>
+
     <div class="prices">
       <p class="title">Bid list</p>
       <div class="data-group">
@@ -287,12 +298,14 @@ export default {
     const { proxy } = getCurrentInstance(); //vue
     const loading = ref(true); //loading
     const nft_info = reactive({}); //nft信息
+    const nft_info_nns = ref(); //nns_nft信息
     const imgs = reactive([]); //下方热门nft
     const route = useRoute(); //路由
     const is_bided = ref(false); //是否已经出借
 
     const nft_type = ref(1);
     const dialog_show = ref(false); //出价对话框
+    const nft_data_show = ref(false); //nft-data对话框
     // 展示的信息
     let NFT_INFO = reactive({
       owner_id: "id",
@@ -300,6 +313,7 @@ export default {
         title: "title",
       },
     });
+
     let nft_bids = reactive([]); //报价信息
     onMounted(() => {
       setTimeout(async () => {
@@ -350,7 +364,6 @@ export default {
         }
         //----------获得出价信息
         if (nft_info.values.owner_id === proxy.$near.user.accountId) {
-          console.log("your nft");
           // 这里是属于自己的nft
           nft_type.value = 5;
         } else {
@@ -389,6 +402,16 @@ export default {
           nft_info.values
         ).approved_account_ids;
         loading.value = false;
+
+        let nns_nft = await proxy.useNnsApi('nft_tokens',{})
+        for (let index = 0; index < nns_nft.length; index++) {
+          let data = nns_nft[index].metadata.description.split(":")
+          let token_id = data[1] + ":" + data[2]
+          if (token_id === route.params.token_id) {
+            nft_info_nns.value = JSON.stringify(nns_nft[index])
+            break
+          }
+        }
       }, 40);
     });
 
@@ -483,12 +506,14 @@ export default {
     return {
       like, //右上角的喜欢
       NFT_INFO,
+      nft_info_nns,
       // nft_info, //详细nft信息
       imgs, //下方热点nft
       img_preview: ref(false), //是否显示预览图
       nft_type, //当前nft状况
       confirm,
       dialog_show,
+      nft_data_show,
       price,
       startTime,
       endTime,
@@ -703,6 +728,7 @@ p {
       }
 
       .bid {
+        position: relative;
         .tip {
           font-family: Barlow;
           font-style: normal;
@@ -741,6 +767,11 @@ p {
               margin-left: 16.88px;
             }
           }
+        }
+        .NFT-data {
+          position: absolute;
+          right: 10px;
+          bottom: 0px;
         }
       }
     }
@@ -868,8 +899,8 @@ p {
     justify-content: center;
     align-items: center;
     .dialog-card {
-      width: 300px;
-      height: 336px;
+      min-width: 300px;
+      min-height: 336px;
       background-color: white;
       border: 4px solid #fccb01;
       border-radius: 10px;
