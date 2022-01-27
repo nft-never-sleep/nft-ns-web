@@ -4,7 +4,7 @@ var myMixin = {
       parasApi: null,
       nnsApi:null,
       // parasContract: process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'x.paras.near',
-      parasContract: process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'paras-token-v2.testnet',
+      parasContract: process.env.NODE_ENV === 'development' ? 'paras-token-v2.testnet' : 'x.paras.near',
       nnsContract: process.env.NODE_ENV === 'development' ? 'nns.dipoletech.testnet' : 'nns.dipoletech.testnet',
     }
   },
@@ -51,6 +51,7 @@ var myMixin = {
           return new Promise((resolve , reject) =>{
             try {
               setTimeout(async() => {
+                console.log(data);
                 if (attachedGAS && attachedDeposit) {
                   chainRes = await this.parasApi[apiName](data , attachedGAS , attachedDeposit)
                 }else{
