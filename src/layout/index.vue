@@ -12,7 +12,7 @@
             <Search />
           </n-icon>
           <input
-            placeholder="Search: Account Id"
+            placeholder="Search: Account ID"
             @keyup.enter="search"
             v-model="searchAccountId"
           />

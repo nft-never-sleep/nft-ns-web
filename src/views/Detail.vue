@@ -67,11 +67,13 @@
               <div class="input-item">
                 <p class="desc">End Time</p>
                 <div class="input">
-                  <n-date-picker
-                    type="datetime"
-                    clearable
-                    v-model:value="endTime"
-                  />
+                  <n-config-provider :locale="locale" :date-locale="dateLocale">
+                    <n-date-picker
+                      type="datetime"
+                      clearable
+                      v-model:value="endTime"
+                    />
+                  </n-config-provider>
                 </div>
               </div>
             </div>

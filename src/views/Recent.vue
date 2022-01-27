@@ -11,14 +11,13 @@
           <div class="top">
             <div :class="'mask '">
               <img
-                v-if="item.expired"
+                v-if="item.expired || item.bid_state === 'Rejected'"
                 src="../assets/img/public/expired.png"
               />
               <img
                 v-else-if="item.bid_state === 'InProgress'"
                 src="../assets/img/public/inprogress.png"
               />
-              
             </div>
             <img :src="item.metadata.img" />
           </div>
@@ -67,7 +66,8 @@ export default {
           metadata: {},
           token_id: token_id_meta[1] + ":" + token_id_meta[2],
           expired:
-            (bidData[key].start_at * 1000 + bidData[key].lasts) < new Date().getTime(),
+            bidData[key].start_at * 1000 + bidData[key].lasts <
+            new Date().getTime(),
         };
         nftData.push(data);
         // 循环nft数据信息
@@ -130,7 +130,9 @@ export default {
       margin-top: 16px;
       transform: translateY(0);
       // 等待响应
-      &.InProgress,&.Expired {
+      &.InProgress,
+      &.Expired,
+      &.Rejected {
         .top .mask {
           display: flex;
         }
@@ -155,7 +157,7 @@ export default {
           position: absolute;
           top: 0;
           left: 0;
-          background-color: rgba(0, 0, 0, 0.4); //出价了
+          background-color: rgba(0, 0, 0, 0.6); //出价了
           display: none;
           align-items: center;
           justify-content: center;
