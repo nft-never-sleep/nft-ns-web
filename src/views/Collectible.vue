@@ -112,7 +112,7 @@ export default {
     const nexPage = async () => {
       if (collectibles.values.length < nft_supply_for_owner.value) {
         loading.value = true;
-        let remaining = nft_supply_for_owner.value - tokens.values.length;
+        let remaining = nft_supply_for_owner.value - collectibles.values.length;
         let data = await proxy.useParasApi("nft_tokens_for_owner", {
           account_id: proxy.$store.getters.account_id,
           from_index: collectibles.values.length.toString(),

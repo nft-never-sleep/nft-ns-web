@@ -19,11 +19,17 @@
       </div>
       <div class="next-page">
         <button
-          v-if="collectibles.values.length < nft_total_supply"
+          v-if="collectibles.values.length + 11 < 30"
           @click="nexPage()"
         >
           Nex Page
         </button>
+        <!-- <button
+          v-if="collectibles.values.length < nft_total_supply"
+          @click="nexPage()"
+        >
+          Nex Page
+        </button> -->
       </div>
     </div>
   </n-spin>
@@ -57,13 +63,15 @@ export default {
     const media_base_url = "https://ipfs.fleek.co/ipfs/";
     onMounted(() => {
       setTimeout(async () => {
-        nft_total_supply.value  = await proxy.useParasApi("nft_total_supply");
+        // nft_total_supply.value  = await proxy.useParasApi("nft_total_supply");
+        nft_total_supply.value  = 30;
         nft_total_supply.value = parseInt(nft_total_supply.value)
         if (nft_total_supply.value !== 0) {
           tokens.values = await proxy.useParasApi("nft_tokens", {
-            from_index: "0",
-            limit: nft_total_supply.value > 10 ? 10 : nft_total_supply.value,
+            from_index: "11",
+            limit: 10,
           });
+          console.log(tokens.values,nft_total_supply.value);
           // 拼接url
           loading.value = false;
           collectibles.values = tokens.values.map((e) => {
@@ -101,20 +109,18 @@ export default {
     };
 
     const nexPage = async () => {
-      if (collectibles.values.length < nft_total_supply.value) {
-      console.log(2);
+      if (collectibles.values.length + 11 < nft_total_supply.value) {
         loading.value = true;
-        let remaining = nft_total_supply.value - tokens.values.length;
-        console.log({
-          account_id: proxy.$store.getters.account_id,
-          from_index: tokens.values.length.toString(),
-          limit: remaining > 10 ? 10 : remaining,
-        });
+        let remaining = nft_total_supply.value - collectibles.values.length;
         let data = await proxy.useParasApi("nft_tokens", {
-          account_id: proxy.$store.getters.account_id,
-          from_index: tokens.values.length.toString(),
+          from_index: (collectibles.values.length + 7).toString(),
           limit: remaining > 10 ? 10 : remaining,
         });
+        console.log({
+          from_index: (collectibles.values.length + 7).toString(),
+          limit: remaining > 10 ? 10 : remaining,
+        });
+        console.log(nft_total_supply.value );
         let newData = data.map((e) => {
           return {
             img: media_base_url + e.metadata.media,
