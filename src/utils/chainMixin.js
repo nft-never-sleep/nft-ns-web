@@ -53,7 +53,6 @@ var myMixin = {
                 if (attachedGAS && attachedDeposit) {
                   chainRes = await this.parasApi[apiName](data , attachedGAS , attachedDeposit)
                 }else{
-                  console.log(this.parasApi);
                   chainRes = await this.parasApi[apiName](data)
                 }
                 resolve(chainRes)              
