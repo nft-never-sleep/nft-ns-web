@@ -61,7 +61,7 @@ export default {
         nft_total_supply.value = parseInt(nft_total_supply.value)
         if (nft_total_supply.value !== 0) {
           tokens.values = await proxy.useParasApi("nft_tokens", {
-            from_index: "0",
+            from_index: "7",
             limit: nft_total_supply.value > 10 ? 10 : nft_total_supply.value,
           });
           // 拼接url
@@ -101,15 +101,9 @@ export default {
     };
 
     const nexPage = async () => {
-      if (collectibles.values.length < nft_total_supply.value) {
-      console.log(2);
+      if (collectibles.values.length + 7 < nft_total_supply.value) {
         loading.value = true;
         let remaining = nft_total_supply.value - tokens.values.length;
-        console.log({
-          account_id: proxy.$store.getters.account_id,
-          from_index: tokens.values.length.toString(),
-          limit: remaining > 10 ? 10 : remaining,
-        });
         let data = await proxy.useParasApi("nft_tokens", {
           account_id: proxy.$store.getters.account_id,
           from_index: tokens.values.length.toString(),
