@@ -551,7 +551,11 @@ export default {
         let parasContract =
           process.env.NODE_ENV === "development"
             ? "paras-token-v2.testnet"
-            : "x.paras.near";
+            : "paras-token-v2.testnet";
+        // let parasContract =
+        //   process.env.NODE_ENV === "development"
+        //     ? "paras-token-v2.testnet"
+        //     : "x.paras.near";
         // 获取该nft的报价信息
         nft_bids.values = await proxy.useNnsApi("list_bids_by_nft", {
           nft_id: parasContract + ":" + route.params.token_id,
@@ -704,7 +708,11 @@ export default {
       let parasContract =
         process.env.NODE_ENV === "development"
           ? "paras-token-v2.testnet"
-          : "x.paras.near";
+          : "paras-token-v2.testnet";
+      // let parasContract =
+      //   process.env.NODE_ENV === "development"
+      //     ? "paras-token-v2.testnet"
+      //     : "x.paras.near";
       let start = new Date(startTime.value);
       let end = new Date(endTime.value);
       let data = {
