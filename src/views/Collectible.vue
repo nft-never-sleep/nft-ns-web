@@ -78,19 +78,8 @@ export default {
               ? "paras-token-v2.testnet"
               : "x.paras.near";
           const token_ids = toRaw(tokens.values).map((e) => e.token_id);
-          const result = await Promise.all(
-            token_ids.map((e) => {
-              return proxy.useNnsApi("list_bids_by_nft", {
-                nft_id: parasContract + ":" + e,
-              });
-            })
-          );
-          console.log("promise all", result);
-          // result.forEach((e, i) => {
-          //   if (Object.keys(e).length > 0) {
-          //     have_price_group.push(i);
-          //   }
-          // });
+          const result = await get_price_list(token_ids);
+
           //------------ 获得拥有的每一个nft的报价列表
 
           collectibles.values = tokens.values.map((e, i) => {
@@ -119,23 +108,14 @@ export default {
           limit: remaining > 10 ? 10 : remaining,
         });
         const token_ids = data.map((e) => e.token_id); //获得新的tokens_id
-        let parasContract =
-          process.env.NODE_ENV === "development"
-            ? "paras-token-v2.testnet"
-            : "x.paras.near";
+
         // 获得每一个nft的报价列表
-        const result = await Promise.all(
-          token_ids.map((e) => {
-            return proxy.useNnsApi("list_bids_by_nft", {
-              nft_id: parasContract + ":" + e,
-            });
-          })
-        );
+        const result = await get_price_list(token_ids);
+        console.log(result);
 
         // console.log(have_price_group);
         // result.forEach
         let newData = data.map((e, i) => {
-          console.log(result[i]);
           return {
             img: media_base_url + e.metadata.media,
             title: e.metadata.title,
@@ -149,6 +129,34 @@ export default {
 
         loading.value = false;
       }
+    };
+    const get_price_list = async (_token_ids) => {
+      // 返回的每一个报价列表 需要剔除已过期(需要计算)
+      // 内容中有报价项为Approved 或者 Consumed 时也返回空对象
+      let parasContract =
+        process.env.NODE_ENV === "development"
+          ? "paras-token-v2.testnet"
+          : "x.paras.near";
+      //所有报价列表
+      let _list = await Promise.all(
+        _token_ids.map((e) => {
+          return proxy.useNnsApi("list_bids_by_nft", {
+            nft_id: parasContract + ":" + e,
+          });
+        })
+      );
+      _list = _list.map((e) => {
+        // 每个报价列表
+        console.log(e);
+        for (let key in e) {
+          e[key].bid_state === "Approved" || e[key].bid_state === "Consumed";
+          //列表中有approved或者消费都不返回列表
+        }
+        return e;
+      });
+      return new Promise((resolve) => {
+        resolve(_list);
+      });
     };
     window.nexPageCollectible = nexPage;
     return {
