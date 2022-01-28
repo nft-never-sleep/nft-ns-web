@@ -76,7 +76,7 @@ export default {
           let parasContract =
             process.env.NODE_ENV === "development"
               ? "paras-token-v2.testnet"
-              : "x.paras.near";
+              : "paras-token-v2.testnet";
           const token_ids = toRaw(tokens.values).map((e) => e.token_id);
           const result = await get_price_list(token_ids);
 
@@ -136,7 +136,7 @@ export default {
       let parasContract =
         process.env.NODE_ENV === "development"
           ? "paras-token-v2.testnet"
-          : "x.paras.near";
+          : "paras-token-v2.testnet";
       //所有报价列表
       let _list = await Promise.all(
         _token_ids.map((e) => {
