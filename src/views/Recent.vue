@@ -21,10 +21,10 @@
             </div>
             <img :src="item.metadata.img" />
           </div>
-          <div class="bottom">
-            <!-- <button @click="lease(item.data)">Bid Now</button> -->
-            <button>Bid Again</button>
-          </div>
+          <!-- <div class="bottom"> -->
+          <!-- <button @click="lease(item.data)">Bid Now</button> -->
+          <!-- <button>Bid Again</button> -->
+          <!-- </div> -->
         </div>
       </div>
       <div class="empty" v-if="imgs.length === 0">
@@ -66,7 +66,7 @@ export default {
           metadata: {},
           token_id: token_id_meta[1] + ":" + token_id_meta[2],
           expired:
-            bidData[key].start_at * 1000 + bidData[key].lasts <
+            (bidData[key].start_at + bidData[key].lasts) * 1000 <
             new Date().getTime(),
         };
         nftData.push(data);
@@ -122,7 +122,7 @@ export default {
       box-sizing: border-box;
       border-radius: 10px;
       width: 232px;
-      height: 325.63px;
+      // height: 325.63px;
       overflow: hidden;
       box-sizing: border-box;
       padding: 16px;

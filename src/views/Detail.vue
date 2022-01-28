@@ -564,7 +564,13 @@
             {{ $moment(item.start_at * 1000).format("yyyy/MM/DD HH:mm") }}
           </div>
           <div :class="item.expired ? 'Expired' : item.bid_state">
-            {{ item.expired ? "Expired" : item.bid_state }}
+            {{
+              item.expired
+                ? "Expired"
+                : item.bid_state === "Consumed"
+                ? "Minted"
+                : item.bid_state
+            }}
           </div>
           <div v-if="nft_type === 5" class="operate-btns">
             <button
@@ -1296,7 +1302,7 @@ p {
         }
         .NFT-data {
           position: absolute;
-          right: 10px;
+          right: 0px;
           bottom: 0px;
           button {
             background-color: black;
@@ -1383,13 +1389,16 @@ p {
           }
           // .C
           .InProgress {
-            color: #0c9f59;
+            color: #ff9a20;
           }
           .Consumed {
-            color: #f7941d;
+            color: #11DE7B;
           }
           .Rejected {
             color: #ff3232;
+          }
+          .Approved {
+            color: #0c9f59;
           }
           .operate-btns {
             button {

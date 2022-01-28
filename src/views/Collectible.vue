@@ -99,6 +99,11 @@ export default {
     });
 
     const nexPage = async () => {
+      console.log(
+        collectibles.values.length < nft_supply_for_owner.value
+          ? "还有剩余的nft没有展示"
+          : "已经到底部"
+      );
       if (collectibles.values.length < nft_supply_for_owner.value) {
         loading.value = true;
         let remaining = nft_supply_for_owner.value - collectibles.values.length;
@@ -111,7 +116,7 @@ export default {
 
         // 获得每一个nft的报价列表
         const result = await get_price_list(token_ids);
-        console.log(result);
+        // console.log(result);
 
         // console.log(have_price_group);
         // result.forEach
@@ -125,7 +130,7 @@ export default {
         });
 
         collectibles.values.push(...newData); //添加新数据
-        console.log(token_ids);
+        // console.log(token_ids);
 
         loading.value = false;
       }
@@ -147,7 +152,7 @@ export default {
       );
       _list = _list.map((e, i) => {
         let prices = { ...e }; // 每个报价列表
-        console.log(i, "e", prices);
+        // console.log(i, "e", prices);
         let have_consumed_or_approved = false;
         for (let key in prices) {
           if (
@@ -164,11 +169,11 @@ export default {
             prices[key].bid_state === "Consumed"
           ) {
             have_consumed_or_approved = true;
-            console.log("Approved或者Consumed直接返回{}", prices[key]);
+            // console.log("Approved或者Consumed直接返回{}", prices[key]);
           }
           //列表中有approved或者消费都不返回列表
         }
-        console.log("--------");
+        // console.log("--------");
         if (have_consumed_or_approved) {
           return {};
         } else {
