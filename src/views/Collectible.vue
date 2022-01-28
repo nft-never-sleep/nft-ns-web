@@ -145,14 +145,35 @@ export default {
           });
         })
       );
-      _list = _list.map((e) => {
-        // 每个报价列表
-        console.log(e);
-        for (let key in e) {
-          e[key].bid_state === "Approved" || e[key].bid_state === "Consumed";
+      _list = _list.map((e, i) => {
+        let prices = { ...e }; // 每个报价列表
+        console.log(i, "e", prices);
+        let have_consumed_or_approved = false;
+        for (let key in prices) {
+          if (
+            (prices[key].lasts + prices[key].start_at) * 1000 <
+            new Date().getTime()
+          ) {
+            delete prices[key];
+            // 报价列表中删除所有的过期
+            continue;
+          }
+          // 判断报价列表中是否有同意支付阶段和正在消费阶段的nft
+          if (
+            prices[key].bid_state === "Approved" ||
+            prices[key].bid_state === "Consumed"
+          ) {
+            have_consumed_or_approved = true;
+            console.log("Approved或者Consumed直接返回{}", prices[key]);
+          }
           //列表中有approved或者消费都不返回列表
         }
-        return e;
+        console.log("--------");
+        if (have_consumed_or_approved) {
+          return {};
+        } else {
+          return e;
+        }
       });
       return new Promise((resolve) => {
         resolve(_list);
