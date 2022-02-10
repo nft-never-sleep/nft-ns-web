@@ -96,7 +96,8 @@ export default {
               : Math.ceil(Math.random() * 30).toString(),
           limit: nft_total_supply.value > 10 ? 10 : nft_total_supply.value,
         });
-        // 拼接url
+        
+
         loading.value = false;
         collectibles.values = tokens.values.map((e) => {
           return {

@@ -1,5 +1,5 @@
 <template>
-  <div class="Detail">
+  <div class="Detail" id="nft-detail">
     <div class="loading" v-if="loading">
       <img src="../assets/img/public/loading.gif" />
     </div>
@@ -651,6 +651,12 @@ export default {
 
     let nft_bids = reactive([]); //报价信息
     onMounted(() => {
+      //输出 class="bg-wrap" 滚动的距离
+      const bg_wrap = document.querySelector(".bg-wrap");
+      console.log(bg_wrap.scrollTop);
+      // 设置 bg_wrap 滚动距离为1
+      bg_wrap.scrollTop = 0;
+
       setTimeout(async () => {
         // ---------------在进入页面是通过params获取nft的token_id然后从链侧获取nft信息
         nft_info.values = await proxy.useParasApi("nft_token", {
@@ -658,9 +664,11 @@ export default {
         });
         // ----------------在进入页面是通过params获取nft的token_id然后从链侧获取nft信息
 
-        //----------没有热门fnt接口直接获取随机连续nft
+        //----------没有热门fnt接口直接获取随机连续nft,这里有可能出现不合适的图片
         const hot_nft = await proxy.useParasApi("nft_tokens", {
-          from_index: Math.ceil(Math.random() * 30).toString(),
+          // 获得 10-30的随机数
+
+          from_index: Math.ceil(Math.random() * (30 - 10) + 10).toString(),
           limit: 6,
         });
         //----------没有热门fnt接口直接获取随机连续nft
@@ -1392,7 +1400,7 @@ p {
             color: #ff9a20;
           }
           .Consumed {
-            color: #11DE7B;
+            color: #11de7b;
           }
           .Rejected {
             color: #ff3232;

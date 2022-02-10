@@ -115,6 +115,7 @@ export default {
         const token_ids = data.map((e) => e.token_id); //获得新的tokens_id
 
         // 获得每一个nft的报价列表
+
         const result = await get_price_list(token_ids);
         // console.log(result);
 

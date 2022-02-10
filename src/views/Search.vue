@@ -51,7 +51,6 @@ export default {
         get_data(route.query.id);
       }, 40);
     });
-
     const render = (_tokens) => {
       const media_base_url = "https://ipfs.fleek.co/ipfs/";
       tokens.values = _tokens;
