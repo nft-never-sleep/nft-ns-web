@@ -65,7 +65,7 @@ export default {
       setTimeout(async () => {
         // nft_total_supply.value  = await proxy.useParasApi("nft_total_supply");
         // nft_total_supply.value = parseInt(nft_total_supply.value)
-        nft_total_supply.value  = 45;
+        nft_total_supply.value  = 41;
         if (nft_total_supply.value !== 0) {
           tokens.values = await proxy.useParasApi("nft_tokens", {
             from_index: "12",
@@ -113,12 +113,12 @@ export default {
         loading.value = true;
         // let remaining = nft_total_supply.value - collectibles.values.length;
         let remaining = nft_total_supply.value - 12 - collectibles.values.length;
-        let data = await proxy.useParasApi("nft_tokens", {
-          from_index: (collectibles.values.length + 11).toString(),
+        console.log({
+          from_index: (collectibles.values.length + 12).toString(),
           limit: remaining > 10 ? 10 : remaining,
         });
-        console.log({
-          from_index: (collectibles.values.length + 11).toString(),
+        let data = await proxy.useParasApi("nft_tokens", {
+          from_index: (collectibles.values.length + 12).toString(),
           limit: remaining > 10 ? 10 : remaining,
         });
         let newData = data.map((e) => {
