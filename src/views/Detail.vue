@@ -377,6 +377,14 @@
           <span>NFT Never Sleep</span>
           <img src="../assets/img/detail/right.svg" />
         </div>
+        <div class="link">
+          <span>Deposit to :</span>
+          <a href="https://youminter.com/" target="_blank"><img src="../assets/img/detail/youminter.svg" /></a>
+          <a href="https://twitter.com/twitterblue" target="_blank"><img src="../assets/img/detail/Twitter_blue.svg" /></a>
+          <a href="https://www.cryptovoxels.com/"><img src="../assets/img/detail/Cryptovoxel.svg" /></a>
+          <a href="https://paras.id/zh" target="_blank"><img src="../assets/img/detail/paras.svg" /></a>
+          <a href="https://nearhub.online/" target="_blank"><img src="../assets/img/detail/Near_Hub.svg" /></a>
+        </div>
       </div>
       <div
         v-else
@@ -520,6 +528,14 @@
           <img src="../assets/img/detail/left.svg" />
           <span>NFT Never Sleep</span>
           <img src="../assets/img/detail/right.svg" />
+        </div>
+        <div class="link">
+          <span>Deposit to :</span>
+          <a href="https://youminter.com/" target="_blank"><img src="../assets/img/detail/youminter.svg" /></a>
+          <a href="https://twitter.com/twitterblue" target="_blank"><img src="../assets/img/detail/Twitter_blue.svg" /></a>
+          <a href="https://www.cryptovoxels.com/"><img src="../assets/img/detail/Cryptovoxel.svg" /></a>
+          <a href="https://paras.id/zh" target="_blank"><img src="../assets/img/detail/paras.svg" /></a>
+          <a href="https://nearhub.online/" target="_blank"><img src="../assets/img/detail/Near_Hub.svg" /></a>
         </div>
       </div>
     </n-modal>
