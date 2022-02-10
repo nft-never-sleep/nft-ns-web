@@ -104,7 +104,7 @@ export default {
           ? "还有剩余的nft没有展示"
           : "已经到底部"
       );
-      if (collectibles.values.length < nft_supply_for_owner.value) {
+      if (collectibles.values.length < nft_supply_for_owner.value && !loading.value) {
         loading.value = true;
         let remaining = nft_supply_for_owner.value - collectibles.values.length;
         let data = await proxy.useParasApi("nft_tokens_for_owner", {

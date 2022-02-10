@@ -64,11 +64,11 @@ export default {
     onMounted(() => {
       setTimeout(async () => {
         // nft_total_supply.value  = await proxy.useParasApi("nft_total_supply");
-        nft_total_supply.value  = 30;
-        nft_total_supply.value = parseInt(nft_total_supply.value)
+        // nft_total_supply.value = parseInt(nft_total_supply.value)
+        nft_total_supply.value  = 45;
         if (nft_total_supply.value !== 0) {
           tokens.values = await proxy.useParasApi("nft_tokens", {
-            from_index: "11",
+            from_index: "12",
             limit: 10,
           });
           console.log(tokens.values,nft_total_supply.value);
@@ -85,19 +85,18 @@ export default {
       }, 40);
     });
     const get_and_clear_nfts = async () => {
-      nft_total_supply.value = await proxy.useParasApi("nft_total_supply");
-      nft_total_supply.value = parseInt(nft_total_supply.value);
+      // nft_total_supply.value = await proxy.useParasApi("nft_total_supply");
+      // nft_total_supply.value = parseInt(nft_total_supply.value);
+      nft_total_supply.value  = 45;
       if (nft_total_supply.value !== 0) {
+        // let remaining = nft_total_supply.value - collectibles.values.length;
+        let remaining = nft_total_supply.value - 12 - collectibles.values.length;
+        let from_index = category_type.value === "All NFTs" ? "0" : Math.ceil(Math.random() * 45).toString()
         tokens.values = await proxy.useParasApi("nft_tokens", {
           // 游戏时获取随机
-          from_index:
-            category_type.value === "All NFTs"
-              ? "0"
-              : Math.ceil(Math.random() * 30).toString(),
-          limit: nft_total_supply.value > 10 ? 10 : nft_total_supply.value,
+          from_index,
+          limit: nft_total_supply.value > 10 ? 10 : remaining,
         });
-        
-
         loading.value = false;
         collectibles.values = tokens.values.map((e) => {
           return {
@@ -110,18 +109,18 @@ export default {
     };
 
     const nexPage = async () => {
-      if (collectibles.values.length + 11 < nft_total_supply.value) {
+      if (collectibles.values.length < nft_total_supply.value - 12 && !loading.value) {
         loading.value = true;
-        let remaining = nft_total_supply.value - collectibles.values.length;
+        // let remaining = nft_total_supply.value - collectibles.values.length;
+        let remaining = nft_total_supply.value - 12 - collectibles.values.length;
         let data = await proxy.useParasApi("nft_tokens", {
-          from_index: (collectibles.values.length + 7).toString(),
+          from_index: (collectibles.values.length + 11).toString(),
           limit: remaining > 10 ? 10 : remaining,
         });
         console.log({
-          from_index: (collectibles.values.length + 7).toString(),
+          from_index: (collectibles.values.length + 11).toString(),
           limit: remaining > 10 ? 10 : remaining,
         });
-        console.log(nft_total_supply.value );
         let newData = data.map((e) => {
           return {
             img: media_base_url + e.metadata.media,
