@@ -378,7 +378,7 @@
           <img src="../assets/img/detail/right.svg" />
         </div>
         <div class="link">
-          <span>Deposit to :</span>
+          <span>Deploy to :</span>
           <a href="https://youminter.com/" target="_blank"><img src="../assets/img/detail/youminter.svg" /></a>
           <a href="https://twitter.com/twitterblue" target="_blank"><img src="../assets/img/detail/Twitter_blue.svg" /></a>
           <a href="https://www.cryptovoxels.com/"><img src="../assets/img/detail/Cryptovoxel.svg" /></a>
@@ -530,7 +530,7 @@
           <img src="../assets/img/detail/right.svg" />
         </div>
         <div class="link">
-          <span>Deposit to :</span>
+          <span>Deploy to :</span>
           <a href="https://youminter.com/" target="_blank"><img src="../assets/img/detail/youminter.svg" /></a>
           <a href="https://twitter.com/twitterblue" target="_blank"><img src="../assets/img/detail/Twitter_blue.svg" /></a>
           <a href="https://www.cryptovoxels.com/"><img src="../assets/img/detail/Cryptovoxel.svg" /></a>

@@ -90,8 +90,8 @@ export default {
       nft_total_supply.value  = 45;
       if (nft_total_supply.value !== 0) {
         // let remaining = nft_total_supply.value - collectibles.values.length;
-        let remaining = nft_total_supply.value - 12 - collectibles.values.length;
-        let from_index = category_type.value === "All NFTs" ? "0" : Math.ceil(Math.random() * 45).toString()
+        let from_index = category_type.value === "All NFTs" ? "12" : Math.ceil(Math.random() * 20 + 12).toString()
+        let remaining = nft_total_supply.value - 12 - parseInt(from_index);
         tokens.values = await proxy.useParasApi("nft_tokens", {
           // 游戏时获取随机
           from_index,
