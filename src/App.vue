@@ -17,7 +17,7 @@ import { NConfigProvider, createLocale, zhCN, enUS, dateZhCN } from "naive-ui";
 const zh = createLocale(
   {
     Input: {
-      placeholder: "不提申请不构成加班",
+      placeholder: "",
     },
   },
   zhCN
@@ -25,7 +25,7 @@ const zh = createLocale(
 const en = createLocale(
   {
     Input: {
-      placeholder: "fuck",
+      placeholder: "",
     },
   },
   enUS
